@@ -1,0 +1,28 @@
+@mixin CreateFlex{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.HomeBody{
+    margin: 4%;
+    display: flex;
+    height: 60vh;
+    gap: 5%;
+
+    .Separator
+    {
+        flex: 0.01;
+        background-color: rgb(163, 163, 163);
+        border-radius: 5px;
+    }
+
+    .Right{
+        @include CreateFlex();
+        flex: 1;
+    }
+    .Left{
+        @include CreateFlex();
+        flex: 1;
+    }
+}

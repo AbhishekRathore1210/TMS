@@ -1,0 +1,18 @@
+$textPrimary : rgb(163, 163, 163);
+$textFocus : rgb(68, 143, 255);
+
+.WelcomeContainer{
+    margin: 2%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1%;
+
+    .Focused{
+        color: $textFocus;
+    }
+    
+    h2{
+        color: $textPrimary;
+    }
+}

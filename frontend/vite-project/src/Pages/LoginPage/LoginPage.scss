@@ -1,0 +1,7 @@
+$height: calc(90vh - 56px);
+.LoginPageBody{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: $height;
+}

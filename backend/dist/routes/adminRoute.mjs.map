@@ -1,0 +1,1 @@
+{"version":3,"file":"adminRoute.mjs","sourceRoot":"","sources":["../../src/routes/adminRoute.mts"],"names":[],"mappings":"AAAA,OAAO,OAAO,MAAM,SAAS,CAAC;AAC9B,OAAO,EAAC,SAAS,EAAC,MAAM,mCAAmC,CAAC;AAE5D,MAAM,WAAW,GAAG,OAAO,CAAC,MAAM,EAAE,CAAC;AAErC,WAAW,CAAC,IAAI,CAAC,YAAY,EAAC,SAAS,CAAC,CAAC;AAEzC,eAAe,WAAW,CAAA"}
