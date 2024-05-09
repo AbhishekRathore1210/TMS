@@ -2,6 +2,7 @@ import { orgUser } from '../models/user.model.mjs';
 // import { checkAdmin , createUser , createAdmin,checkOrg } from '../services/userService.mjs';
 import UserService from '../services/user.service.mjs';
 class UserController {
+    userService = new UserService();
     userRegistration = async (req, res) => {
         const { firstName, lastName, org, email } = req.body;
         const userExist = await orgUser.findOne({ email: email });
@@ -12,7 +13,7 @@ class UserController {
         }
         else {
             try {
-                const userAdded = UserService.createUser(firstName, lastName, org, email);
+                const userAdded = await this.userService.createUser(firstName, lastName, org, email);
                 // await userAdded.save();
                 res.status(200).json({ userAdded });
             }

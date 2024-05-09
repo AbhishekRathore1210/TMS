@@ -1,15 +1,16 @@
 import UserService from "../services/user.service.mjs";
-import { adminUser } from '../models/admin.model.mjs';
 class AdminController {
+    userService = new UserService();
     registerAdmin = async (req, res) => {
         const { firstName, lastName, email } = req.body;
-        const userExist = await adminUser.findOne({ email: email });
+        // const userExist = await adminUser.findOne({ email: email });
+        const userExist = await this.userService.createAdminUser(firstName, lastName, email);
         if (userExist) {
             res.status(400).json({ message: "User is already present" });
         }
         else {
             try {
-                const newUser = UserService.createAdmin(firstName, lastName, email);
+                const newUser = this.userService.createAdmin(firstName, lastName, email);
                 res.status(200).json(newUser);
             }
             catch (error) {
@@ -19,17 +20,17 @@ class AdminController {
     };
     sendOTP = async (req, res) => {
         const { email } = req.body;
-        const otpSent = await UserService.sendOTP(email);
+        const otpSent = await this.userService.sendOTP(email);
         return res.status(200).send({ success: "true", message: "OTP sent succesffuly" });
     };
     loginAdmin = async (req, res) => {
         const { email, otp } = req.body;
-        const adminExist = await UserService.checkAdmin(email, otp);
+        const adminExist = await this.userService.checkAdmin(email, otp);
         if (!adminExist) {
-            res.status(400).json({ message: 'Cannot Login' });
+            return res.status(401).json({ success: 'false', message: 'Cannot Login' });
         }
         else {
-            res.status(200).send({ message: "Login success" });
+            return res.status(200).json({ success: 'true', message: "Login success" });
         }
     };
 }

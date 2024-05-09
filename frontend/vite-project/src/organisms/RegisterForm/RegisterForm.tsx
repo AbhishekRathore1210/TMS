@@ -43,7 +43,7 @@ function RegisterForm() {
 
 
   const validateUser = ()=>{
-    if(!email || !firstName || !lastName || !dob || !doj){
+    if(!email || !firstName || !lastName){
       setError("Fill All the Details");
       return false;
     }
@@ -87,7 +87,7 @@ function RegisterForm() {
       setLastname("");
       setEmail("");
       console.log("User is Already Registered!");
-      navigate("/login");
+      navigate("/register");
     }
 
     const result = await response.json();
@@ -163,8 +163,10 @@ function RegisterForm() {
         <h3 className='heading'>Register</h3>
         <div className="underline"></div>
         <div className="userSelection">
-            <Button size='lg' color='yellow' onClick={()=>{setUser("System")}}  appearance={user == "System"? "primary" : "default"}>System</Button>
-            <Button size='lg' color='yellow' onClick={()=>{setUser("Organization")}} appearance={user == "Organization"? "primary" : "default"}>Organization</Button>
+          
+          <span className='btn'>
+            <Button size='lg' color='cyan' onClick={()=>{setUser("System")}}  appearance='subtle'>System</Button></span><span>
+            <Button size='lg' color='cyan' onClick={()=>{setUser("Organization")}} appearance={user == "Organization"? "primary" : "default"}>Organization</Button></span>
         </div>
 
         <form onSubmit={user=='System'?handleSystem :handleOrganization}>
@@ -183,7 +185,7 @@ function RegisterForm() {
             <Input disabled={user == "System"? true : false} value={doj} type='date' onChange={(e: string)=>{setDOJ(e)}}></Input>
           </div>
 
-          <Button type='submit' color='blue' appearance='primary' size='lg' >Submit</Button>
+          <Button type='submit' color='red' appearance='primary' size='lg' >Submit</Button>
         </form>
     </div>
     

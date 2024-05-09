@@ -5,9 +5,11 @@ import { adminUser } from '../models/admin.model.mjs';
 import UserService from '../services/user.service.mjs';
 
 class Organization{
+
+    private userService = new UserService();
     public createOrg = async (req: Request, res: Response) => {
         const { org } = req.body;
-        const orgExist = await UserService.checkOrg(org);
+        const orgExist = await this.userService.checkOrg(org);
         if (orgExist) {
             res.status(400).json({
                 success: 'false',

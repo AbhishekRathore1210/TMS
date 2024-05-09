@@ -1,9 +1,10 @@
 import express from 'express';
 import { Router } from 'express';
-
+import userRegisterSchema from '../controllers/validators/user.controller.validation.js';
+import validate from '../middleware/user.middleware.mjs';
+import { RequestHandler } from 'express';
 import UserController from "../controllers/user.controller.mjs"
 import AdminController from "../controllers/admin.controller.mjs";
-
 
 class Routes{
     public userPath = '/users';
@@ -11,6 +12,7 @@ class Routes{
     public router = Router();
     public userController = new UserController();
     public adminController = new AdminController();
+
 
     constructor() {
         this.initializeUserRoutes(`${this.userPath}`);

@@ -1,45 +1,48 @@
 import { orgUser } from "../models/user.model.mjs";
 import { adminUser } from "../models/admin.model.mjs";
 import { Organization } from "../models/organization.model.mjs";
-async function createUser(firstName, lastName, org, email) {
-    const newUser = orgUser.create({
-        firstName: firstName,
-        lastName: lastName,
-        org: org,
-        email: email,
-        organization_list: [org]
-    });
-    return newUser;
-}
-async function checkAdmin(email, otp) {
-    const user = await adminUser.findOne({ email: email });
-    console.log(user);
-    if (!user) {
+class UserDao {
+    createUser = async (firstName, lastName, org, email) => {
+        const newUser = orgUser.create({
+            firstName: firstName,
+            lastName: lastName,
+            org: org,
+            email: email,
+            organization_list: [org]
+        });
+        return newUser;
+    };
+    createAdminUser = async (firstName, lastName, email) => {
+        const user = await adminUser.findOne({ email: email });
+        if (user) {
+            return true;
+        }
         return false;
-    }
-    else {
-        const updateUser = await adminUser.updateOne({ _id: user._id }, { $set: { otp: otp } });
-        if (user.otp != otp) {
+    };
+    checkAdmin = async (email, otp) => {
+        const user = await adminUser.findOne({ email: email });
+        console.log(user);
+        if (!user) {
             return false;
         }
-    }
-    return user;
+        else {
+            if (user.otp != otp) {
+                return false;
+            }
+        }
+        return user;
+    };
+    findOrgByName = async (org) => {
+        const organization = Organization.findOne({ name: org });
+        return organization;
+    };
+    createAdmin = async (firstName, lastName, email) => {
+        const newUser = adminUser.create({
+            name: firstName + ' ' + lastName,
+            email: email
+        });
+        return newUser;
+    };
 }
-async function findOrgByName(org) {
-    const organization = Organization.findOne({ name: org });
-    return organization;
-}
-async function createAdmin(firstName, lastName, email) {
-    const newUser = adminUser.create({
-        name: firstName + ' ' + lastName,
-        email: email
-    });
-    return newUser;
-}
-export default {
-    createUser,
-    createAdmin,
-    checkAdmin,
-    findOrgByName
-};
+export default UserDao;
 //# sourceMappingURL=user.dao.mjs.map

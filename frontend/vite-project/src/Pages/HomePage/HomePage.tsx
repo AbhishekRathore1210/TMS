@@ -1,5 +1,5 @@
 
-import Welcome from "../../atoms/Welcome/Welcome"
+import Welcome from "../../atoms/Heading/Welcome"
 import RegisterCard from "../../molecules/RegisterCard/RegisterCard"
 import LoginCard from "../../molecules/LoginCard/LoginCard"
 import "./HomePage.scss"

@@ -21,7 +21,7 @@ const adminSchema = new mongoose.Schema({
         type:String,
         default:'000000'
     }
-})
+},{timestamps:true});
 
 const adminUser = mongoose.model('Admin', adminSchema);
 

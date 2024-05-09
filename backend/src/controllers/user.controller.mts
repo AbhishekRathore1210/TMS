@@ -7,6 +7,8 @@ import UserService from '../services/user.service.mjs';
 
 class UserController {
 
+    private userService = new UserService();
+
     public userRegistration = async (req: Request, res: Response) => {
         const { firstName, lastName, org, email } = req.body;
         const userExist = await orgUser.findOne({ email: email });
@@ -17,7 +19,7 @@ class UserController {
         }
         else {
             try {
-                const userAdded = UserService.createUser(firstName, lastName, org, email);
+                const userAdded = await this.userService.createUser(firstName, lastName, org, email);
                 // await userAdded.save();
                 res.status(200).json({ userAdded });
             } catch (error: any) {

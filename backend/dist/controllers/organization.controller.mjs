@@ -1,9 +1,10 @@
 // import { checkAdmin , createUser , createAdmin,checkOrg } from '../services/userService.mjs';
 import UserService from '../services/user.service.mjs';
 class Organization {
+    userService = new UserService();
     createOrg = async (req, res) => {
         const { org } = req.body;
-        const orgExist = await UserService.checkOrg(org);
+        const orgExist = await this.userService.checkOrg(org);
         if (orgExist) {
             res.status(400).json({
                 success: 'false',

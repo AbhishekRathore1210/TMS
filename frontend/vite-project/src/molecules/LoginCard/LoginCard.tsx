@@ -6,7 +6,7 @@ function LoginCard() {
   return (
     <div className="CardContainer">
         <h3>Already a User?</h3>
-        <p><b>Lorem ipsum dolor sit amet consectetur adipisicing elit. Debitis reiciendis veritatis cupiditate asperiores odio illum unde mollitia ab delectus porro? Nam ipsam maxime quas architecto suscipit numquam hic sapiente et. Fuga, a? Sequi sit earum possimus maxime laudantium sunt asperiores molestias accusamus autem, exercitationem libero nulla amet ipsa at rerum.</b></p>
+        <p><b>Welcome to our Application Ticket Management System . Register here to avail our services!!</b></p>
         <Link to="/login">
             <Button size='lg' appearance='ghost' color='yellow'>Login</Button>
         </Link>

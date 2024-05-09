@@ -50,7 +50,7 @@ function RegisterForm() {
     }
     console.log("api called");
     const user = {email,otp};
-    const response = await fetch("http://localhost:8555/admin/register",{
+    const response = await fetch("http://localhost:8555/admin/login",{
         method:'POST',
         body:JSON.stringify(user),
         headers:{
@@ -59,11 +59,11 @@ function RegisterForm() {
     })
     const result = await response.json();
 
-    console.log(response);
+    console.log(result);
 
-    if(response.status == 400){
+    if(result.success == false){
       console.log("Cannot Login");
-      navigate('/dashboard');
+      navigate('/admin/login');
     }
 
     if(!response.ok){
@@ -72,7 +72,7 @@ function RegisterForm() {
       setOrg("");
       setEmail("");
       setOtp("");
-      navigate('/dashboard');
+      navigate('/login');
     }
 
     if(response.ok){
@@ -80,7 +80,7 @@ function RegisterForm() {
       setOrg("");
       setEmail("");
       setOtp("");
-      navigate('/AdminLogin');
+      navigate('/dashboard');
     }
   }
 
@@ -138,11 +138,11 @@ function RegisterForm() {
         </div>
 
         <form onSubmit={user == 'System'? handleSystem : handleOrganization}>
-          <Input disabled={user == 'System'? true : false} type="text" placeholder='Organization' onChange={(e: string)=>{setOrg((e))}}></Input>
-          <Input type="email" placeholder='E-mail' onChange={(e: string)=>{setEmail((e))}}></Input>
+          <Input disabled={user == 'System'? true : false} value={org} type="text" placeholder='Organization' onChange={(e: string)=>{setOrg((e))}}></Input>
+          <Input type="email" value={email} placeholder='E-mail' onChange={(e: string)=>{setEmail((e))}}></Input>
 
           <div className="otpContainer">
-            <Input type='text' onChange={(e:string)=>{setOtp((e))}} placeholder='OTP'></Input>
+            <Input type='text' value={otp} onChange={(e:string)=>{setOtp((e))}} placeholder='OTP'></Input>
             <Button appearance='default' onClick={sendOTP}>Get OTP</Button>
           </div>
 
