@@ -34,7 +34,7 @@ public sendOTP = async(email:string)=>{
         requireTLS:true,
         auth:{
             user:'abhishek19229785@gmail.com',
-            pass:'inft pvav gugm lqyz' // password is reuired for OTP
+            pass:'' // password is reuired for OTP
         }
     });
     // const myOtp = this.generateOTP();
