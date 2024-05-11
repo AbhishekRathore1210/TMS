@@ -8,9 +8,9 @@ function NavBar() {
   const navigate = useNavigate();
   return (
     <div>
-        <Navbar appearance='default'>
+        <Navbar appearance='subtle'>
             <Navbar.Brand><b>TMS</b></Navbar.Brand>
-            <Nav>
+            <Nav appearance='tabs'>
                   <Nav.Item icon={<Others/>} onClick={()=>{navigate('/')}}>Home</Nav.Item>
                   {/* <Link to='/'>Home</Link> */}
             </Nav>

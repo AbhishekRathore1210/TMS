@@ -64,9 +64,11 @@
     flex-direction: column;
     gap: 2%;
     align-items: center;
+    background-color: rgb(11 28 48);
+    border-radius: 5%;
     justify-content: center;
     width: 30%;
-    height: 60%;
+    height: 65%;
 
     .upperContainer{
         display: flex;
@@ -85,6 +87,9 @@
                 min-width: 35%;
             }
         }
+    }
+    h3{
+        text-decoration: solid;
     }
     
 

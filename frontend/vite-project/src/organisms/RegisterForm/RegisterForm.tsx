@@ -2,7 +2,7 @@ import { Button, Input } from 'rsuite'
 import './RegisterForm.scss'
 import { useNavigate  } from 'react-router-dom'
 import { useState } from 'react'
- 
+import { ToastContainer,toast} from 'react-toastify'
 import "react-toastify/dist/ReactToastify.css";
  
 // toast.configure();
@@ -23,18 +23,21 @@ function RegisterForm() {
   const validateOrgUser = ()=>{
 
     if(!email || !firstName || !lastName){
-      setError("Fill All the Details");
+      toast.error("Fill All the Details");
+      // setError("Fill All the Details");
       return false;
     }
 
     let hasNumbers = /\d/.test(firstName);
     let hasNumbers2 = /\d/.test(lastName);
     if(hasNumbers){
+      toast.error("Invalid Name");
       setError("Name field should not contains any Number inside it");
       return false;
     }
 
     if(hasNumbers2){
+      toast.error("Invalid Name");
       setError("Name field should not contains any Number inside it");
       return false;
     }
@@ -44,6 +47,7 @@ function RegisterForm() {
 
   const validateUser = ()=>{
     if(!email || !firstName || !lastName){
+      toast.error("Fill All the Details");
       setError("Fill All the Details");
       return false;
     }
@@ -51,11 +55,13 @@ function RegisterForm() {
     let hasNumbers = /\d/.test(firstName);
     let hasNumbers2 = /\d/.test(lastName);
     if(hasNumbers){
+      toast.error("Invalid Name");
       setError("Name field should not contains any Number inside it");
       return false;
     }
 
     if(hasNumbers2){
+      toast.error("Invalid Name");
       setError("Name field should not contains any Number inside it");
       return false;
     }
@@ -81,16 +87,19 @@ function RegisterForm() {
       }
     })
 
+    const result = await response.json();
+
     if(response.status == 400){
       setError("");
       setFirstname("");
       setLastname("");
       setEmail("");
-      console.log("User is Already Registered!");
+      // console.log("User is Already Registered!");
+      toast.error("User is Already Registered!");
       navigate("/register");
     }
 
-    const result = await response.json();
+    
 
     if(!response.ok){
       setError(result.error);
@@ -101,7 +110,8 @@ function RegisterForm() {
       setFirstname("");
       setLastname("");
       setEmail("");
-      navigate("/login")
+      navigate('/login');
+      // navigate("/login")
     }
   }
 
@@ -122,8 +132,12 @@ function RegisterForm() {
         "Content-Type": "application/json",
       }
     })
-    console.log(response);
-    if(response.status == 400){
+    // console.log(response);
+    const result = await response.json();
+
+
+    console.log(result);
+    if(!result.success){
       setError("");
       setFirstname("");
       setLastname("");
@@ -131,15 +145,26 @@ function RegisterForm() {
       setOrg("");
       setDOB("");
       setDOJ("");
-      console.log("User is Already Registered!");
-      navigate("/login");
+      toast.error(result.message);
+      navigate('/register');
     }
-
-    const result = await response.json();
+    else{
+      setError("");
+      setFirstname("");
+      setLastname("");
+      setEmail("");
+      setOrg("");
+      setDOB("");
+      setDOJ("");
+      toast.success(result.message);
+      navigate('/login');
+    }
+   
 
     if(!response.ok){
       console.log(result.error);
       setError(result.error);
+      toast.error(result.message);
     }
 
     if(response.ok){
@@ -150,23 +175,25 @@ function RegisterForm() {
       setOrg("");
       setDOB("");
       setDOJ("");
-      navigate("/login")
+      toast.success(result.message);
+      navigate("/login");
     }
 
   }
 
   return (
-    <div className={'RegisterContainer ' + user}>
-        <div className="errorContainer">
-          {error && <div className="alert alert-danger" >{error}</div>}
+    <>
+    <div className="errorContainer">
+          {/* {error && <div className="alert alert-danger" >{error}</div>} */}
         </div>
+    <div className={'RegisterContainer ' + user}>
+        
         <h3 className='heading'>Register</h3>
         <div className="underline"></div>
         <div className="userSelection">
-          
           <span className='btn'>
-            <Button size='lg' color='cyan' onClick={()=>{setUser("System")}}  appearance='subtle'>System</Button></span><span>
-            <Button size='lg' color='cyan' onClick={()=>{setUser("Organization")}} appearance={user == "Organization"? "primary" : "default"}>Organization</Button></span>
+            <Button size='lg' color='cyan' onClick={()=>{setUser("System")}}  appearance='subtle'>System</Button></span>
+            <span><Button size='lg' color='cyan' onClick={()=>{setUser("Organization")}} appearance='subtle'>Organization</Button></span>
         </div>
 
         <form onSubmit={user=='System'?handleSystem :handleOrganization}>
@@ -177,18 +204,19 @@ function RegisterForm() {
 
           <div className="dateContainer">
             <label className="form-label">Date of Birth</label>
-            <Input type='date' disabled={user == "System"? true:false} value={dob} onChange={(e:string)=>{setDOB((e))}}></Input>
+            <Input type='date' disabled={true} value={dob} onChange={(e:string)=>{setDOB((e))}}></Input>
           </div>
 
           <div className="dateContainer">
             <label className="form-label">Date of Joining</label>
-            <Input disabled={user == "System"? true : false} value={doj} type='date' onChange={(e: string)=>{setDOJ(e)}}></Input>
+            <Input disabled={true} value={doj} type='date' onChange={(e: string)=>{setDOJ(e)}}></Input>
           </div>
 
           <Button type='submit' color='red' appearance='primary' size='lg' >Submit</Button>
         </form>
     </div>
-    
+    <ToastContainer/>
+    </>
   )
 }
 

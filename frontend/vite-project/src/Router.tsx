@@ -1,4 +1,5 @@
 import {BrowserRouter, Routes, Route} from 'react-router-dom';
+// import LoginPage from './Pages/LoginPage/loginPage';
 import LoginPage from './Pages/LoginPage/LoginPage';
 import RegisterPage from './Pages/RegisterPage/RegisterPage';
 import HomePage from './Pages/HomePage/HomePage';
@@ -12,8 +13,7 @@ function AppRoutes() {
           <Route path='/' element={<HomePage />} />
           <Route path='/login' element={<LoginPage />} />
           <Route path='/register' element={<RegisterPage />} />
-          
-          <Route path='/dashboard' element={<DashboardPage/>} />
+          <Route path='/admin/dashboard' element={<DashboardPage/>} />
           <Route path='/dashboard/create' element={<CreateOrganizationPage></CreateOrganizationPage>} />
         </Routes>
       </BrowserRouter>

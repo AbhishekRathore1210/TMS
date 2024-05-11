@@ -4,8 +4,11 @@
     gap: 2%;
     align-items: center;
     justify-content: center;
+    background-color: rgb(11 28 48);;
+    border-radius: 5%;
     width: 30%;
     height: 90%;
+    padding-bottom: 15px;
 
     .errorContainer{
         height: 20%;
@@ -18,15 +21,15 @@
         }
     }
     Input{
-        padding: 8px;
+        // padding: 8px;
         margin-top: 5px;
     }
 
-    .heading{
-        margin-bottom:30px
-    }
+    // .heading{
+        // margin-bottom:30px
+    // }
     .btn{
-        margin-right: 15px;
+        margin-right: 35px;
     }
 
     .userSelection{
@@ -38,7 +41,8 @@
         margin-bottom:20px;
 
         Button{
-            min-width: 35%;
+            // min-width: 35%;
+            // padding-left: 10px;
         }
     }
 

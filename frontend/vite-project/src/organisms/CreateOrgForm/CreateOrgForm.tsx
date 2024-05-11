@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button, Input } from "rsuite";
+import { ToastContainer,toast } from "react-toastify";
 
 function RegisterForm(){
 const [org , setOrg] = useState("");
@@ -25,25 +26,28 @@ const handleSubmit = async(e:FormSubmit)=>{
     console.log(response);
     console.log(result);
 
-    if(result.success == false){
+    if(!result.success){
         console.log("Organization is alreaedy created");
+        toast.error(result.message);
         setOrg("");
         navigate('/dashboard/create')
     }
 
     if(!response.ok){
         setError("Organization can't be created");
+        toast.error(result.message);
         setOrg("");
-        navigate('/dashboard');
+        navigate('/admin/dashboard');
     }
     if(response.ok){
         setError("");
         setOrg("");
-        navigate('/dashboard');
+        navigate('/admin/dashboard');
     }
 }
 
 return(
+    <>
     <div className="outer-div">
         <div className="errorContainer">
           {error && <div className="alert alert-danger" >{error}</div>}
@@ -57,6 +61,8 @@ return(
         </div>
         </form>
     </div>
+    <ToastContainer/>
+    </>
 )
 
 }

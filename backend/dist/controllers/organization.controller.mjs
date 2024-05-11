@@ -6,13 +6,13 @@ class Organization {
         const { org } = req.body;
         const orgExist = await this.userService.checkOrg(org);
         if (orgExist) {
-            res.status(400).json({
-                success: 'false',
+            res.status(400).send({
+                success: false,
                 message: 'Organization already exists!'
             });
         }
         else {
-            res.status(200).json({ success: 'true', message: 'Organization Created' });
+            res.status(200).send({ success: true, message: 'Organization Created' });
         }
     };
 }

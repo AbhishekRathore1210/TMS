@@ -1,15 +1,12 @@
-import React from 'react';
 import './App.css';
 import 'rsuite/dist/rsuite.min.css';
-import LoginPage from './Pages/LoginPage/LoginPage';
-// import { Button } from 'rsuite';
-import HomePage from './Pages/HomePage/HomePage';
 
+//Entry Point 
 function App() {
 
   return (
     <div className="App">
-      <h1>Hello</h1>
+      <h1>Welcome to TMS</h1>
     </div>
   );
 }

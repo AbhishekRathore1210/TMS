@@ -6,7 +6,7 @@ function RegisterCard() {
   return (
     <div className="CardContainer">
         <h3>New User!</h3>
-        <p><b>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Unde soluta atque dolor inventore dolores odio quod quam omnis eos, architecto deserunt ipsa neque ipsam. Voluptate perspiciatis cum quod enim cumque officia beatae laborum facilis provident </b>.</p>
+        <h5>Welcome to our Application Ticket Management System . Register here to avail our services!!</h5>
         <Link to='/register'>
             <Button size='lg' appearance='ghost' color='red'>Register</Button>
         </Link>

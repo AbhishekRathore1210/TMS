@@ -1,8 +1,8 @@
 import { z } from "zod";
-const userRegisterSchema = z.object({
-    firstName: z.string({ required_error: "First Name is required bhai do yr" })
+const orgUserRegisterSchema = z.object({
+    firstName: z.string({ required_error: "First Name is required" })
         .trim()
-        .min(3, { message: "Name must be of atleast 3 characters" })
+        .min(3, { message: "Name must be of atleast 3 characters ha yrr" })
         .max(10, { message: "Name cannot exceeds more than 10 characters" }),
     lastName: z.string({ required_error: "Last Name is required" })
         .trim()
@@ -10,8 +10,10 @@ const userRegisterSchema = z.object({
         .max(10, { message: "Name cannot exceeds more than 10 characters" }),
     email: z.string({ required_error: "Email is required" }).
         trim().
-        email({ message: "Invalid Email Address" })
+        email({ message: "Invalid Email Address" }),
+    org: z.string({ required_error: "Organization Name is required" })
+        .trim()
 });
 // const login
-export default userRegisterSchema;
-//# sourceMappingURL=user.controller.validation.js.map
+export default orgUserRegisterSchema;
+//# sourceMappingURL=orguser.controller.validation.js.map

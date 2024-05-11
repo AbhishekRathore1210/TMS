@@ -1,11 +1,12 @@
 import { Button, Input } from 'rsuite'
 import './LoginForm.scss'
-import { useState } from 'react'
-import './types.d.ts'
+import { useEffect, useState } from 'react'
+// import './types'
 import { useNavigate } from 'react-router-dom';
+import { ToastContainer,toast } from 'react-toastify';
 
 
-function RegisterForm() {
+function LoginForm() {
   const [user, setUser] = useState("System");
   const [error,setError] = useState("");
   const [org, setOrg] = useState("");
@@ -13,6 +14,10 @@ function RegisterForm() {
   const [otp, setOtp] = useState("");
 
   const navigate = useNavigate();
+
+  useEffect(()=>{
+    toast.success("Registerd Succesfully! Kindly Login");
+  }, [])
 
   const validateUser = ()=>{
     if(!otp){
@@ -48,7 +53,7 @@ function RegisterForm() {
     if(!validateUser()){
       return;
     }
-    console.log("api called");
+    // console.log("api called");
     const user = {email,otp};
     const response = await fetch("http://localhost:8555/admin/login",{
         method:'POST',
@@ -60,10 +65,12 @@ function RegisterForm() {
     const result = await response.json();
 
     console.log(result);
+    console.log(result.success);
 
-    if(result.success == false){
+    if(!result.success){
       console.log("Cannot Login");
-      navigate('/admin/login');
+      toast.error("Login Failed!");
+      navigate('/login');
     }
 
     if(!response.ok){
@@ -80,7 +87,7 @@ function RegisterForm() {
       setOrg("");
       setEmail("");
       setOtp("");
-      navigate('/dashboard');
+      navigate('/admin/dashboard');
     }
   }
 
@@ -88,8 +95,14 @@ function RegisterForm() {
   const sendOTP = async()=>{
     
     if(!validateEmail()){
+      toast.error("Enter your Email first!");
       return;
     }
+
+    // if(!otp){
+    //   toast.error("Enter Your OTP");
+    //   return;
+    // }
 
     console.log("otp api called");
     const userEmail = {email};
@@ -120,20 +133,23 @@ function RegisterForm() {
     if(!validateOrg()){
       return;
     }
+
+    
     
   }
 
   return (
+    <>
     <div className={'LoginContainer ' + user}>
         <div className='upperContainer'>
-        <div className="errorContainer">
+        {/* <div className="errorContainer">
           {error && <div className="alert alert-danger" >{error}</div>}
-        </div>
-        <h3>Login</h3>
+        </div> */}
+        <h3 >Login</h3>
         <div className="underline"></div>
         <div className="userSelection">
-            <Button size='lg' onClick={()=>{setUser("System")}}  appearance={user == "System"? "ghost" : "default"}>System</Button>
-            <Button size='lg' onClick={()=>{setUser("Organization")}} appearance={user == "Organization"? "ghost" : "default"}>Organization</Button>
+            <Button size='lg' color='blue' onClick={()=>{setUser("System")}}  appearance={user == "System"? "primary" : "default"}>System</Button>
+            <Button size='lg'color='blue' onClick={()=>{setUser("Organization")}} appearance={user == "Organization"? "primary" : "default"}>Organization</Button>
         </div>
         </div>
 
@@ -149,8 +165,9 @@ function RegisterForm() {
           <Button type='submit' appearance='primary' size='lg'>Submit</Button>
         </form>
     </div>
-    
+        <ToastContainer/>
+        </>
   )
 }
 
-export default RegisterForm
+export default LoginForm

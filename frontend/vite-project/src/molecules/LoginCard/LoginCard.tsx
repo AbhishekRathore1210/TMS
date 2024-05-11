@@ -6,9 +6,9 @@ function LoginCard() {
   return (
     <div className="CardContainer">
         <h3>Already a User?</h3>
-        <p><b>Welcome to our Application Ticket Management System . Register here to avail our services!!</b></p>
+        <h5>Welcome to our Application TMS. Login here to avail our services</h5>
         <Link to="/login">
-            <Button size='lg' appearance='ghost' color='yellow'>Login</Button>
+            <Button size='lg' appearance='ghost' color='green'>Login</Button>
         </Link>
     </div>
   )
