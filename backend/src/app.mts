@@ -3,7 +3,7 @@ import express, { Request, Response } from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import dotenv from 'dotenv';
-import errorMiddleware from "./middleware/error.middleware.mjs";
+import errorMiddleWare from "./middleware/error.middleware.mjs";
 
 
 dotenv.config();
@@ -37,19 +37,12 @@ class App {
   }
 
   private initializeErrorHandling(){
-    this.app.use(errorMiddleware.handleUser);    
-    this.app.use(errorMiddleware.handleOrgUser);    
-
+    this.app.use(errorMiddleWare);   
   }
 
   private initializeRoutes(routes: any) {
     routes.forEach((route: any) => {
       this.app.use('/', route.router);
-    });
-    // Example error handling middleware
-    this.app.use((err: any, req: Request, res: Response, next: any) => {
-      console.error(err.stack);
-      res.status(500).send('Something broke!');
     });
   }
 }

@@ -2,7 +2,7 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import dotenv from 'dotenv';
-import errorMiddleware from "./middleware/error.middleware.mjs";
+import errorMiddleWare from "./middleware/error.middleware.mjs";
 dotenv.config();
 class App {
     app;
@@ -29,16 +29,11 @@ class App {
         this.app.use(cookieParser());
     }
     initializeErrorHandling() {
-        this.app.use(errorMiddleware.handleUser);
+        this.app.use(errorMiddleWare);
     }
     initializeRoutes(routes) {
         routes.forEach((route) => {
             this.app.use('/', route.router);
-        });
-        // Example error handling middleware
-        this.app.use((err, req, res, next) => {
-            console.error(err.stack);
-            res.status(500).send('Something broke!');
         });
     }
 }

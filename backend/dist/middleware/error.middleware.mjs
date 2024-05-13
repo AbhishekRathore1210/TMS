@@ -1,25 +1,30 @@
 import { ZodError } from 'zod';
-class ErrorHandler {
-    static handleUser(err, req, res, next) {
-        if (err instanceof ZodError) {
-            const errorMessage = err.errors.map((error) => error.message).join('and');
-            res.status(400).json({ error: errorMessage });
+// import {NotFoundError} from ''
+const errorMiddleWare = (error, req, res, next) => {
+    try {
+        if (error instanceof ZodError) {
+            return res.status(501).send({
+                code: 501,
+                errors: error.issues
+            });
         }
-        else {
-            console.error(err);
-            res.status(500).json({ error: 'Internal Server Error' });
-        }
+        return res.status(500).send({
+            code: 500,
+            errors: [{
+                    error_code: 500,
+                    title: "Something Went Wrong!"
+                }]
+        });
     }
-    static handleOrgUser(err, req, res, next) {
-        if (err instanceof ZodError) {
-            const errorMessage = err.errors.map((error) => error.message).join(',');
-            res.status(400).json({ error: errorMessage });
-        }
-        else {
-            console.log(err);
-            res.status(500).json({ error: 'Internal Server Error' });
-        }
+    catch (error) {
+        res.status(501).send({
+            code: 500,
+            errors: [{
+                    error_code: 500,
+                    title: "Something Went Wrong!"
+                }]
+        });
     }
-}
-export default ErrorHandler;
+};
+export default errorMiddleWare;
 //# sourceMappingURL=error.middleware.mjs.map

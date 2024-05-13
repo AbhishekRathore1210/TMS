@@ -1,7 +1,7 @@
 import {z, ZodType} from "zod";
 
 const userRegisterSchema = z.object({
-    firstName:z.string({required_error:"First Name is required bhai do yr"})
+    firstName:z.string({required_error:"First Name is required"})
     .trim()
     .min(3,{message:"Name must be of atleast 3 characters"})
     .max(10,{message:"Name cannot exceeds more than 10 characters"}),

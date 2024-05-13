@@ -21,7 +21,6 @@ function RegisterForm() {
   const navigate = useNavigate();
 
   const validateOrgUser = ()=>{
-
     if(!email || !firstName || !lastName){
       toast.error("Fill All the Details");
       // setError("Fill All the Details");
@@ -46,6 +45,7 @@ function RegisterForm() {
 
 
   const validateUser = ()=>{
+
     if(!email || !firstName || !lastName){
       toast.error("Fill All the Details");
       setError("Fill All the Details");

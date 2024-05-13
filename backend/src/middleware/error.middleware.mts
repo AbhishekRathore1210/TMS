@@ -1,27 +1,30 @@
 import { Request, Response, NextFunction } from 'express';
 import { ZodError } from 'zod';
 
-class ErrorHandler {
-  static handleUser(err: Error, req: Request, res: Response, next: NextFunction) {
-    if (err instanceof ZodError) {
-      const errorMessage = err.errors.map((error) => error.message).join('and');
-      res.status(400).json({ error: errorMessage });
-    } else {
-      console.error(err);
-      res.status(500).json({ error: 'Internal Server Error' });
-    }
-  }
-
-  static handleOrgUser(err:Error,req:Request,res:Response,next:NextFunction) {
-    if(err instanceof ZodError) {
-      const errorMessage = err.errors.map((error) => error.message).join(',');
-      res.status(400).json({error:errorMessage});
-    }
-    else{
-      console.log(err);
-      res.status(500).json({error:'Internal Server Error'});
-    }
+const errorMiddleWare = (error:{status:string,message:string},req:Request,res:Response,next:NextFunction) =>{
+  try{
+      if(error instanceof ZodError){
+        return res.status(501).send({
+          code:501,
+          errors:error.issues
+        })
+      }
+      return res.status(500).send({
+        code: 500,
+        errors: [{
+          error_code: 500,
+          title: "Something Went Wrong!"
+        }]
+      })
+  }catch(error){
+    res.status(501).send({
+      code: 500,
+        errors: [{
+          error_code: 500,
+          title: "Something Went Wrong!"
+        }]
+    });
   }
 }
 
-export default ErrorHandler;
+export default errorMiddleWare;
