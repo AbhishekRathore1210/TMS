@@ -1,6 +1,7 @@
 import express from 'express';
 import { Router } from 'express';
-import userRegisterSchema from '../controllers/validators/user.controller.validation.js';
+import {userRegisterSchema} from '../controllers/validators/user.controller.validation.js';
+import { userLoginSchema } from '../controllers/validators/user.controller.validation.js';
 import { RequestHandler } from 'express';
 import UserController from "../controllers/user.controller.mjs"
 import AdminController from "../controllers/admin.controller.mjs";
@@ -32,7 +33,7 @@ class Routes{
     private initiaizeAdminRoutes(prefix:string){
         console.log("Admin Route");
         this.router.post(`${prefix}/register`,this.validation.validate(userRegisterSchema),this.adminController.registerAdmin);
-        this.router.post(`${prefix}/login`,this.adminController.loginAdmin);
+        this.router.post(`${prefix}/login`,this.validation.validate(userLoginSchema),this.adminController.loginAdmin);
         this.router.post(`${prefix}/otp`,this.adminController.sendOTP);
         this.router.get(`${prefix}/dashboard`,this.adminController.showOrganization);
         this.router.post(`${prefix}/createOrg`,this.organizationController.createOrg);

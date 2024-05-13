@@ -1,5 +1,4 @@
 import { ZodError } from 'zod';
-// import {NotFoundError} from ''
 const errorMiddleWare = (error, req, res, next) => {
     try {
         if (error instanceof ZodError) {

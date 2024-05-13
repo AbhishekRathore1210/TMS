@@ -1,5 +1,5 @@
 import { z } from "zod";
-const userRegisterSchema = z.object({
+export const userRegisterSchema = z.object({
     firstName: z.string({ required_error: "First Name is required" })
         .trim()
         .min(3, { message: "Name must be of atleast 3 characters" })
@@ -12,6 +12,12 @@ const userRegisterSchema = z.object({
         trim().
         email({ message: "Invalid Email Address" })
 });
+export const userLoginSchema = z.object({
+    email: z.string({ required_error: "Email is required!" })
+        .trim()
+        .min(3, { message: "Please write valid Email" })
+        .max(20, { message: "Invalid Eamil" })
+});
 // const login
-export default userRegisterSchema;
+// export default {userRegisterSchema , userLoginSchema};
 //# sourceMappingURL=user.controller.validation.js.map
