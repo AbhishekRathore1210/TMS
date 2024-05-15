@@ -4,11 +4,13 @@
     gap: 2%;
     align-items: center;
     justify-content: center;
-    background-color: rgb(11 28 48);;
+    background-color: gainsboro;
     border-radius: 5%;
+    border:1px solid black;
     width: 30%;
     height: 90%;
     padding-bottom: 15px;
+
 
     .errorContainer{
         height: 20%;
@@ -23,13 +25,26 @@
     Input{
         // padding: 8px;
         margin-top: 5px;
+        border:1px solid rgb(69, 2, 2);
     }
 
-    // .heading{
-        // margin-bottom:30px
-    // }
+    .sub-btn{
+        margin-left: 0;
+        border:2px solid rgb(0, 0, 0);
+    }
+    .heading{
+        text-decoration: solid;
+        font-family:Verdana, Geneva, Tahoma, sans-serif
+        // text-decoration-line: underline;
+    }
+
     .btn{
-        margin-right: 35px;
+        margin-left: 0;
+        // border:2px solid black;
+    }
+    .btn2{
+        // border:2px solid black;
+
     }
 
     .userSelection{

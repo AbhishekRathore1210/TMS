@@ -6,7 +6,7 @@ import {Button} from 'rsuite';
 function HomePage() {
   return (
     <>
-    <Button block color='yellow' appearance="primary" >Welcome User!</Button>
+    <Button block color='violet' appearance="primary" style={{margin:0}} >Welcome User!</Button>
       {/* <Welcome/> */}
       <div className="upperContainer">
       <div className="heading"> <h2>Welcome to TMS </h2></div>

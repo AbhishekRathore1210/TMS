@@ -20,7 +20,3 @@ export const userLoginSchema = z.object({
     .min(5,{message:"Please write valid Email"})
     .max(20,{message:"Invalid Eamil"})
 })
-
-// const login
-
-// export default {userRegisterSchema , userLoginSchema};

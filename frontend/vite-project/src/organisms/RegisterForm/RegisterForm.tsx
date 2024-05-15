@@ -188,12 +188,12 @@ function RegisterForm() {
         </div>
     <div className={'RegisterContainer ' + user}>
         
-        <h3 className='heading'>Register</h3>
+        <h3 className='heading' style={{color:'black'}}>REGISTER</h3>
         <div className="underline"></div>
         <div className="userSelection">
-          <span className='btn'>
-            <Button size='lg' color='cyan' onClick={()=>{setUser("System")}}  appearance='subtle'>System</Button></span>
-            <span><Button size='lg' color='cyan' onClick={()=>{setUser("Organization")}} appearance='subtle'>Organization</Button></span>
+          <span>
+            <Button className='btn' size='lg' color='orange' onClick={()=>{setUser("System")}}  appearance={user=='System'?'ghost':'default'}>System</Button></span>
+            <span><Button className='btn2' size='lg' color='orange' onClick={()=>{setUser("Organization")}} appearance={user=='Organization'?'ghost':'default'}>Organization</Button></span>
         </div>
 
         <form onSubmit={user=='System'?handleSystem :handleOrganization}>
@@ -204,15 +204,15 @@ function RegisterForm() {
 
           <div className="dateContainer">
             <label className="form-label">Date of Birth</label>
-            <Input type='date' disabled={true} value={dob} onChange={(e:string)=>{setDOB((e))}}></Input>
+            <Input type='date' disabled={user=="System"?true:false} value={dob} onChange={(e:string)=>{setDOB((e))}}></Input>
           </div>
 
           <div className="dateContainer">
             <label className="form-label">Date of Joining</label>
-            <Input disabled={true} value={doj} type='date' onChange={(e: string)=>{setDOJ(e)}}></Input>
+            <Input disabled={user=="System"?true:false} value={doj} type='date' onChange={(e: string)=>{setDOJ(e)}}></Input>
           </div>
 
-          <Button type='submit' color='red' appearance='primary' size='lg' >Submit</Button>
+          <Button className='sub-btn' type='submit' color='green' appearance='subtle' size='lg' >Submit</Button>
         </form>
     </div>
     <ToastContainer/>

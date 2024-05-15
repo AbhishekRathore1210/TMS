@@ -1,4 +1,3 @@
-// import {userRegisterSchema} from "../controllers/validators/user.controller.validation.js";
 class Validation {
     validate(schema) {
         return (req, res, next) => {

@@ -15,9 +15,7 @@ export const userRegisterSchema = z.object({
 export const userLoginSchema = z.object({
     email: z.string({ required_error: "Email is required!" })
         .trim()
-        .min(3, { message: "Please write valid Email" })
+        .min(5, { message: "Please write valid Email" })
         .max(20, { message: "Invalid Eamil" })
 });
-// const login
-// export default {userRegisterSchema , userLoginSchema};
 //# sourceMappingURL=user.controller.validation.js.map

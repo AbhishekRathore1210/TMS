@@ -4,6 +4,10 @@ const orgSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    is_active: {
+        type: Boolean,
+        default: true
+    },
     user_list: [{
             userId: {
                 type: mongoose.Schema.Types.ObjectId,

@@ -38,11 +38,6 @@ class UserDao {
         return user;
     }
 
-    public findOrgByName = async(org: string)=>{
-        const organization = Organization.findOne({ name: org });
-        return organization;
-    }
-
     public createAdmin = async(firstName: string, lastName: string, email: string)=>{
         const newUser = adminUser.create({
             name: firstName + ' ' + lastName,

@@ -11,7 +11,7 @@ function NavBar() {
         <Navbar appearance='subtle'>
             <Navbar.Brand><b>TMS</b></Navbar.Brand>
             <Nav appearance='tabs'>
-                  <Nav.Item icon={<Others/>} onClick={()=>{navigate('/')}}>Home</Nav.Item>
+                  <Nav.Item onClick={()=>{navigate('/')}}>Go To Home Page</Nav.Item>
                   {/* <Link to='/'>Home</Link> */}
             </Nav>
         </Navbar>

@@ -1,56 +1,12 @@
-// .btn{
-//     // background-color: red;
-//     text-align: right;
-// }
-// // html{
-// //     width: 100%;
-// //     height:100%;
-// // }
-// body{
-//     // background-color: antiquewhite;
-// }
-// h1{
-//     text-align: center;
-// }
-// .org{
-//     padding-left: 20px;
-// }
-// .orgName{
-//     border: 2px solid black;
-//     background-color: white;
-//     margin: 10px;
-//     border-radius: 5px;
-//     width: 13%;
-//     height: 30px;
-// }
-// .heading{
-//     margin-top: 0px;
-// }
-// Button{
-//     display: inline-block;
-//     margin-right: 40px;
-// }
-// p{
-//     color:black;
-//     font-size: large;
-//     padding:5px;
-// }
-
-// .org-heading{
-//     margin:10px;
-// }
-
-// .upperContainer{
-//     margin:0px;
-//     padding :0px;
-//     width:100%;
-//     height:100%;
-// }
 
 // Dashboard.scss
 
 .dashboard-container {
     display: flex;
+}
+
+button{
+    margin: 15px;
 }
 
 .sidebar {
@@ -64,38 +20,52 @@
     padding: 20px;
 }
 
+.heading-btn{
+    // background-color: blue;
+    padding:20px;
+}
+
 .main-content {
     margin-left: 20%; 
     padding: 20px;
     // flex-grow: 1; 
+    width:70%;
+    height:90vh;
     margin:0px;
+    // background-color: black;
     padding:0px;
 }
-Button{
-    margin-left: 20px;
-}
-
 h1 {
     text-align: center;
-}
-
-.btn {
-    text-align: center;
-    margin-bottom: 20px;
 }
 
 .org {
     padding-left: 20px;
 }
 
-.orgName {
+.orgNameDiv{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     border: 2px solid black;
     background-color: white;
     margin: 10px 0;
     border-radius: 5px;
-    height: 30px;
+    // height: 30px;
     line-height: 30px;
-    padding: 0 10px;
+    // padding: 0 10px;
+}
+
+.orgName {
+}
+
+.orgButton{
+    color: red;
+    background: none;
+}
+
+.orgButton:hover{
+    background-color: aliceblue;
 }
 
 .org-heading {

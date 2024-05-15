@@ -8,7 +8,7 @@ function LoginCard() {
         <h3>Already a User?</h3>
         <h5>Welcome to our Application TMS. Login here to avail our services</h5>
         <Link to="/login">
-            <Button size='lg' appearance='ghost' color='green'>Login</Button>
+            <Button size='lg' appearance='primary' color='green'>Login</Button>
         </Link>
     </div>
   )

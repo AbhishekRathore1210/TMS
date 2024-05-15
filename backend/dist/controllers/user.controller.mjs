@@ -2,8 +2,10 @@ import { orgUser } from '../models/user.model.mjs';
 // import { checkAdmin , createUser , createAdmin,checkOrg } from '../services/userService.mjs';
 import { Organization } from '../models/organization.model.mjs';
 import UserService from '../services/user.service.mjs';
+import jwt from 'jsonwebtoken';
 class UserController {
     userService = new UserService();
+    secretKey = 'Abhishek@123$';
     userRegistration = async (req, res) => {
         try {
             const { firstName, lastName, org, email } = req.body;
@@ -40,6 +42,41 @@ class UserController {
                     });
                     await orgExist.save();
                     res.status(200).send({ success: true, message: "New User is added to the Organization" });
+                }
+            }
+        }
+        catch (error) {
+            console.log(error.message);
+        }
+    };
+    userLogin = async (req, res) => {
+        try {
+            const { email, org, otp } = req.body;
+            console.log(req.body);
+            const orgExist = await Organization.findOne({ name: org });
+            if (!orgExist) {
+                res.status(400).send({ success: false, message: "Organization not Exists!" });
+            }
+            else {
+                const userExist = await orgUser.findOne({ email: email });
+                if (userExist) {
+                    if (!userExist.organization_list.includes(org)) {
+                        res.status(501).send({ success: false, message: "User is Not Part of this Organization" });
+                    }
+                    else {
+                        const myOTP = userExist.otp;
+                        // console.log("otp",otp);
+                        if (otp == undefined || myOTP != otp) {
+                            res.status(501).send({ success: false, message: "Incorrect OTP" });
+                        }
+                        else {
+                            const token = jwt.sign({ email, org }, this.secretKey);
+                            res.status(200).send({ accessToken: token, success: true, message: "Login Successfully!" });
+                        }
+                    }
+                }
+                else {
+                    res.status(501).send({ success: false, message: "User not Exist kindly Login!!" });
                 }
             }
         }

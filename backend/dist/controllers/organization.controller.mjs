@@ -15,6 +15,15 @@ class Organization {
             res.status(200).send({ success: true, message: 'Organization Created' });
         }
     };
+    deleteOrg = async (req, res) => {
+        // console.log(req.body);
+        const { name } = req.body;
+        const ifDeleted = await this.userService.deleteOrg(name);
+        if (ifDeleted) {
+            return res.status(200).send({ message: "Organization deleted!! hehe" });
+        }
+        return res.status(400).send({ message: "Not Deleted!" });
+    };
 }
 export default Organization;
 //# sourceMappingURL=organization.controller.mjs.map

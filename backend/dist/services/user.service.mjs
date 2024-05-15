@@ -1,21 +1,32 @@
 import express from 'express';
 const regOrgRoute = express.Router();
+import { orgUser } from '../models/user.model.mjs';
 import UserDao from '../dao/user.dao.mjs';
-import createDAO from '../dao/organization.dao.mjs';
 import nodemailer from 'nodemailer';
 import { adminUser } from "../models/admin.model.mjs";
-// import otpGenerator from 'otp-generator';
+import OrganizationDao from '../dao/organization.dao.mjs';
 class UserService {
     userDao = new UserDao();
+    organizationDao = new OrganizationDao();
+    flag = true;
     createUser = async (firstName, lastName, org, email) => {
         const newUser = this.userDao.createUser(firstName, lastName, org, email);
         return newUser;
+    };
+    deleteOrg = async (name) => {
+        const ifDeleted = this.organizationDao.deleteOrg(name);
+        return ifDeleted;
+    };
+    allOrganizations = async () => {
+        const allOrganization = await this.organizationDao.showAllOrganizations();
+        return allOrganization;
     };
     createAdminUser = async (firstName, lastName, email) => {
         const newUser = this.userDao.createAdminUser(firstName, lastName, email);
         return newUser;
     };
-    sendOTP = async (email) => {
+    sendOTP = async (email, org) => {
+        console.log("sentOTP called");
         const transporter = nodemailer.createTransport({
             host: 'smtp.gmail.com',
             port: 587,
@@ -23,10 +34,9 @@ class UserService {
             requireTLS: true,
             auth: {
                 user: 'abhishek19229785@gmail.com',
-                pass: '' // password is reuired for OTP
+                pass: 'inft pvav gugm lqyz' // password is reuired for OTP
             }
         });
-        // const myOtp = this.generateOTP();
         const myOtp = Math.floor((Math.random() * 1000000) + 1);
         const mailOptions = {
             from: 'abhishek19229785@gmail.com',
@@ -40,11 +50,39 @@ class UserService {
             }
             else {
                 console.log("Mail sent succesfully", info.response);
-                const updateUser = await adminUser.updateOne({ email: email }, { $set: { otp: myOtp } });
-                console.log("Updated User ", updateUser);
+                if (org) {
+                    // console.log("User is Organizations Usr");
+                    const updatedUser = await orgUser.updateOne({ email: email }, { $set: { otp: myOtp } });
+                    console.log("Updated User ", updatedUser);
+                }
+                else {
+                    // console.log("User is Admin Usr");
+                    const updateUser = await adminUser.updateOne({ email: email }, { $set: { otp: myOtp } });
+                    console.log("Updated User ", updateUser);
+                }
             }
         });
         return myOtp;
+    };
+    throttle = async (func, limit, email, org) => {
+        if (this.flag) {
+            func(email, org);
+            this.flag = false;
+            setTimeout(() => {
+                this.flag = true;
+            }, limit);
+        }
+        else {
+            console.log("Wait for some seconds");
+        }
+    };
+    sendOtpBetter = async (email, org) => {
+        if (this.flag) {
+            this.throttle(this.sendOTP, 10000, email, org);
+        }
+        else {
+            console.log("kindly wait for some time");
+        }
     };
     createAdmin = async (firstName, lastName, email) => {
         const newUser = await this.userDao.createAdmin(firstName, lastName, email);
@@ -55,11 +93,11 @@ class UserService {
         return user;
     };
     checkOrg = async (org) => {
-        const organization = await this.userDao.findOrgByName(org);
+        const organization = await this.organizationDao.findOrgByName(org);
         if (organization) {
             return true;
         }
-        createDAO.createOrg(org);
+        this.organizationDao.createOrg(org);
         return false;
     };
 }

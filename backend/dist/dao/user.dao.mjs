@@ -1,6 +1,5 @@
 import { orgUser } from "../models/user.model.mjs";
 import { adminUser } from "../models/admin.model.mjs";
-import { Organization } from "../models/organization.model.mjs";
 class UserDao {
     createUser = async (firstName, lastName, org, email) => {
         const newUser = orgUser.create({
@@ -31,10 +30,6 @@ class UserDao {
             }
         }
         return user;
-    };
-    findOrgByName = async (org) => {
-        const organization = Organization.findOne({ name: org });
-        return organization;
     };
     createAdmin = async (firstName, lastName, email) => {
         const newUser = adminUser.create({

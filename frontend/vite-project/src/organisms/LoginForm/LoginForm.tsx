@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 // import './types'
 import { useNavigate } from 'react-router-dom';
 import { ToastContainer,toast } from 'react-toastify';
+import { Cookies } from 'react-cookie';
 
 
 function LoginForm() {
@@ -14,6 +15,7 @@ function LoginForm() {
   const [otp, setOtp] = useState("");
 
   const navigate = useNavigate();
+  const cookies = new Cookies();
 
   useEffect(()=>{
     toast.success("Registerd Succesfully! Kindly Login");
@@ -22,6 +24,7 @@ function LoginForm() {
   const validateUser = ()=>{
     if(!otp){
       setError("Please Write OTP for login");
+      toast.error("Please Write OTP for login");
       return false;
     }
     return true;
@@ -30,6 +33,7 @@ function LoginForm() {
   const validateEmail = ()=>{
     if(!email){
       setError("Please Write your Email");
+      toast.error("Please Write your Email");
       return false;
     }
     return true;
@@ -38,6 +42,7 @@ function LoginForm() {
   const validateOrg = ()=>{
     if(!otp){
       setError("Please Write OTP for login");
+      toast.error("Please Write OTP for login");
       return false;
     }
     if(!org){
@@ -53,7 +58,6 @@ function LoginForm() {
     if(!validateUser()){
       return;
     }
-    // console.log("api called");
     const user = {email,otp};
     const response = await fetch("http://localhost:8555/admin/login",{
         method:'POST',
@@ -83,6 +87,8 @@ function LoginForm() {
     }
 
     if(response.ok){
+      const token = result.accessToken;
+      cookies.set("accessToken",token);
       setError("");
       setOrg("");
       setEmail("");
@@ -90,8 +96,6 @@ function LoginForm() {
       navigate('/admin/dashboard');
     }
   }
-
-
   const sendOTP = async()=>{
     
     if(!validateEmail()){
@@ -99,13 +103,8 @@ function LoginForm() {
       return;
     }
 
-    // if(!otp){
-    //   toast.error("Enter Your OTP");
-    //   return;
-    // }
-
-    console.log("otp api called");
-    const userEmail = {email};
+    // console.log("otp api called");
+    const userEmail = {email,org};
     const response = await fetch("http://localhost:8555/admin/otp",{
       method:'POST',
       body:JSON.stringify(userEmail),
@@ -116,13 +115,14 @@ function LoginForm() {
 
     const result = await response.json();
 
-    console.log(response);
-    console.log(result);
+    // console.log(response);
+    // console.log(result);
 
     if(!result.success){
       console.log("OTP NOT SENT");
     }
     else{
+      toast.success("OTP sent successfully!");
       console.log("OTP has been sent!");
     }
   }
@@ -134,22 +134,43 @@ function LoginForm() {
       return;
     }
 
-    
-    
+    const user = {email,org,otp};
+    const response = await fetch("http://localhost:8555/users/login",{
+        method:'POST',
+        body:JSON.stringify(user),
+        headers:{
+          "Content-Type": "application/json",
+        }
+    });
+
+    const result = await response.json();
+    console.log(result);
+
+    if(response.ok){
+    toast.success(result.message);
+    setTimeout(()=>navigate('/users/dashboard'),300);
+    }
+    else{
+      console.log("Response is not ok");
+      navigate('/login');
+    }
   }
 
   return (
     <>
     <div className={'LoginContainer ' + user}>
         <div className='upperContainer'>
-        {/* <div className="errorContainer">
-          {error && <div className="alert alert-danger" >{error}</div>}
-        </div> */}
         <h3 >Login</h3>
         <div className="underline"></div>
         <div className="userSelection">
-            <Button size='lg' color='blue' onClick={()=>{setUser("System")}}  appearance={user == "System"? "primary" : "default"}>System</Button>
-            <Button size='lg'color='blue' onClick={()=>{setUser("Organization")}} appearance={user == "Organization"? "primary" : "default"}>Organization</Button>
+            {/* <Button size='lg' color='blue' onClick={()=>{setUser("System")}}  appearance={user == "System"? "primary" : "default"}>System</Button>
+            <Button size='lg'color='blue' onClick={()=>{setUser("Organization")}} appearance={user == "Organization"? "primary" : "default"}>Organization</Button> */}
+            <span className='btn-sys'>
+              <Button size='lg' color='orange' onClick={()=>setUser("System")} appearance={user=='System'?"ghost":"default"} >System</Button>
+            </span>
+            <span className='btn-org'>
+              <Button size='lg' color='orange' onClick={()=>setUser("Organization")} appearance={user=='Organization'?"ghost":"default"} >Organization</Button>
+            </span>
         </div>
         </div>
 
@@ -159,10 +180,9 @@ function LoginForm() {
 
           <div className="otpContainer">
             <Input type='text' value={otp} onChange={(e:string)=>{setOtp((e))}} placeholder='OTP'></Input>
-            <Button appearance='default' onClick={sendOTP}>Get OTP</Button>
+            <Button size='md' appearance='default' onClick={sendOTP}>Get OTP</Button>
           </div>
-
-          <Button type='submit' appearance='primary' size='lg'>Submit</Button>
+        <span className='sub'><Button type='submit' color='green' appearance='subtle' size='lg'>Submit</Button></span>
         </form>
     </div>
         <ToastContainer/>

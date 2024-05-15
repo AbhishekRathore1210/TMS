@@ -1,9 +1,14 @@
 import mongoose from 'mongoose'
+import { boolean } from 'zod';
 
 const orgSchema = new mongoose.Schema({
     name:{
         type:String,
         required:true
+    },
+    is_active:{
+        type:Boolean,
+        default:true
     },
     user_list:[{
         userId:{
