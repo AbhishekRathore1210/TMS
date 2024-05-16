@@ -9,6 +9,7 @@ class UserController {
     userRegistration = async (req, res) => {
         try {
             const { firstName, lastName, org, email } = req.body;
+            console.log(req.body);
             const orgExist = await Organization.findOne({ name: org });
             console.log(orgExist);
             if (!orgExist) {
@@ -70,7 +71,7 @@ class UserController {
                             res.status(501).send({ success: false, message: "Incorrect OTP" });
                         }
                         else {
-                            const token = jwt.sign({ email, org }, this.secretKey);
+                            const token = jwt.sign({ email: email, is_admin: userExist.is_admin, organization: org }, this.secretKey);
                             res.status(200).send({ accessToken: token, success: true, message: "Login Successfully!" });
                         }
                     }

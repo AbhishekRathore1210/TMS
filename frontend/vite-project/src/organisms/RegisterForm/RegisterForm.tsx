@@ -4,7 +4,7 @@ import { useNavigate  } from 'react-router-dom'
 import { useState } from 'react'
 import { ToastContainer,toast} from 'react-toastify'
 import "react-toastify/dist/ReactToastify.css";
- 
+ import CustomDropdown from '../DropDown/DropDown'
 // toast.configure();
 
 
@@ -13,10 +13,11 @@ function RegisterForm() {
   const [firstName, setFirstname] = useState("")
   const [lastName, setLastname] = useState("");
   const [email, setEmail] = useState("");
-  const [org, setOrg] = useState("");
+  const [org, setOrg] = useState<string | null>("");
   const [dob, setDOB] = useState("");
   const [doj, setDOJ] = useState("");
   const [error, setError] = useState("");
+  const [data,setData] =  useState([]);
 
   const navigate = useNavigate();
 
@@ -200,7 +201,8 @@ function RegisterForm() {
           <Input type="text" placeholder='First Name' value={firstName} onChange={(e: string)=>{setFirstname((e))}}></Input>
           <Input type='text' placeholder='Last Name' value={lastName} onChange={(e: string)=>{setLastname((e))}}></Input>
           <Input type="email" value={email} placeholder='E-mail' onChange={(e: string)=>{setEmail((e))}}></Input>
-          <Input type="text" value={org} disabled={user == "System"? true : false} placeholder='Organization' onChange={(e: string)=>{setOrg((e))}}></Input>
+
+          <CustomDropdown org={org} setOrg={setOrg}/>
 
           <div className="dateContainer">
             <label className="form-label">Date of Birth</label>

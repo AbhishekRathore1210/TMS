@@ -1,6 +1,7 @@
 import express from 'express';
 const regOrgRoute = express.Router();
 import { orgUser } from '../models/user.model.mjs';
+import { Organization } from '../models/organization.model.mjs';
 import { Request, Response } from 'express';
 import UserDao from '../dao/user.dao.mjs';
 import createDAO from '../dao/organization.dao.mjs';
@@ -38,7 +39,7 @@ public createAdminUser = async(firstName:string,lastName:string,email:string) =>
 
 
 public sendOTP = async(email:string,org:string)=>{
-    console.log("sentOTP called");
+    // console.log("sentOTP called");
     const transporter = nodemailer.createTransport({
         host:'smtp.gmail.com',
         port:587,
@@ -46,7 +47,8 @@ public sendOTP = async(email:string,org:string)=>{
         requireTLS:true,
         auth:{
             user:'abhishek19229785@gmail.com',
-            pass:'' // password is reuired for OTP
+            pass:''
+            // password is reuired for OTP
         }
     });
     const myOtp = Math.floor((Math.random()*1000000)+1);
@@ -66,11 +68,11 @@ transporter.sendMail(mailOptions,async function(err:any,info:any){
         if(org){
             // console.log("User is Organizations Usr");
             const updatedUser = await orgUser.updateOne({email:email},{$set:{otp:myOtp}});
-            console.log("Updated User ",updatedUser);
+            // console.log("Updated User ",updatedUser);
         }else{
             // console.log("User is Admin Usr");
             const updateUser = await adminUser.updateOne({email:email},{$set:{otp:myOtp}});
-            console.log("Updated User ",updateUser);
+            // console.log("Updated User ",updateUser);
         }
     }
 });
@@ -114,7 +116,9 @@ public checkAdmin = async(email:string,otp:string)=>{
 public checkOrg = async(org:string) =>{
 
     const organization = await this.organizationDao.findOrgByName(org);
+    // console.log("org",organization);
     if(organization){
+        const updateOrg = await Organization.updateOne({name:org},{$set:{is_active:true}});
         return true;
     }
     this.organizationDao.createOrg(org);

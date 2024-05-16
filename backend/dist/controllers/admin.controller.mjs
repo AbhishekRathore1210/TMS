@@ -32,13 +32,13 @@ class AdminController {
     loginAdmin = async (req, res) => {
         const { email, otp } = req.body;
         const adminExist = await this.userService.checkAdmin(email, otp);
-        console.log(adminExist);
+        // console.log(adminExist);
         if (!adminExist) {
             return res.status(401).json({ success: false, message: 'Cannot Login' });
         }
         else {
             const token = jwt.sign({ adminExist }, this.secret);
-            console.log(token);
+            // console.log(token);
             return res.status(200).json({ accessToken: token, success: true, message: "Login success" });
         }
     };

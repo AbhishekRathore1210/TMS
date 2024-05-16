@@ -1,4 +1,22 @@
-import mongoose from "mongoose";
+import mongoose,{Document,Schema} from "mongoose";
+
+interface Ticket {
+    ticketId: Schema.Types.ObjectId;
+    status: "TOBEPICKED" | "INPROGRESS" | "INTESTING" | "COMPLETED";
+    assignee: string | null;
+  }
+
+  interface UserDocument extends Document {
+    firstName: string;
+    lastName: string;
+    email: string;
+    created: Date;
+    is_admin:boolean;
+    Organization?: Schema.Types.ObjectId;
+    organization_list?: string[];
+    ticketCount?: number;
+    tickets?: Ticket[];
+  }
 
 const orgUserSchema = new mongoose.Schema({
     firstName:{
@@ -38,7 +56,29 @@ const orgUserSchema = new mongoose.Schema({
     // },
     organization_list:[{
         type:String,
-    }]
+    }],
+    ticketCount: {
+        type: Number,
+        default: 0,
+        required: function(this: UserDocument) {
+          return this.is_admin==false;
+        }
+      },
+      tickets: [{
+        ticketId: {
+          type: Schema.Types.ObjectId,
+          ref: 'Ticket'
+        },
+        status: {
+          type: String,
+          enum: ['TOBEPICKED', 'INPROGRESS', 'INTESTING', 'COMPLETED'],
+          default: 'TOBEPICKED'
+        },
+        assignee: {
+          type: String,
+          default: null
+        }
+      }]
 
 }, {timestamps:true});
 

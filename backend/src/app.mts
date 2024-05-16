@@ -4,7 +4,6 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import dotenv from 'dotenv';
 import errorMiddleWare from "./middleware/error.middleware.mjs";
-// import sendFormatMiddleWare from "./middleware/sendFormat.middleware.mjs";
 import { NotFoundError } from "./exceptions/notFoundError.js";
 
 

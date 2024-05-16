@@ -6,7 +6,7 @@ class OrganizationDao {
     };
     deleteOrg = async (name) => {
         const ifDeleted = await Organization.updateOne({ name: name }, { $set: { is_active: false } });
-        console.log("ifDeleted", ifDeleted);
+        // console.log("ifDeleted",ifDeleted);
         if ((ifDeleted).modifiedCount) {
             return true;
         }

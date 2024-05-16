@@ -17,7 +17,7 @@ const handleSubmit = async(e:FormSubmit)=>{
 
     const orgName = {org};  
     const token:string | undefined = cookies.get('accessToken');
-    console.log(token);
+    // console.log(token);
     if(!token){
         navigate('/login');
         return;
@@ -33,8 +33,8 @@ const handleSubmit = async(e:FormSubmit)=>{
     });
     
     const result = await response.json();
-    console.log(response);
-    console.log(result);
+    // console.log(response);
+    // console.log(result);
 
     if(!result.success){
         console.log("Organization is alreaedy created");

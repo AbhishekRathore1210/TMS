@@ -144,9 +144,10 @@ function LoginForm() {
     });
 
     const result = await response.json();
-    console.log(result);
 
     if(response.ok){
+      const token = result.accessToken;
+      cookies.set("accessToken",token);
     toast.success(result.message);
     setTimeout(()=>navigate('/users/dashboard'),300);
     }

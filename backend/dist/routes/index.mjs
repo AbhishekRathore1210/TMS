@@ -6,12 +6,14 @@ import OrganizationController from '../controllers/organization.controller.mjs';
 import Validation from '../middleware/validator.middleware.mjs';
 import orgUserRegisterSchema from '../controllers/validators/orguser.controller.validation.js';
 import Auth from '../middleware/auth.middleware.mjs';
+import TicketController from '../controllers/ticket.controller.mjs';
 class Routes {
     userPath = '/users';
     adminPath = '/admin';
     router = Router();
     userController = new UserController();
     adminController = new AdminController();
+    ticketController = new TicketController();
     validation = new Validation();
     organizationController = new OrganizationController();
     constructor() {
@@ -22,13 +24,15 @@ class Routes {
         console.log("Initializing user routes..");
         this.router.post(`${prefix}/register`, this.validation.validate(orgUserRegisterSchema), this.userController.userRegistration);
         this.router.post(`${prefix}/login`, this.userController.userLogin);
+        this.router.get(`${prefix}/dashboard`, this.ticketController.showAllTickets);
+        this.router.post(`${prefix}/dashboard/createTicket`, Auth, this.ticketController.createTicket);
     }
     initiaizeAdminRoutes(prefix) {
         console.log("Admin Route");
         this.router.post(`${prefix}/register`, this.validation.validate(userRegisterSchema), this.adminController.registerAdmin);
         this.router.post(`${prefix}/login`, this.adminController.loginAdmin);
         this.router.post(`${prefix}/otp`, this.adminController.sendOTP);
-        this.router.get(`${prefix}/dashboard`, Auth, this.adminController.showOrganization);
+        this.router.get(`${prefix}/dashboard`, this.adminController.showOrganization);
         this.router.post(`${prefix}/dashboard/createOrg`, Auth, this.organizationController.createOrg);
         this.router.post(`${prefix}/dashboard/deleteOrg`, this.organizationController.deleteOrg);
     }

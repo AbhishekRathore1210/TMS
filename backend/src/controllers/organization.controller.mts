@@ -11,9 +11,9 @@ class Organization{
         const { org } = req.body;
         const orgExist = await this.userService.checkOrg(org);
         if (orgExist) {
-            res.status(400).send({
+            res.status(200).send({
                 success: false,
-                message: 'Organization already exists!'
+                message: 'Organization already Created with same previous users!'
             })
         }
         else {
@@ -22,7 +22,7 @@ class Organization{
     }
 
     public deleteOrg = async(req:Request,res:Response) =>{
-        // console.log(req.body);
+        
         const {name} = req.body;
         const ifDeleted = await this.userService.deleteOrg(name);
         if(ifDeleted){

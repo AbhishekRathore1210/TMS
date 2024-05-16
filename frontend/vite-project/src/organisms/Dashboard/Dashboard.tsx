@@ -33,7 +33,7 @@ function Dashboard() {
     response = axios
       .get("http://localhost:8555/admin/dashboard",config)
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         const activeData = res.data.filter((item:any) => item.is_active == true);
       setOrg(activeData);
       setfil(activeData);
@@ -46,10 +46,10 @@ function Dashboard() {
     }
 
   const deliveOrganization = async(name:string) => {
-    console.log(name);
+    // console.log(name);
 
     const token:string | undefined = cookies.get('accessToken');
-    console.log(token);
+    // console.log(token);
     if(!token){
         navigate('/login');
         return;
@@ -63,6 +63,7 @@ function Dashboard() {
         "Content-Type": "application/json",
       }
     });
+    alert("Are You sure you want to delete");
     const result = await response.json();
     if(response.ok){
       const activeData = org.filter((item:any) => {
@@ -76,11 +77,12 @@ function Dashboard() {
     else{
       console.log("Cannot Delete");
     }
+    navigate(0);
   }
   const handleInput = async(inp: any) => {
 
     const filterData = org.filter((temp: any) => {
-      console.log(temp.is_active);
+      // console.log(temp.is_active);
       return temp.is_active && temp.name.toLowerCase().includes(inp.toLowerCase());
     });
     setfil(filterData);
@@ -99,7 +101,7 @@ function Dashboard() {
           <div>
           </div>
           <div className="org">
-            {fil.map((e: any, i) => (
+            {fil.map((e: any, i:number) => (
               <div className="orgNameDiv">
                 <p className="orgName" key={i}>{e.name}</p>
                 <button className="orgButton" onClick={()=>deliveOrganization(e.name)}>X</button>
@@ -124,7 +126,7 @@ function Dashboard() {
               </Button>
             </span>
             </Link>
-            <Link to="dashboard/createOrgUser">
+            <Link to="/admin/dashboard/createOrgUser">
               <span>
                 <Button className="btn2" color="green" appearance="primary">
                   Create Organization User
