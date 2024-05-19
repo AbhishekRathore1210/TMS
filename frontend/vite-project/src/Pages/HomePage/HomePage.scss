@@ -4,36 +4,45 @@
     justify-content: center;
 }
 
+html{
+    height:100vh;
+}
+
 .heading{
     text-align: center;
     padding: 20px;
     color:rgb(0, 0, 0);
-    // text-decoration: black wavy underline;
 }
 body{
     background-color: white;
-    //  background-color: #EEDD82;
+}
+.Right{
+    justify-content: center;
+    background-color: white;
+    width: 30%;
+    margin:auto;
+    margin-top: 10%;
+    border-radius: 10px;
+    height:200px;
+
+    .inner-div{
+        justify-content: center;
+    }
 }
 
 .HomeBody{
     margin: 4%;
     display: flex;
+    justify-content: center;
     height: 60vh;
-    gap: 5%;
+    width:60vw;
+    // gap: 5%;
+    background-color: cyan;
 
     .Separator
     {
         flex: 0.01;
         background-color: rgb(163, 163, 163);
         border-radius: 5px;
-    }
-
-    .Right{
-        @include CreateFlex();
-        flex: 1;
-    }
-    .Left{
-        @include CreateFlex();
-        flex: 1;
     }
 }

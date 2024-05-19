@@ -21,7 +21,6 @@ class AdminController {
     };
     sendOTP = async (req, res) => {
         const { email, org } = req.body;
-        // console.log(req.body ,"req.body");
         const otpSent = await this.userService.sendOtpBetter(email, org);
         return res.status(200).send({ success: true, message: "OTP sent succesffuly" });
     };

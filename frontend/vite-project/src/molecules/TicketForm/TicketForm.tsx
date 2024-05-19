@@ -1,95 +1,184 @@
+// import React, { useState } from 'react';
+
+// interface FormData {
+//   type: string;
+//   description: string;
+//   email: string;
+//   dueDate: string;
+// }
+
+// const initialFormData: FormData = {
+//   type: '',
+//   description: '',
+//   email: '',
+//   dueDate: ''
+// };
+
+// const TicketForm: React.FC = () => {
+//   const [formData, setFormData] = useState<FormData>(initialFormData);
+
+//   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+//     const { name, value } = e.target;
+//     setFormData({
+//       ...formData,
+//       [name]: value
+//     });
+//   };
+
+//   const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
+//     e.preventDefault();
+//     // You can handle form submission here, for now just logging the data
+
+//     const ticket = {...formData}; 
+//     const response = await fetch("http://localhost:8555/users/dashboard/createTicket",{
+//       method:'POST',
+//       body:JSON.stringify(ticket),
+//       headers:{
+//         "Content-Type": "application/json",
+//       }
+//     });
+
+//     const result = response.json();
+//     console.log("Result",result);
+//     if(response.ok){
+//         console.log("Ticket genereated");
+//     }
+
+//     console.log(formData);
+//     // Resetting the form after submission
+//     setFormData(initialFormData);
+//   };
+
+//   return (
+//     <div>
+//       <h2>Create New Item</h2>
+//       <form onSubmit={handleSubmit}>
+//         <label htmlFor="type">Type:</label>
+//         <select id="type" name="type" value={formData.type} onChange={handleChange}>
+//           <option value="">Select Type</option>
+//           <option value="story">Story</option>
+//           <option value="task">Task</option>
+//           <option value="bug">Bug</option>
+//         </select><br /><br />
+
+//         <label htmlFor="description">Description:</label><br />
+//         <textarea id="description" name="description" value={formData.description} onChange={handleChange} rows={4} cols={50}></textarea><br /><br />
+
+//         <label htmlFor="email">Email:</label>
+//         <input type="email" id="email" name="email" value={formData.email} onChange={handleChange} /><br /><br />
+
+//         <label htmlFor="dueDate">Due Date:</label>
+//         <input type="date" id="dueDate" name="dueDate" value={formData.dueDate} onChange={handleChange} /><br /><br />
+
+//         <input type="submit" value="Submit" />
+//       </form>
+//     </div>
+//   );
+// };
+
+// export default TicketForm;
+
+
 import React, { useState } from 'react';
-// import 'rsuite/dist/styles/rsuite-default.css';
-import { Form, ButtonToolbar, Button, SelectPicker, DatePicker ,Input } from 'rsuite';
+import { Cookies } from 'react-cookie';
+import { useNavigate } from 'react-router-dom';
 
-const TicketForm = () => {
-  // Define state variables for form fields
-  const [formData, setFormData] = useState({
-    email: '',
-    type: 'story',
-    summary: '',
-    description: '',
-    dueDate: null,
-    file: null
-  });
+interface FormData {
+  type: string;
+  summary: string;
+  description: string;
+  assignee: string;
+  dueDate: string;
+}
 
-  // Handle form field changes and update state
-  const handleFormChange = (value:any, name:any) => {
+
+const initialFormData: FormData = {
+  type: '',
+  description: '',
+  assignee: '',
+  dueDate: '',
+  summary: ''
+};
+
+const FormComponent: React.FC = () => {
+
+  
+const cookies = new Cookies();
+const navigate = useNavigate();
+
+  const [formData, setFormData] = useState<FormData>(initialFormData);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
     setFormData({
       ...formData,
       [name]: value
     });
   };
 
-  // Handle form submission
-  const handleSubmit = () => {
-    // You can access form data from formData state
-    setFormData({
-        email: '',
-        type: 'story',
-        summary: '',
-        description: '',
-        dueDate: null,
-        file: null
-      });
+  const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const token:string | undefined = cookies.get('accessToken');
+    console.log('**************************');
+    console.log("Token",token);
+    if(!token){
+      navigate('/login');
+      return;
+  }
+
+    console.log("inside handlesubmit");
+    const ticket = {...formData}; 
+    const response = await fetch("http://localhost:8555/users/dashboard/createTicket",{
+      method:'POST',
+      body:JSON.stringify(ticket),
+      headers:{
+        "Content-Type": "application/json",
+        "authorization": `BEARER ${token}`
+      }
+    });
+
+    console.log("outside handlesubmit");
+    const result = await response.json();
+    console.log("Result",result);
+    if(response.ok){
+        console.log("Ticket genereated");
+    }
+
     console.log(formData);
-    // Add your submission logic here
+    setFormData(initialFormData);
   };
 
-  return (
-    <Form>
-      <Form.Group controlId="type">
-        <Form.ControlLabel>Type</Form.ControlLabel>
-        <SelectPicker
-          name="type"
-          defaultValue="story"
-          data={[
-            { label: 'Story', value: 'story' },
-            { label: 'Bug', value: 'bug' },
-            { label: 'Task', value: 'task' }
-          ]}
-          onChange={value => handleFormChange(value, 'type')}
-        />
-      </Form.Group>
-      <Form.Group controlId="summary">
-        <Form.ControlLabel>Summary</Form.ControlLabel>
-        <Input name="summary" value={formData.summary} onChange={value => handleFormChange(value, 'summary')} />
-      </Form.Group>
-      <Form.Group controlId="email">
-        <Form.ControlLabel>Assignee Email</Form.ControlLabel>
-        <Form.Control name="email" value={formData.email} type="email" onChange={value => handleFormChange(value, 'email')} />
-        <Form.HelpText tooltip>Email is required</Form.HelpText>
-      </Form.Group>
 
-      <Form.Group controlId="description">
-        <Form.ControlLabel>Description</Form.ControlLabel>
-        <textarea className="rs-input" rows={5} value={formData.description} name="description" onChange={e => handleFormChange(e.target.value, 'description')} />
-      </Form.Group>
-      <Form.Group controlId="dueDate">
-        <Form.ControlLabel>Due Date</Form.ControlLabel>
-        <DatePicker name="dueDate" value={formData.dueDate} onChange={value => handleFormChange(value, 'dueDate')} />
-      </Form.Group>
-      {/* <Form.Group controlId="file">
-        <Form.ControlLabel>Attach File</Form.ControlLabel>
-        <Uploader
-          name="file"
-          accept="image/jpeg,image/jpg,application/pdf"
-          multiple={false}
-          autoUpload={false}
-          listType="picture-text"
-          action="/upload_endpoint" // Replace '/upload_endpoint' with your actual endpoint
-          onChange={file => handleFormChange(file, 'file')}
-        />
-        <Form.HelpText>Supported formats: jpg, jpeg, pdf</Form.HelpText>
-      </Form.Group> */}
-      <Form.Group>
-        <ButtonToolbar>
-          <span><Button appearance="primary" onClick={handleSubmit}>Submit</Button></span>
-          <span><Button appearance="default">Cancel</Button></span>
-        </ButtonToolbar>
-      </Form.Group>
-    </Form>
+  return (
+    <div>
+      <h2>Create New Item</h2>
+      <form onSubmit={handleSubmit}>
+        <label htmlFor="type">Type:</label>
+        <select id="type" name="type" value={formData.type} onChange={handleChange}>
+          <option value="">Select Type</option>
+          <option value="Story">Story</option>
+          <option value="Task">Task</option>
+          <option value="Bug">Bug</option>
+        </select><br /><br />
+
+        <label htmlFor="summary">Summary:</label><br />
+        <textarea id="summary" name="summary" value={formData.summary} onChange={handleChange} rows={4} cols={50}></textarea><br /><br />
+
+        <label htmlFor="description">Description:</label><br />
+        <textarea id="description" name="description" value={formData.description} onChange={handleChange} rows={4} cols={50}></textarea><br /><br />
+        
+
+        <label htmlFor="email">Email:</label>
+        <input type="email" id="assignee" name="assignee" value={formData.assignee} onChange={handleChange} /><br /><br />
+
+        <label htmlFor="dueDate">Due Date:</label>
+        <input type="date" id="dueDate" name="dueDate" value={formData.dueDate} onChange={handleChange} /><br /><br />
+
+        <input type="submit" value="Submit" />
+      </form>
+    </div>
   );
 };
 
-export default TicketForm;
+export default FormComponent;

@@ -1,87 +1,100 @@
 
-// Dashboard.scss
+// .dashboard-container {
+//     display: flex;
+//     // border:2px solid black;
+//     width:80vh;
+//     height:50%;
+//     // background-color: white;
+// }
 
-.dashboard-container {
-    display: flex;
-}
+// button{
+//     margin: 15px;
+// }
 
-button{
-    margin: 15px;
-}
+// .sidebar {
+//     width: 20%; 
+//     position: fixed;
+//     top: 0;
+//     left: 0;
+//     bottom: 0;
+//     background-color: #f4f4f4; 
+//     overflow-y: auto; 
+//     padding: 20px;
+// }
 
-.sidebar {
-    width: 20%; 
-    position: fixed;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    background-color: #f4f4f4; 
-    overflow-y: auto; 
-    padding: 20px;
-}
+// .heading-btn{
+//     // background-color: blue;
 
-.heading-btn{
-    // background-color: blue;
-    padding:20px;
-}
+//     padding:20px;
+// }
 
-.main-content {
-    margin-left: 20%; 
-    padding: 20px;
-    // flex-grow: 1; 
-    width:70%;
-    height:90vh;
-    margin:0px;
-    // background-color: black;
-    padding:0px;
+// .main-content {
+//     margin-left: 20%; 
+//     border: 2px solid black;
+//     padding: 20px;
+//     width:70%;
+//     height:90vh;
+//     margin:0px;
+//     padding:0px;
+// }
+
+// .org {
+//     padding-left: 20px;
+// }
+
+// .orgNameDiv{
+//     display: flex;
+//     align-items: center;
+//     justify-content: space-between;
+//     border: 2px solid black;
+//     background-color: white;
+//     margin: 10px 0;
+//     border-radius: 5px;
+//     // height: 30px;
+//     line-height: 30px;
+//     // padding: 0 10px;
+// }
+
+// .orgButton{
+//     color: red;
+//     background: none;
+// }
+
+// .orgButton:hover{
+//     background-color: aliceblue;
+// }
+
+// .org-heading {
+//     margin: 10px 0;
+// }
+
+// .upperContainer {
+//     margin: 0;
+//     padding: 0;
+//     width: 100%;
+//     height: 100%;
+// }
+
+// p {
+//     color: black;
+//     font-size: large;
+//     padding: 5px;
+// }
+
+
+h1{
+    border:2px solid black;
+    text-align: center;
+    background-color: black;
+    height: 74px;
+    color:white;
 }
-h1 {
+.org-heading{
+    color:white;
     text-align: center;
 }
 
-.org {
-    padding-left: 20px;
-}
 
-.orgNameDiv{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border: 2px solid black;
-    background-color: white;
-    margin: 10px 0;
-    border-radius: 5px;
-    // height: 30px;
-    line-height: 30px;
-    // padding: 0 10px;
+.table{
+    margin: 50px 160px;
 }
-
-.orgName {
-}
-
-.orgButton{
-    color: red;
-    background: none;
-}
-
-.orgButton:hover{
-    background-color: aliceblue;
-}
-
-.org-heading {
-    margin: 10px 0;
-}
-
-.upperContainer {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    height: 100%;
-}
-
-p {
-    color: black;
-    font-size: large;
-    padding: 5px;
-}
-

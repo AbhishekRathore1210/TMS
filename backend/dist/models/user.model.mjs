@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
 const orgUserSchema = new mongoose.Schema({
     firstName: {
         type: String,
@@ -37,6 +37,28 @@ const orgUserSchema = new mongoose.Schema({
     // },
     organization_list: [{
             type: String,
+        }],
+    ticketCount: {
+        type: Number,
+        default: 0,
+        required: function () {
+            return this.is_admin == false;
+        }
+    },
+    tickets: [{
+            ticketId: {
+                type: Schema.Types.ObjectId,
+                ref: 'Ticket'
+            },
+            status: {
+                type: String,
+                enum: ['TOBEPICKED', 'INPROGRESS', 'INTESTING', 'COMPLETED'],
+                default: 'TOBEPICKED'
+            },
+            assignee: {
+                type: String,
+                default: null
+            }
         }]
 }, { timestamps: true });
 const orgUser = mongoose.model('OrgUser', orgUserSchema);

@@ -1,6 +1,5 @@
-
 import UserDashboard from "../../organisms/Dashboard/UserDashboard"
-function DashboardPage() {
+function UserDashboardPage() {
   return (
     <>
         <div className="LoginPageBody">
@@ -10,4 +9,4 @@ function DashboardPage() {
   )
 }
 
-export default DashboardPage
+export default UserDashboardPage

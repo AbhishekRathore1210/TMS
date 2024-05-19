@@ -6,9 +6,10 @@ import Dashboard from '../../organisms/Dashboard/Dashboard';
 function DashboardPage() {
   return (
     <>
-        <div className="LoginPageBody">
+    {/* <NavBar/> */}
+        {/* <div className="LoginPageBody"> */}
             <Dashboard/>
-        </div>
+        {/* </div> */}
     </>
   )
 }

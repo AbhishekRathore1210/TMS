@@ -6,7 +6,6 @@ import {Button} from 'rsuite'
 const RegisterPage = () => {
   return (
     <> 
-    <Button block appearance="primary" color='violet' className="heading-reg">Register User!</Button>
         <NavBar/>
         <div className="LoginPageBody">
             <RegisterForm/>

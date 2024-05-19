@@ -1,7 +1,7 @@
 import { Organization } from "../models/organization.model.mjs";
 class OrganizationDao {
     showAllOrganizations = async () => {
-        const allOrg = Organization.find();
+        const allOrg = Organization.find({});
         return allOrg;
     };
     deleteOrg = async (name) => {

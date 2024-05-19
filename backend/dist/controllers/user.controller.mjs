@@ -59,6 +59,9 @@ class UserController {
                 res.status(400).send({ success: false, message: "Organization not Exists!" });
             }
             else {
+                if (!orgExist.is_active) {
+                    res.status(400).send({ success: false, message: "Organization is delived!!" });
+                }
                 const userExist = await orgUser.findOne({ email: email });
                 if (userExist) {
                     if (!userExist.organization_list.includes(org)) {
@@ -67,13 +70,13 @@ class UserController {
                     else {
                         const myOTP = userExist.otp;
                         // console.log("otp",otp);
-                        if (otp == undefined || myOTP != otp) {
-                            res.status(501).send({ success: false, message: "Incorrect OTP" });
-                        }
-                        else {
-                            const token = jwt.sign({ email: email, is_admin: userExist.is_admin, organization: org }, this.secretKey);
-                            res.status(200).send({ accessToken: token, success: true, message: "Login Successfully!" });
-                        }
+                        // if(otp == undefined ||  myOTP != otp){
+                        //     res.status(501).send({success:false,message:"Incorrect OTP"});
+                        // }
+                        // else{
+                        const token = jwt.sign({ email: email, is_admin: userExist.is_admin, organization: org }, this.secretKey);
+                        res.status(200).send({ accessToken: token, success: true, message: "Login Successfully!" });
+                        // }
                     }
                 }
                 else {

@@ -6,7 +6,7 @@ import {Organization} from "../models/organization.model.mjs";
 class OrganizationDao{
     
 public showAllOrganizations = async() =>{
-        const allOrg = Organization.find();
+        const allOrg = Organization.find({});
     return allOrg;
 }
 

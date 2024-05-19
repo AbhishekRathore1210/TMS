@@ -4,8 +4,9 @@ class ticketController {
     createTicket = async (req, res, next) => {
         const ticket = await this.ticketService.createTicket(req, res, next);
     };
-    showAllTickets = async (req, res, next) => {
-        console.log("Tickets are here !!");
+    showAllTicketsInOrganization = async (req, res, next) => {
+        const allTicketInOrganization = await this.ticketService.showTicketsInOrganization(req, res, next);
+        // console.log("in controller ",allTicketInOrganization);
     };
 }
 export default ticketController;

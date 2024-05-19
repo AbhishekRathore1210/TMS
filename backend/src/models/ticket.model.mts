@@ -67,7 +67,8 @@ const historyLogSchema = new Schema<HistoryLog>({
 const ticketSchema = new Schema<TicketDocument>({
   type: {
     type: String,
-    enum: ['Story', 'Task', 'Bug'],
+    enum: ['Story', 'Task', 'Bug','bug','task','story'
+    ],
     required: true
   },
   key: {

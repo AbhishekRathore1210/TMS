@@ -11,9 +11,9 @@ class ticketController {
         const ticket =  await this.ticketService.createTicket(req,res,next);
     }
 
-
-    public showAllTickets = async(req:Request,res:Response,next:NextFunction)=>{  
-        console.log("Tickets are here !!");
+    public showAllTicketsInOrganization = async(req:Request,res:Response,next:NextFunction)=>{  
+        const allTicketInOrganization = await this.ticketService.showTicketsInOrganization(req,res,next);
+        // console.log("in controller ",allTicketInOrganization);
     }
 
 }

@@ -7,6 +7,7 @@ import UserDao from '../dao/user.dao.mjs';
 import createDAO from '../dao/organization.dao.mjs';
 import nodemailer from 'nodemailer';
 import { adminUser } from "../models/admin.model.mjs";
+
 import OrganizationDao from '../dao/organization.dao.mjs';
 import jwt from 'jsonwebtoken';
 
@@ -47,7 +48,7 @@ public sendOTP = async(email:string,org:string)=>{
         requireTLS:true,
         auth:{
             user:'abhishek19229785@gmail.com',
-            pass:''
+            pass:'inft pvav gugm lqyz'
             // password is reuired for OTP
         }
     });

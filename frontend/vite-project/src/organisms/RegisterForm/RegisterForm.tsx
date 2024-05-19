@@ -4,12 +4,10 @@ import { useNavigate  } from 'react-router-dom'
 import { useState } from 'react'
 import { ToastContainer,toast} from 'react-toastify'
 import "react-toastify/dist/ReactToastify.css";
- import CustomDropdown from '../DropDown/DropDown'
-// toast.configure();
-
+import CustomDropdown from '../DropDown/DropDown'
 
 function RegisterForm() {
-  const [user, setUser] = useState("Organization");
+  const [user, setUser] = useState<string | null>("Organization");
   const [firstName, setFirstname] = useState("")
   const [lastName, setLastname] = useState("");
   const [email, setEmail] = useState("");
@@ -24,7 +22,6 @@ function RegisterForm() {
   const validateOrgUser = ()=>{
     if(!email || !firstName || !lastName){
       toast.error("Fill All the Details");
-      // setError("Fill All the Details");
       return false;
     }
 
@@ -43,8 +40,6 @@ function RegisterForm() {
     }
     return true;
   }
-
-
   const validateUser = ()=>{
 
     if(!email || !firstName || !lastName){
@@ -76,7 +71,6 @@ function RegisterForm() {
     if(!validateUser()){
       return;
     }
-
     console.log("api is called");
 
     const adminUser = {firstName,lastName,email};
@@ -87,7 +81,6 @@ function RegisterForm() {
         "Content-Type": "application/json",
       }
     })
-
     const result = await response.json();
 
     if(response.status == 400){
@@ -95,13 +88,9 @@ function RegisterForm() {
       setFirstname("");
       setLastname("");
       setEmail("");
-      // console.log("User is Already Registered!");
       toast.error("User is Already Registered!");
       navigate("/register");
     }
-
-    
-
     if(!response.ok){
       setError(result.error);
     }
@@ -112,20 +101,15 @@ function RegisterForm() {
       setLastname("");
       setEmail("");
       navigate('/login');
-      // navigate("/login")
     }
   }
-
-
   const handleOrganization = async(e:FormSubmit)=>{
     e.preventDefault();
-    // console.log('chal rha h ');
     const addOrgUser = {firstName, lastName, email, org, dob, doj};
 
     if(!validateOrgUser()){
       return;
     }
-
     const response = await fetch("http://localhost:8555/users/register", {
       method: 'POST',
       body : JSON.stringify(addOrgUser),
@@ -135,34 +119,16 @@ function RegisterForm() {
     })
     // console.log(response);
     const result = await response.json();
-
-
     console.log(result);
-    if(!result.success){
-      setError("");
-      setFirstname("");
-      setLastname("");
-      setEmail("");
-      setOrg("");
-      setDOB("");
-      setDOJ("");
-      toast.error(result.message);
-      navigate('/register');
-    }
-    else{
-      setError("");
-      setFirstname("");
-      setLastname("");
-      setEmail("");
-      setOrg("");
-      setDOB("");
-      setDOJ("");
-      toast.success(result.message);
-      navigate('/login');
-    }
-   
 
     if(!response.ok){
+      setError("");
+      setFirstname("");
+      setLastname("");
+      setEmail("");
+      setOrg("");
+      setDOB("");
+      setDOJ("");
       console.log(result.error);
       setError(result.error);
       toast.error(result.message);
@@ -177,44 +143,39 @@ function RegisterForm() {
       setDOB("");
       setDOJ("");
       toast.success(result.message);
-      navigate("/login");
+      navigate("/admin/dashboard");
     }
-
   }
-
   return (
     <>
     <div className="errorContainer">
-          {/* {error && <div className="alert alert-danger" >{error}</div>} */}
         </div>
     <div className={'RegisterContainer ' + user}>
-        
-        <h3 className='heading' style={{color:'black'}}>REGISTER</h3>
-        <div className="underline"></div>
-        <div className="userSelection">
-          <span>
-            <Button className='btn' size='lg' color='orange' onClick={()=>{setUser("System")}}  appearance={user=='System'?'ghost':'default'}>System</Button></span>
-            <span><Button className='btn2' size='lg' color='orange' onClick={()=>{setUser("Organization")}} appearance={user=='Organization'?'ghost':'default'}>Organization</Button></span>
-        </div>
-
+        <h4 className='heading'>REGISTER</h4>
         <form onSubmit={user=='System'?handleSystem :handleOrganization}>
-          <Input type="text" placeholder='First Name' value={firstName} onChange={(e: string)=>{setFirstname((e))}}></Input>
-          <Input type='text' placeholder='Last Name' value={lastName} onChange={(e: string)=>{setLastname((e))}}></Input>
-          <Input type="email" value={email} placeholder='E-mail' onChange={(e: string)=>{setEmail((e))}}></Input>
+          <div className='name-div'>
+            <span className='name-span'>First Name</span>
+          <Input type="text" placeholder='First Name' value={firstName} onChange={(e: string)=>{setFirstname((e))}}></Input></div>
+          <div className='name-div'>
+            <span className='name-span'>Last Name</span>
+          <Input type='text' placeholder='Last Name' value={lastName} onChange={(e: string)=>{setLastname((e))}}></Input></div>
+          <div className='name-div'>
+            <span className='name-span'>Email</span>
+          <Input type="email" value={email} placeholder='E-mail' onChange={(e: string)=>{setEmail((e))}}></Input></div>
 
-          <CustomDropdown org={org} setOrg={setOrg}/>
-
+          <div className='name-div'>
+            <span className='name-span'>Organization</span>
+          <CustomDropdown user = {user} setUser = {setUser} org={org} setOrg={setOrg}/>
+            </div>
           <div className="dateContainer">
             <label className="form-label">Date of Birth</label>
             <Input type='date' disabled={user=="System"?true:false} value={dob} onChange={(e:string)=>{setDOB((e))}}></Input>
           </div>
-
           <div className="dateContainer">
             <label className="form-label">Date of Joining</label>
             <Input disabled={user=="System"?true:false} value={doj} type='date' onChange={(e: string)=>{setDOJ(e)}}></Input>
           </div>
-
-          <Button className='sub-btn' type='submit' color='green' appearance='subtle' size='lg' >Submit</Button>
+          <Button className='sub-btn' type='submit' color='red' appearance='primary' size='lg' >Submit</Button>
         </form>
     </div>
     <ToastContainer/>

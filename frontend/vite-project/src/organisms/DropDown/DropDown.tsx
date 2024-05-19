@@ -5,6 +5,8 @@ import { SelectPicker, Stack } from "rsuite";
 interface Prop{
     org:string | null,
     setOrg:(value:string | null)=>void
+    user:string |null,
+    setUser:(value:string | null)=>void
 }
 
 function CustomDropdown(props:Prop) {
@@ -45,6 +47,7 @@ function CustomDropdown(props:Prop) {
           <SelectPicker
             data={data}
             value={props.org}
+            disabled={props.user == 'System'?true:false}
             onChange={(value)=>{
                  console.log(value, '>>>>>>');
                  props.setOrg(value);

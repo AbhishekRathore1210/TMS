@@ -1,11 +1,13 @@
 import "./Dashboard.scss";
-import { Button, Input, Modal } from "rsuite";
+import { Button, Input, Modal, Table } from "rsuite";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { Cookies } from "react-cookie";
+import TableDemo from "../../molecules/Table/Table";
+import NavBar from "../../molecules/NavBar/NavBar";
 
 function Dashboard() {
   const [org, setOrg] = useState([]);
@@ -33,7 +35,6 @@ function Dashboard() {
     response = axios
       .get("http://localhost:8555/admin/dashboard",config)
       .then((res) => {
-        // console.log(res.data);
         const activeData = res.data.filter((item:any) => item.is_active == true);
       setOrg(activeData);
       setfil(activeData);
@@ -49,7 +50,6 @@ function Dashboard() {
     // console.log(name);
 
     const token:string | undefined = cookies.get('accessToken');
-    // console.log(token);
     if(!token){
         navigate('/login');
         return;
@@ -63,7 +63,6 @@ function Dashboard() {
         "Content-Type": "application/json",
       }
     });
-    alert("Are You sure you want to delete");
     const result = await response.json();
     if(response.ok){
       const activeData = org.filter((item:any) => {
@@ -79,63 +78,82 @@ function Dashboard() {
     }
     navigate(0);
   }
+  const logout = async()=>{
+      cookies.remove('accessToken');
+      console.log("LogOut SuccessFully");
+  }
+
   const handleInput = async(inp: any) => {
 
     const filterData = org.filter((temp: any) => {
-      // console.log(temp.is_active);
       return temp.is_active && temp.name.toLowerCase().includes(inp.toLowerCase());
     });
     setfil(filterData);
   };
   return (
     <>
-      <div className="dashboard-container">
-        <div className="sidebar">
-          <h2>All Organizations</h2>
-          <Input
-            style={{ width: 300 }}
-            type="text"
-            placeholder="Search here"
-            onChange={(e) => handleInput(e)}
-          />
-          <div>
-          </div>
-          <div className="org">
-            {fil.map((e: any, i:number) => (
-              <div className="orgNameDiv">
-                <p className="orgName" key={i}>{e.name}</p>
-                <button className="orgButton" onClick={()=>deliveOrganization(e.name)}>X</button>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-      <div className="main-content">
-        <div className="heading-btn">
+    {/* <NavBar/> */}
           <h1>System User Dashboard</h1>
-          <div className="btn">
-            <Link to='/admin/dashboard/createOrg'>
-
-            <span>
+          {/* <Link to='/admin/dashboard/createOrg'>
               <Button
-                className="btn1"
-                color="green"
+                className="org-btn"
+                color="red"
                 appearance="primary"
               >
-                Create Organizations
+                Create
               </Button>
-            </span>
-            </Link>
-            <Link to="/admin/dashboard/createOrgUser">
+            </Link> */}
+            <div className="table">
+            <TableDemo fil={fil} deliveOrganization={deliveOrganization}/>
+            </div>
+          {/* <div className="org-heading"><h2>All Organizaitons</h2></div>
+      <div>
+          { fil.map((e: any, i:number) => (
+            <div>
+              <div className="org" key={i}>
+                <div className="org-name">{e.name}</div></div>
+              </div>
+        ))} */}
+      {/* </div> */}
+  {/* <div className="grid-item">2</div>
+  <div className="grid-item">3</div>
+  <div className="grid-item">4</div>
+  <div className="grid-item">5</div>
+  <div className="grid-item">6</div>
+  <div className="grid-item">7</div>
+  <div className="grid-item">8</div> */}
+        {/* <TableDemo fil={fil} setfil={setfil}/> */}
+        {/* <div className="sidebar"> */}
+          {/* <h2>All Organizations</h2> */}
+          {/* <div>
+          </div> */}
+          {/* <div className="org">
+             {fil.map((e: any, i:number) => (
+              <div className="orgNameDiv">
+                <p className="orgName" key={i}>{e.name}</p> */}
+                {/* <button className="orgButton" onClick={()=>deliveOrganization(e.name)}>Delete</button> */}
+              {/* </div>
+            ))}  */}
+          {/* </div> */}
+        {/* </div> */}
+      {/* </div> */}
+      {/* <div className="main-content">
+        <div className="heading-btn">
+          <div className="btn"> */}
+            {/*<Link to="/admin/dashboard/createOrgUser">
               <span>
-                <Button className="btn2" color="green" appearance="primary">
+                <Button className="btn2" color="red" appearance="primary">
                   Create Organization User
                 </Button>
               </span>
             </Link>
+            <Link to="/">
+            <span>
+              <Button color='red' appearance="primary" onClick={logout}>LOG OUT</Button>
+            </span></Link>
           </div>
         </div>
-      </div>
+      </div> */}
       {/* </div> */}
       <ToastContainer />
     </>

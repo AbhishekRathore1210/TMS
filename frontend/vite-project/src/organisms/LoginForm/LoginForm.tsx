@@ -1,7 +1,7 @@
 import { Button, Input } from 'rsuite'
 import './LoginForm.scss'
 import { useEffect, useState } from 'react'
-// import './types'
+ 
 import { useNavigate } from 'react-router-dom';
 import { ToastContainer,toast } from 'react-toastify';
 import { Cookies } from 'react-cookie';
@@ -13,13 +13,15 @@ function LoginForm() {
   const [org, setOrg] = useState("");
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("");
+  const [toggle,setToggle] = useState(false);
+  let flag = false;
 
   const navigate = useNavigate();
   const cookies = new Cookies();
 
-  useEffect(()=>{
-    toast.success("Registerd Succesfully! Kindly Login");
-  }, [])
+  // useEffect(()=>{
+    // toast.success("Registerd Succesfully! Kindly Login");
+  // }, [])
 
   const validateUser = ()=>{
     if(!otp){
@@ -68,8 +70,8 @@ function LoginForm() {
     })
     const result = await response.json();
 
-    console.log(result);
-    console.log(result.success);
+    // console.log(result);
+    // console.log(result.success);
 
     if(!result.success){
       console.log("Cannot Login");
@@ -97,7 +99,9 @@ function LoginForm() {
     }
   }
   const sendOTP = async()=>{
-    
+    // console.log("before",toggle);
+    setToggle(true);
+    console.log("before",toggle);
     if(!validateEmail()){
       toast.error("Enter your Email first!");
       return;
@@ -114,7 +118,6 @@ function LoginForm() {
     });
 
     const result = await response.json();
-
     // console.log(response);
     // console.log(result);
 
@@ -122,9 +125,11 @@ function LoginForm() {
       console.log("OTP NOT SENT");
     }
     else{
-      toast.success("OTP sent successfully!");
+      // toast.success("OTP sent successfully!");
       console.log("OTP has been sent!");
     }
+    setToggle(false);
+    console.log(toggle,"after");
   }
   
   const handleOrganization =async (e:FormSubmit)=>{
@@ -148,11 +153,12 @@ function LoginForm() {
     if(response.ok){
       const token = result.accessToken;
       cookies.set("accessToken",token);
-    toast.success(result.message);
+    // toast.success(result.message);
     setTimeout(()=>navigate('/users/dashboard'),300);
     }
     else{
       console.log("Response is not ok");
+      toast.error(result.message);
       navigate('/login');
     }
   }
@@ -161,8 +167,8 @@ function LoginForm() {
     <>
     <div className={'LoginContainer ' + user}>
         <div className='upperContainer'>
-        <h3 >Login</h3>
-        <div className="underline"></div>
+        <h4 >LOGIN</h4>
+        {/* <div className="underline"></div> */}
         <div className="userSelection">
             {/* <Button size='lg' color='blue' onClick={()=>{setUser("System")}}  appearance={user == "System"? "primary" : "default"}>System</Button>
             <Button size='lg'color='blue' onClick={()=>{setUser("Organization")}} appearance={user == "Organization"? "primary" : "default"}>Organization</Button> */}
@@ -181,9 +187,9 @@ function LoginForm() {
 
           <div className="otpContainer">
             <Input type='text' value={otp} onChange={(e:string)=>{setOtp((e))}} placeholder='OTP'></Input>
-            <Button size='md' appearance='default' onClick={sendOTP}>Get OTP</Button>
+            <Button size='md' appearance='default' disabled={toggle} onClick={sendOTP} >Get OTP</Button>
           </div>
-        <span className='sub'><Button type='submit' color='green' appearance='subtle' size='lg'>Submit</Button></span>
+        <span className='sub'><Button type='submit' color='red' appearance='primary' size='lg'>Submit</Button></span>
         </form>
     </div>
         <ToastContainer/>

@@ -1,11 +1,9 @@
 import RegisterForm from "../../organisms/RegisterForm/RegisterForm"
+import './CreateOrganizationUserPage.scss';
 
 function CreateOrganizationUserPage() {
-    
     return (
       <>
-          {/* <NavBar/> */}
-          <h1>Register the User </h1>
           <div className="LoginPageBody">
               <RegisterForm/>
           </div>

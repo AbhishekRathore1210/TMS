@@ -10,7 +10,7 @@ const CreateModal = () => {
   return (
     <>
       <ButtonToolbar>
-        <Button onClick={handleOpen} color='blue' appearance='primary'> Create Ticket</Button>
+        <Button onClick={handleOpen} color='red' appearance='primary'> Create Ticket</Button>
       </ButtonToolbar>
       <Modal open={open} onClose={handleClose}>
         <Modal.Header>
