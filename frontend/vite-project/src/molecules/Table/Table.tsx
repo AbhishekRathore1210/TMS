@@ -12,6 +12,10 @@ function TableDemo(props:any){
     const cookies = new Cookies();
     const navigate = useNavigate();
 
+    const SerialNumberCell = ({ rowIndex, ...props }:any) => (
+      <Cell {...props}>{rowIndex + 1}</Cell>
+    );
+
     const AllUsers = async()=>{
 
     }
@@ -19,12 +23,12 @@ function TableDemo(props:any){
     // <div>My name is abhishek</div>
     <Table
     className='table'
-      height={800} width={900}
+      height={500} width={900}
       data={data}
     >
        <Column width={200} align='center'  fixed>
         <HeaderCell>S.no</HeaderCell>
-        <Cell>{1}</Cell>
+        <SerialNumberCell/>
       </Column>
 
       <Column width={200} align='center'  fixed>

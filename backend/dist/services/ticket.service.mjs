@@ -58,6 +58,19 @@ class TicketService {
             res.status(500).json({ success: false, error: 'Failed to create ticket', message: error.message });
         }
     };
+    showAllUserInOrganization = async (req, res, next) => {
+        console.log("JWT", req.user);
+        try {
+            const org = req.user.organization;
+            console.log("org", org);
+            const users = await orgUser.find({ organization_list: org });
+            console.log("users", users);
+            res.status(200).json({ users });
+        }
+        catch (error) {
+            console.log(error.message);
+        }
+    };
     showTicketsInOrganization = async (req, res, next) => {
         try {
             const user = req.user;

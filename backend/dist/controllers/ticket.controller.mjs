@@ -8,6 +8,9 @@ class ticketController {
         const allTicketInOrganization = await this.ticketService.showTicketsInOrganization(req, res, next);
         // console.log("in controller ",allTicketInOrganization);
     };
+    showAllUserInOrganization = async (req, res, next) => {
+        const allUserInOrganization = await this.ticketService.showAllUserInOrganization(req, res, next);
+    };
 }
 export default ticketController;
 //# sourceMappingURL=ticket.controller.mjs.map

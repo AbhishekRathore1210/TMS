@@ -10,8 +10,8 @@ class UserService {
     userDao = new UserDao();
     organizationDao = new OrganizationDao();
     flag = true;
-    createUser = async (firstName, lastName, org, email) => {
-        const newUser = this.userDao.createUser(firstName, lastName, org, email);
+    createUser = async (firstName, lastName, org, email, dob, doj) => {
+        const newUser = this.userDao.createUser(firstName, lastName, org, email, dob, doj);
         return newUser;
     };
     deleteOrg = async (name) => {

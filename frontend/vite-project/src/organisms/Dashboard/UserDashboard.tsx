@@ -6,12 +6,15 @@ import axios from 'axios';
 import { Button } from 'rsuite';
 import { Link } from "react-router-dom";
 import './UserDashboard.scss';
-import NavBar from '../../molecules/NavBar/NavBar';
 import UserTicket from '../../molecules/Table/TicketTable'; 
 
 function UserDashboard() {
 
   const [ticket,SetTicket] = useState([]);
+  const [show,setShow] = useState(false);
+
+  const handleOpen = ()=>setShow(true);
+  const handleClose = ()=>setShow(false);
 
   const navigate = useNavigate();
   const cookies = new Cookies();
@@ -55,7 +58,7 @@ function UserDashboard() {
      
           <h2>Tickets</h2>
       <div className='ticket'>
-        <UserTicket ticket={ticket}/>
+        <UserTicket ticket={ticket} SetTicket={SetTicket}/>
       </div>
       
     </div>

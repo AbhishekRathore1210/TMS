@@ -146,6 +146,18 @@ function RegisterForm() {
       navigate("/admin/dashboard");
     }
   }
+
+  const getCurrentDate = () => {
+    const today = new Date();
+    return today.toISOString().split('T')[0];
+  };
+
+  const getMinDate = () => {
+    const today = new Date();
+    today.setFullYear(today.getFullYear() - 120); // Set the minimum date to 120 years ago
+    return today.toISOString().split('T')[0];
+  };
+
   return (
     <>
     <div className="errorContainer">
@@ -169,7 +181,7 @@ function RegisterForm() {
             </div>
           <div className="dateContainer">
             <label className="form-label">Date of Birth</label>
-            <Input type='date' disabled={user=="System"?true:false} value={dob} onChange={(e:string)=>{setDOB((e))}}></Input>
+            <Input type='date' disabled={user=="System"?true:false} value={dob} onChange={(e:string)=>{setDOB((e))}}  max={getCurrentDate()} min={getMinDate()}></Input>
           </div>
           <div className="dateContainer">
             <label className="form-label">Date of Joining</label>
@@ -182,5 +194,4 @@ function RegisterForm() {
     </>
   )
 }
-
 export default RegisterForm

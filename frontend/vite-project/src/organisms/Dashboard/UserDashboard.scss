@@ -1,44 +1,41 @@
-.log-out-btn{
-    // padding-right: 0;
-    margin-right: 0;
-    padding-left: 91%;
-    margin-top: 0;
-}
-body{
-    // position: fixed;
-}
-.main{
-    // border:2px solid black;
-    height:100vh;
-    width:100vw;
+
+
+.log-out-btn {
+    position: absolute;
+    top: 1rem; /* Adjust top spacing */
+    right: 3rem; /* Adjust right spacing */
 }
 
-.heading{
+.main {
+    height: 100vh;
+    width: 100vw;
+}
+
+.heading {
     border: 2px solid black;
+    text-align: center; /* Center the heading text */
 }
 
-.create-ticket{
-    // border: 2px solid red;
-    bottom: 0;
-    width:100%;
-    padding-left: 53%;
-    position:fixed;
+.create-ticket {
+    position: fixed;
+    bottom: 1rem; /* Adjust bottom spacing */
+    right: 1rem; /* Adjust right spacing */
+    z-index: 999; /* Ensure the button stays on top */
 }
-
-.ticket{
+.ticket {
     display: flex;
-    margin:auto;
     justify-content: center;
-    // border: 5px solid green;
-
-    
+    margin: auto;
 }
 
-h2{
-    justify-content: center;
-    text-align: center;
-    // border: 2px solid black;
-    flex-direction: column;
-    color:white
+h2 {
+    text-align: center; /* Center the heading text */
+    color: black;
+}
+
+@media (max-width: 768px) {
+    .create-ticket {
+        padding-left: 0; /* Remove left padding */
+    }
 }
 

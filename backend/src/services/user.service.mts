@@ -1,24 +1,25 @@
 import express from 'express';
-const regOrgRoute = express.Router();
+import jwt from 'jsonwebtoken'
+import { Request, Response } from 'express';
+import nodemailer from 'nodemailer';
+
+
 import { orgUser } from '../models/user.model.mjs';
 import { Organization } from '../models/organization.model.mjs';
-import { Request, Response } from 'express';
 import UserDao from '../dao/user.dao.mjs';
 import createDAO from '../dao/organization.dao.mjs';
-import nodemailer from 'nodemailer';
 import { adminUser } from "../models/admin.model.mjs";
-
 import OrganizationDao from '../dao/organization.dao.mjs';
-import jwt from 'jsonwebtoken';
 
+const regOrgRoute = express.Router();
 class UserService{
     private userDao = new UserDao();
     private organizationDao = new OrganizationDao();
     private flag = true;
 
-public createUser = async(firstName:string,lastName:string,org:string,email:string) =>{
+public createUser = async(firstName:string,lastName:string,org:string,email:string,dob:Date,doj:Date) =>{
 
-    const newUser = this.userDao.createUser(firstName,lastName,org,email);
+    const newUser = this.userDao.createUser(firstName,lastName,org,email,dob,doj);
     return newUser;
 }
 public deleteOrg = async(name:string) =>{
@@ -32,15 +33,11 @@ public allOrganizations = async() =>{
 }
 
 public createAdminUser = async(firstName:string,lastName:string,email:string) =>{
-
     const newUser = this.userDao.createAdminUser(firstName,lastName,email);
     return newUser;
 }
 
-
-
 public sendOTP = async(email:string,org:string)=>{
-    // console.log("sentOTP called");
     const transporter = nodemailer.createTransport({
         host:'smtp.gmail.com',
         port:587,
@@ -48,8 +45,7 @@ public sendOTP = async(email:string,org:string)=>{
         requireTLS:true,
         auth:{
             user:'abhishek19229785@gmail.com',
-            pass:'inft pvav gugm lqyz'
-            // password is reuired for OTP
+            pass:'' // password is required!
         }
     });
     const myOtp = Math.floor((Math.random()*1000000)+1);

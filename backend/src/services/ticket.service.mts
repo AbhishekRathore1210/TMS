@@ -2,6 +2,7 @@ import { Request,Response,NextFunction } from "express-serve-static-core";
 import TicketDAO from "../dao/ticket.dao.mjs";
 import Ticket from "../models/ticket.model.mjs";
 import { orgUser } from "../models/user.model.mjs";
+import { Organization } from "../models/organization.model.mjs";
 
 class TicketService{
 
@@ -71,6 +72,19 @@ class TicketService{
       res.status(201).json({ success: true, message: 'Ticket created successfully', ticket });
     }catch (error : any) {
       res.status(500).json({ success: false, error: 'Failed to create ticket', message: error.message });
+    }
+  }
+
+  public showAllUserInOrganization = async(req:Request,res:Response,next:NextFunction)=>{
+    console.log("JWT",req.user);
+    try{
+        const org = req.user.organization;
+        console.log("org",org);
+        const users = await orgUser.find({organization_list:org});
+        console.log("users",users);
+        res.status(200).json({users});
+    }catch(error:any){
+      console.log(error.message);
     }
   }
 

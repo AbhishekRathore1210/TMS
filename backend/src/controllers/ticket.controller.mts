@@ -16,5 +16,9 @@ class ticketController {
         // console.log("in controller ",allTicketInOrganization);
     }
 
+    public showAllUserInOrganization = async(req:Request,res:Response,next:NextFunction)=>{
+        const allUserInOrganization = await this.ticketService.showAllUserInOrganization(req,res,next);
+    }
+
 }
 export default ticketController;

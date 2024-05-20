@@ -1,12 +1,14 @@
 import { orgUser } from "../models/user.model.mjs";
 import { adminUser } from "../models/admin.model.mjs";
 class UserDao {
-    createUser = async (firstName, lastName, org, email) => {
+    createUser = async (firstName, lastName, org, email, dob, doj) => {
         const newUser = orgUser.create({
             firstName: firstName,
             lastName: lastName,
             org: org,
             email: email,
+            dob: dob,
+            doj: doj,
             organization_list: [org]
         });
         return newUser;

@@ -1,9 +1,7 @@
 import CreateOrgForm from '../../organisms/CreateOrgForm/CreateOrgForm'
-function DashboardPage() {
-    
+function CreateOrgPage() {
     return (
       <>
-          {/* <NavBar/> */}
           <h1>Enter the Name of Organization</h1>
           <div className="LoginPageBody">
               <CreateOrgForm/>
@@ -12,4 +10,4 @@ function DashboardPage() {
     )
   }
   
-  export default DashboardPage
+  export default CreateOrgPage

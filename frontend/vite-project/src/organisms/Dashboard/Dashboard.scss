@@ -1,100 +1,86 @@
 
-// .dashboard-container {
-//     display: flex;
-//     // border:2px solid black;
-//     width:80vh;
-//     height:50%;
-//     // background-color: white;
-// }
 
-// button{
-//     margin: 15px;
-// }
-
-// .sidebar {
-//     width: 20%; 
-//     position: fixed;
-//     top: 0;
-//     left: 0;
-//     bottom: 0;
-//     background-color: #f4f4f4; 
-//     overflow-y: auto; 
-//     padding: 20px;
-// }
-
-// .heading-btn{
-//     // background-color: blue;
-
-//     padding:20px;
-// }
-
-// .main-content {
-//     margin-left: 20%; 
-//     border: 2px solid black;
-//     padding: 20px;
-//     width:70%;
-//     height:90vh;
-//     margin:0px;
-//     padding:0px;
-// }
-
-// .org {
-//     padding-left: 20px;
-// }
-
-// .orgNameDiv{
-//     display: flex;
-//     align-items: center;
-//     justify-content: space-between;
-//     border: 2px solid black;
-//     background-color: white;
-//     margin: 10px 0;
-//     border-radius: 5px;
-//     // height: 30px;
-//     line-height: 30px;
-//     // padding: 0 10px;
-// }
-
-// .orgButton{
-//     color: red;
-//     background: none;
-// }
-
-// .orgButton:hover{
-//     background-color: aliceblue;
-// }
-
-// .org-heading {
-//     margin: 10px 0;
-// }
-
-// .upperContainer {
-//     margin: 0;
-//     padding: 0;
-//     width: 100%;
-//     height: 100%;
-// }
-
-// p {
-//     color: black;
-//     font-size: large;
-//     padding: 5px;
-// }
-
-
-h1{
-    border:2px solid black;
+h1 {
+    border: 2px solid black;
     text-align: center;
     background-color: black;
     height: 74px;
-    color:white;
+    color: white;
+    position: relative;
+    display: flex;
+    justify-content: center; /* Center the heading text */
+    align-items: center;
+    padding: 0 3rem; /* Adjust padding to provide space for the button */
+    box-sizing: border-box;
 }
-.org-heading{
-    color:white;
+
+.org-heading {
+    color: white;
     text-align: center;
 }
 
+h2 {
+    margin: 2rem;
+    margin-bottom: 0;
+    text-align: center;
+}
 
-.table{
-    margin: 50px 160px;
+.upper-table {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    margin: 1rem;
+    margin-top: 0;
+}
+
+.btn2 {
+    position: absolute;
+    right: 7rem; /* Position the button to the right */
+    top:5%;
+    transform: translateY(-50%);
+}
+
+.org-btn{
+    position: absolute;
+    right: 11rem; /* Position the button to the right */
+    top:5%;
+    transform: translateY(-50%);
+}
+
+@media (max-width: 768px) {
+    h1 {
+        padding: 1rem;
+    }
+
+    .btn2 {
+        top: 1rem;
+        right: 1rem;
+        transform: none;
+        position: absolute;
+    }
+
+    h2 {
+        margin: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    h1 {
+        font-size: 1.2rem;
+    }
+
+    .btn2 {
+        width: auto;
+        right: 0.5rem;
+        top: 0.5rem;
+    }
+
+    .upper-table {
+        margin: 0.5rem;
+    }
+
+    h2 {
+        margin: 0.5rem;
+        font-size: 1rem;
+    }
 }

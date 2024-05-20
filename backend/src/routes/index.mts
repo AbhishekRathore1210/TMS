@@ -36,6 +36,7 @@ class Routes{
         this.router.get(`${prefix}/dashboard`,Auth,this.ticketController.showAllTicketsInOrganization);        
         this.router.post(`${prefix}/dashboard/createTicket`,Auth,this.ticketController.createTicket);
         this.router.get(`${prefix}/getAllTicketsInOrg`,Auth,this.ticketController.showAllTicketsInOrganization);  
+        this.router.get(`${prefix}/showAllUsersInOrg`,Auth,this.ticketController.showAllUserInOrganization);
         // this.router.get(`${prefix}/getAllOrg`,this.adminController.showOrganization);
     }
 

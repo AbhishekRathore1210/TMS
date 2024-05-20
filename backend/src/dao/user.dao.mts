@@ -6,12 +6,14 @@ import { formatWithOptions } from "util";
 
 class UserDao {
 
-    public createUser = async (firstName: string, lastName: string, org: string, email: string) => {
+    public createUser = async (firstName: string, lastName: string, org: string, email: string,dob:Date,doj:Date) => {
         const newUser = orgUser.create({
             firstName: firstName,
             lastName: lastName,
             org: org,
             email: email,
+            dob:dob,
+            doj:doj,
             organization_list: [org]
         })
 

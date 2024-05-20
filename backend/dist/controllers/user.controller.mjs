@@ -8,7 +8,7 @@ class UserController {
     secretKey = 'Abhishek@123$';
     userRegistration = async (req, res) => {
         try {
-            const { firstName, lastName, org, email } = req.body;
+            const { firstName, lastName, org, email, dob, doj } = req.body;
             console.log(req.body);
             const orgExist = await Organization.findOne({ name: org });
             console.log(orgExist);
@@ -35,7 +35,7 @@ class UserController {
                 }
                 else {
                     // create user 
-                    const user = await this.userService.createUser(firstName, lastName, org, email);
+                    const user = await this.userService.createUser(firstName, lastName, org, email, dob, doj);
                     orgExist.user_list.push({
                         userId: user._id,
                         name: user.firstName + ' ' + user.lastName,
