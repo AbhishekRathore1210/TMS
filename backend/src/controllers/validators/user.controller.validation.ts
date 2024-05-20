@@ -18,5 +18,8 @@ export const userLoginSchema = z.object({
     email:z.string({required_error:"Email is required!"})
     .trim()
     .min(5,{message:"Please write valid Email"})
-    .max(20,{message:"Invalid Eamil"})
+    .max(40,{message:"Invalid Eamil"}),
+    otp:z.string({required_error:"OTP is required"})
+    .min(6,{message:"OTP should be of 6 digit"})
+    .max(6,{message:"OTP should be of 6 digit"})
 })

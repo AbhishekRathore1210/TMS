@@ -7,6 +7,21 @@ import { ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { Cookies } from "react-cookie";
 import TableDemo from "../../molecules/Table/Table";
+import logOut from '../../../public/logOut.png';
+
+
+interface IUserList{
+  userId:string |null
+  name:string | null,
+  email:string | null
+
+}
+
+interface IData{
+  name:string | null,
+  is_active:boolean,
+  user_list:Array<IUserList>
+}
 
 function Dashboard() {
   const [org, setOrg] = useState([]);
@@ -34,7 +49,7 @@ function Dashboard() {
     response = axios
       .get("http://localhost:8555/admin/dashboard",config)
       .then((res) => {
-        const activeData = res.data.filter((item:any) => item.is_active == true);
+        const activeData = res.data.filter((item:IData) => item.is_active == true);
       setOrg(activeData);
       setfil(activeData);
       })
@@ -129,8 +144,10 @@ function Dashboard() {
       {/* <div className="main-content">
         <div className="heading-btn">*/} 
            <Link to="/">
-            <div className="log-out-btn">
-              <Button color='red' appearance="primary" onClick={logout}>LOG OUT</Button>
+            <div>
+              <Button className='log-out-btn' appearance="primary" onClick={logout}>
+                <img width={20} src={logOut}/>
+              </Button>
             </div></Link>
         {/* </div>
       </div> */}

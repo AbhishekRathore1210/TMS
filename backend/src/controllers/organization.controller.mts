@@ -1,7 +1,5 @@
 import { Request, Response } from "express";
 
-import { orgUser } from "../models/user.model.mjs";
-import { adminUser } from "../models/admin.model.mjs";
 import UserService from "../services/user.service.mjs";
 
 class Organization {

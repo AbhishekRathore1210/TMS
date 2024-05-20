@@ -1,18 +1,15 @@
 import express from "express";
 import { Router } from "express";
-import { userRegisterSchema } from "../controllers/validators/user.controller.validation.js";
-import { userLoginSchema } from "../controllers/validators/user.controller.validation.js";
-import { RequestHandler } from "express";
+import { userLoginSchema, userRegisterSchema } from "../controllers/validators/user.controller.validation.js";
 import UserController from "../controllers/user.controller.mjs";
 import AdminController from "../controllers/admin.controller.mjs";
 import OrganizationController from "../controllers/organization.controller.mjs";
 import Validation from "../middleware/validator.middleware.mjs";
-import errorMiddleWare from "../middleware/error.middleware.mjs";
 import orgUserRegisterSchema from "../controllers/validators/orguser.controller.validation.js";
-import Auth from "../middleware/auth.middleware.mjs";
 import TicketController from "../controllers/ticket.controller.mjs";
 import ticketSchema from "../controllers/validators/ticket.controller.validation.js";
 import Authentication from "../middleware/auth.middleware.mjs";
+import orgSchema from "../controllers/validators/organization.controller.validation.js";
 
 class Routes {
   public userPath = "/users";
@@ -37,7 +34,7 @@ class Routes {
       this.validation.validate(orgUserRegisterSchema),
       this.userController.userRegistration
     );
-    this.router.post(`${prefix}/login`, this.userController.userLogin);
+    this.router.post(`${prefix}/login`,this.validation.validate(userLoginSchema), this.userController.userLogin);
     this.router.get(
       `${prefix}/dashboard`,
       this.authentication.Auth,
@@ -46,6 +43,7 @@ class Routes {
     this.router.post(
       `${prefix}/dashboard/createTicket`,
       this.authentication.Auth,
+      this.validation.validate(ticketSchema),
       this.ticketController.createTicket
     );
     this.router.get(
@@ -68,21 +66,22 @@ class Routes {
       this.validation.validate(userRegisterSchema),
       this.adminController.registerAdmin
     );
-    this.router.post(`${prefix}/login`, this.adminController.loginAdmin);
-    this.router.post(`${prefix}/otp`, this.adminController.sendOTP);
+    this.router.post(`${prefix}/login`,this.validation.validate(userLoginSchema), this.adminController.loginAdmin);
+    this.router.post(`${prefix}/otp`,this.validation.validate(userLoginSchema), this.adminController.sendOTP);
     this.router.get(
       `${prefix}/dashboard`,
       this.adminController.showOrganization
     );
     this.router.post(
-      `${prefix}/dashboard/createOrg`,this.authentication.AdminAuth,
+      `${prefix}/dashboard/createOrg`,
+      this.authentication.AdminAuth,this.validation.validate(orgSchema),
       this.organizationController.createOrg
     );
     this.router.post(
-      `${prefix}/dashboard/deleteOrg`,this.authentication.AdminAuth,
+      `${prefix}/dashboard/deleteOrg`,
+      this.authentication.AdminAuth,
       this.organizationController.deleteOrg
     );
   }
 }
-
 export default Routes;
