@@ -1,10 +1,11 @@
 import { Button, Input } from 'rsuite'
 import './RegisterForm.scss'
 import { useNavigate  } from 'react-router-dom'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { ToastContainer,toast} from 'react-toastify'
 import "react-toastify/dist/ReactToastify.css";
 import CustomDropdown from '../DropDown/DropDown'
+import { Cookies } from 'react-cookie'
 
 function RegisterForm() {
   const [user, setUser] = useState<string | null>("Organization");
@@ -15,9 +16,18 @@ function RegisterForm() {
   const [dob, setDOB] = useState("");
   const [doj, setDOJ] = useState("");
   const [error, setError] = useState("");
-  const [data,setData] =  useState([]);
+
+  const cookies = new Cookies();
 
   const navigate = useNavigate();
+  const token:string | undefined = cookies.get('accessToken');
+
+  useEffect(()=>{
+    if(!token){
+      navigate('/login');
+      return;
+  }
+  })
 
   const validateOrgUser = ()=>{
     if(!email || !firstName || !lastName){
@@ -79,6 +89,7 @@ function RegisterForm() {
       body:JSON.stringify(adminUser),
       headers:{
         "Content-Type": "application/json",
+        Authorization:`BEARER ${token}`
       }
     })
     const result = await response.json();
@@ -117,7 +128,6 @@ function RegisterForm() {
         "Content-Type": "application/json",
       }
     })
-    // console.log(response);
     const result = await response.json();
     console.log(result);
 
@@ -154,7 +164,7 @@ function RegisterForm() {
 
   const getMinDate = () => {
     const today = new Date();
-    today.setFullYear(today.getFullYear() - 120); // Set the minimum date to 120 years ago
+    today.setFullYear(today.getFullYear() - 120);
     return today.toISOString().split('T')[0];
   };
 

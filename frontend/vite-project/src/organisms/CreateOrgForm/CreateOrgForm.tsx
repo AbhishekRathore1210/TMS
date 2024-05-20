@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button, Input } from "rsuite";
 import { ToastContainer,toast } from "react-toastify";
@@ -11,17 +11,20 @@ const [error,setError] = useState("");
 
 const cookies = new Cookies();
 const navigate = useNavigate();
-
-const handleSubmit = async(e:FormSubmit)=>{
-    e.preventDefault();
-
-    const orgName = {org};  
-    const token:string | undefined = cookies.get('accessToken');
+const token:string | undefined = cookies.get('accessToken');
+useEffect(()=>{
     // console.log(token);
     if(!token){
         navigate('/login');
         return;
     }
+})
+
+const handleSubmit = async(e:FormSubmit)=>{
+    e.preventDefault();
+
+    const orgName = {org};  
+    
     const response = await fetch("http://localhost:8555/admin/dashboard/createOrg",{
 
         method:'POST',

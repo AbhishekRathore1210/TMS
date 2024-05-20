@@ -13,7 +13,6 @@ class ticketController {
 
     public showAllTicketsInOrganization = async(req:Request,res:Response,next:NextFunction)=>{  
         const allTicketInOrganization = await this.ticketService.showTicketsInOrganization(req,res,next);
-        // console.log("in controller ",allTicketInOrganization);
     }
 
     public showAllUserInOrganization = async(req:Request,res:Response,next:NextFunction)=>{

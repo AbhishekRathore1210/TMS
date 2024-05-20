@@ -46,7 +46,6 @@ function Dashboard() {
     }
 
   const deliveOrganization = async(name:string) => {
-    // console.log(name);
 
     const token:string | undefined = cookies.get('accessToken');
     if(!token){

@@ -12,6 +12,7 @@ function TableDemo(props:any){
     const cookies = new Cookies();
     const navigate = useNavigate();
 
+
     const SerialNumberCell = ({ rowIndex, ...props }:any) => (
       <Cell {...props}>{rowIndex + 1}</Cell>
     );

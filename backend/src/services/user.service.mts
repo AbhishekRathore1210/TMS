@@ -110,10 +110,9 @@ public checkAdmin = async(email:string,otp:string)=>{
     return user;
 }
 
-public checkOrg = async(org:string) =>{
+public checkOrganization = async(org:string) =>{
 
     const organization = await this.organizationDao.findOrgByName(org);
-    // console.log("org",organization);
     if(organization){
         const updateOrg = await Organization.updateOne({name:org},{$set:{is_active:true}});
         return true;
