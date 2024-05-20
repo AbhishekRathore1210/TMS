@@ -6,7 +6,6 @@ import dotenv from 'dotenv';
 import errorMiddleWare from "./middleware/error.middleware.mjs";
 import { NotFoundError } from "./exceptions/notFoundError.js";
 
-
 dotenv.config();
 
 class App {

@@ -1,11 +1,11 @@
 import express from 'express';
-const regOrgRoute = express.Router();
+import nodemailer from 'nodemailer';
 import { orgUser } from '../models/user.model.mjs';
 import { Organization } from '../models/organization.model.mjs';
 import UserDao from '../dao/user.dao.mjs';
-import nodemailer from 'nodemailer';
 import { adminUser } from "../models/admin.model.mjs";
 import OrganizationDao from '../dao/organization.dao.mjs';
+const regOrgRoute = express.Router();
 class UserService {
     userDao = new UserDao();
     organizationDao = new OrganizationDao();
@@ -27,7 +27,6 @@ class UserService {
         return newUser;
     };
     sendOTP = async (email, org) => {
-        // console.log("sentOTP called");
         const transporter = nodemailer.createTransport({
             host: 'smtp.gmail.com',
             port: 587,
@@ -35,8 +34,7 @@ class UserService {
             requireTLS: true,
             auth: {
                 user: 'abhishek19229785@gmail.com',
-                pass: 'inft pvav gugm lqyz'
-                // password is reuired for OTP
+                pass: '' // password is required!
             }
         });
         const myOtp = Math.floor((Math.random() * 1000000) + 1);
@@ -94,9 +92,8 @@ class UserService {
         const user = await this.userDao.checkAdmin(email, otp);
         return user;
     };
-    checkOrg = async (org) => {
+    checkOrganization = async (org) => {
         const organization = await this.organizationDao.findOrgByName(org);
-        // console.log("org",organization);
         if (organization) {
             const updateOrg = await Organization.updateOne({ name: org }, { $set: { is_active: true } });
             return true;

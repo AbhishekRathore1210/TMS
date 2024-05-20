@@ -95,17 +95,16 @@ function Dashboard() {
           <h1>System User Dashboard</h1>
           <Link to="/admin/dashboard/createOrgUser">
                 <Button className="btn2" color="red" appearance="primary">
-                  User
+                  Create User
                 </Button>
             </Link>
           <Link to='/admin/dashboard/createOrg'>
               <Button
-              size='sm'
                 className="org-btn"
                 color="red"
                 appearance="primary"
               >
-                Org
+                Create Organization
               </Button>
             </Link>
             <h2>All Organizations</h2>

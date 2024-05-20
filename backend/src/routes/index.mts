@@ -12,6 +12,7 @@ import orgUserRegisterSchema from "../controllers/validators/orguser.controller.
 import Auth from "../middleware/auth.middleware.mjs";
 import TicketController from "../controllers/ticket.controller.mjs";
 import ticketSchema from "../controllers/validators/ticket.controller.validation.js";
+import Authentication from "../middleware/auth.middleware.mjs";
 
 class Routes {
   public userPath = "/users";
@@ -22,6 +23,7 @@ class Routes {
   public ticketController = new TicketController();
   public validation = new Validation();
   public organizationController = new OrganizationController();
+  public authentication = new Authentication();
 
   constructor() {
     this.initializeUserRoutes(`${this.userPath}`);
@@ -38,22 +40,22 @@ class Routes {
     this.router.post(`${prefix}/login`, this.userController.userLogin);
     this.router.get(
       `${prefix}/dashboard`,
-      Auth,
+      this.authentication.Auth,
       this.ticketController.showAllTicketsInOrganization
     );
     this.router.post(
       `${prefix}/dashboard/createTicket`,
-      Auth,
+      this.authentication.Auth,
       this.ticketController.createTicket
     );
     this.router.get(
       `${prefix}/getAllTicketsInOrg`,
-      Auth,
+      this.authentication.Auth,
       this.ticketController.showAllTicketsInOrganization
     );
     this.router.get(
       `${prefix}/showAllUsersInOrg`,
-      Auth,
+      this.authentication.Auth,
       this.ticketController.showAllUserInOrganization
     );
     // this.router.get(`${prefix}/getAllOrg`,this.adminController.showOrganization);
@@ -73,11 +75,11 @@ class Routes {
       this.adminController.showOrganization
     );
     this.router.post(
-      `${prefix}/dashboard/createOrg`,Auth,
+      `${prefix}/dashboard/createOrg`,this.authentication.AdminAuth,
       this.organizationController.createOrg
     );
     this.router.post(
-      `${prefix}/dashboard/deleteOrg`,Auth,
+      `${prefix}/dashboard/deleteOrg`,this.authentication.AdminAuth,
       this.organizationController.deleteOrg
     );
   }

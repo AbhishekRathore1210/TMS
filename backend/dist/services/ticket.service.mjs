@@ -36,13 +36,6 @@ class TicketService {
                 dueDate,
                 files,
             });
-            // await orgUser.findOneAndUpdate(
-            //   { email: reporterEmail },
-            //   {
-            //     $inc: { ticketCount: 1 }, // Increment ticket count
-            //     $set: { ticketStatus: 'TOBEPICKED' } // Set ticket status to TOBEPICKED
-            //   }
-            // );
             await orgUser.findOneAndUpdate({ email: assignee }, {
                 $push: {
                     tickets: {
