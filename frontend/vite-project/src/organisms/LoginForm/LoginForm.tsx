@@ -101,7 +101,7 @@ function LoginForm() {
   const sendOTP = async()=>{
     // console.log("before",toggle);
     setToggle(true);
-    console.log("before",toggle);
+    // console.log("before",toggle);
     if(!validateEmail()){
       toast.error("Enter your Email first!");
       return;
@@ -129,7 +129,7 @@ function LoginForm() {
       console.log("OTP has been sent!");
     }
     setToggle(false);
-    console.log(toggle,"after");
+    // console.log(toggle,"after");
   }
   
   const handleOrganization =async (e:FormSubmit)=>{

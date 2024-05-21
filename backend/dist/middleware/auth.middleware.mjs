@@ -9,7 +9,7 @@ class Authentication {
             return res.status(401).json({ code: 401, data: { status: false, message: "Token is missing" } });
         }
         jwt.verify(token, secretKey, (err, decoded) => {
-            console.log(err);
+            // console.log(err);
             if (err) {
                 return res.send({ code: 200, data: {
                         status: false,
@@ -34,7 +34,7 @@ class Authentication {
             return res.status(401).json({ code: 401, data: { status: false, message: "Token is missing" } });
         }
         jwt.verify(token, secretKey, (err, decoded) => {
-            console.log(err);
+            // console.log(err);
             if (err) {
                 return res.status(400).json({ status: false, msg: `Invalid token: ${err.message}` });
             }

@@ -56,7 +56,7 @@ const navigate = useNavigate();
       console.log("Response",result);
 
       const mapData = result.users.map((user:any)=>user.email);
-      console.log("mapData",mapData);
+      // console.log("mapData",mapData);
       SetUser(mapData);
     };
     fetchEmailOptions();
@@ -66,14 +66,14 @@ const navigate = useNavigate();
     e.preventDefault();
 
     const token:string | undefined = cookies.get('accessToken');
-    console.log('**************************');
-    console.log("Token",token);
+    // console.log('**************************');
+    // console.log("Token",token);
     if(!token){
       navigate('/login');
       return;
   }
 
-    console.log("inside handlesubmit");
+    // console.log("inside handlesubmit");
     const ticket = {...formData}; 
     const response = await fetch("http://localhost:8555/users/dashboard/createTicket",{
       method:'POST',
@@ -84,14 +84,14 @@ const navigate = useNavigate();
       }
     });
 
-    console.log("outside handlesubmit");
+    // console.log("outside handlesubmit");
     const result = await response.json();
-    console.log("Result",result);
+    // console.log("Result",result);
     if(response.ok){
         console.log("Ticket genereated");
     }
 
-    console.log(formData);
+    // console.log(formData);
     setFormData(initialFormData);
   };
 

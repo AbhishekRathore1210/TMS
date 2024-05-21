@@ -81,7 +81,7 @@ function RegisterForm() {
     if(!validateUser()){
       return;
     }
-    console.log("api is called");
+    // console.log("api is called");
 
     const adminUser = {firstName,lastName,email};
     const response = await fetch("http://localhost:8555/admin/register",{

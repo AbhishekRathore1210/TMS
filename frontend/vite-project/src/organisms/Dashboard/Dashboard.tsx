@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { Cookies } from "react-cookie";
 import TableDemo from "../../molecules/Table/Table";
 import logOut from '../../../public/logOut.png';
+import { Modal, ButtonToolbar, Placeholder } from 'rsuite';
 
 
 interface IUserList{
@@ -26,6 +27,11 @@ interface IData{
 function Dashboard() {
   const [org, setOrg] = useState([]);
   const [fil, setfil] = useState([]);
+  const [open,setOpen] = useState(false);
+
+
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   const navigate = useNavigate();
   const cookies = new Cookies();
@@ -145,13 +151,17 @@ function Dashboard() {
         <div className="heading-btn">*/} 
            <Link to="/">
             <div>
-              <Button className='log-out-btn' appearance="primary" onClick={logout}>
+              <Button className='log-out-btn' appearance="subtle" onClick={logout}>
                 <img width={20} src={logOut}/>
               </Button>
             </div></Link>
         {/* </div>
       </div> */}
       {/* </div> */}
+
+     
+
+
       <ToastContainer />
 
     </>

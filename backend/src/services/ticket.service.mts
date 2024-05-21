@@ -8,11 +8,25 @@ class TicketService{
 
     private ticketDAO = new TicketDAO();
 
+    public updateTicket = async(req:Request,res:Response,next:NextFunction)=>{
+      try{
+          return res.send({code:200,data:{
+            status:200,
+            message:"Successfull"
+          }})
+      }catch(error){
+        res.send({code:500,data:{
+          status:500,
+          message:"Internal Server Error"
+        }})
+      }
+    }
+
     public createTicket = async(req:Request,res:Response,next:NextFunction) =>{
         // console.log("JWT user",req.user);
         try{
         const { type, summary, description, assignee, dueDate, files } = req.body;
-        console.log("body me ye aa rha h ",req.body);
+        // console.log("body me ye aa rha h ",req.body);
         const reporterOrgName = req.user.organization;
         const reporterEmail = req.user.email;
         // console.log(req.user);
@@ -31,11 +45,11 @@ class TicketService{
           const parts = latestTicket.key.split('-');
           const latestCount = parseInt(parts[1]);
           ticketCount = latestCount + 1;
-          console.log("TICKET COUNT : ", ticketCount);
+          // console.log("TICKET COUNT : ", ticketCount);
       }
       
       const key = `${reporterOrgName}-${ticketCount}`;
-      console.log("KEY : ", key);
+      // console.log("KEY : ", key);
 
       const ticket = await Ticket.create({
         type,
@@ -82,13 +96,25 @@ class TicketService{
 
   public showTicketsInOrganization = async(req:Request,res:Response,next:NextFunction)=>{
     try{
+
       const user = req.user;
-      console.log("user",user.email);
       if(!user){
         return res.status(403).json({ success: false, message: 'Unauthorized: Only authenticated users can view tickets' });
       }
-      const tickets = await Ticket.find({assignee: req.user.email });
-      res.status(200).json({ tickets });
+      // console.log(req.query);
+
+      const page = Number(req.query.page);
+      const limit = Number(req.query.limit);
+
+      const skip = ((page-1)*limit);
+      // const skip = ((Number(page)-1)*Number(limit));
+      // console.log("Page",page);
+      // console.log("limit",limit);
+
+      const tickets = await Ticket.find({assignee: req.user.email }).skip(skip).limit(limit);
+      const totalTicket = await Ticket.countDocuments({assignee:req.user.email})
+
+      res.status(200).json({ tickets,currentPage:page,totalPages:Math.ceil(totalTicket/limit) });
     }catch(error:any){
       console.log(error.message);
     }

@@ -1,9 +1,16 @@
 import { Table, Button } from 'rsuite';
 import './Table.scss'
+import { useState } from 'react';
 import { Cookies } from 'react-cookie';
 import { useNavigate } from "react-router-dom";
+import { Modal,Toggle, ButtonToolbar, Placeholder } from 'rsuite';
 
 function TableDemo(props:any){
+
+  const [open, setOpen] = useState(false);
+  const [overflow, setOverflow] = useState(true);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
     const data = props.fil;
     console.log("props",data);
@@ -22,6 +29,7 @@ function TableDemo(props:any){
     }
   return (
     // <div>My name is abhishek</div>
+    <>
     <Table
     className='table'
       height={500} width={900}
@@ -46,7 +54,7 @@ function TableDemo(props:any){
       <HeaderCell>Users</HeaderCell>
       <Cell>
           {rowData => (
-            <Button size='sm'appearance="primary" color='blue' onClick={AllUsers}>
+            <Button size='sm'appearance="primary" color='blue' onClick={handleOpen}>
               Users
             </Button>
           )}
@@ -61,6 +69,27 @@ function TableDemo(props:any){
           )}
         </Cell></Column>
     </Table>
+
+    
+    <Modal open={open} onClose={handleClose}>
+        <Modal.Header>
+          <Modal.Title>Modal Title</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Placeholder.Paragraph />
+        </Modal.Body>
+        <Modal.Footer>
+          <Button onClick={handleClose} appearance="primary">
+            Ok
+          </Button>
+          <Button onClick={handleClose} appearance="subtle">
+            Cancel
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+    </>
+    
   );
 };
  

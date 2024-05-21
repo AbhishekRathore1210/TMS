@@ -1,6 +1,7 @@
-import { Modal, Button, ButtonToolbar, Placeholder } from 'rsuite';
+import { Modal, Button, ButtonToolbar } from 'rsuite';
 import React from 'react';
 import TicketForm from '../TicketForm/TicketForm';
+import './CreateModal.scss';
 
 const CreateModal = () => {
   const [open, setOpen] = React.useState(false);
@@ -10,7 +11,7 @@ const CreateModal = () => {
   return (
     <>
       <ButtonToolbar>
-        <Button size='lg' onClick={handleOpen} color='red' appearance='primary'>Ticket</Button>
+        <Button className='ticket-btn' onClick={handleOpen}  appearance='primary'>Ticket</Button>
       </ButtonToolbar>
       <Modal open={open} onClose={handleClose}>
         <Modal.Header>

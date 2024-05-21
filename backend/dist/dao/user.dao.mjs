@@ -22,7 +22,7 @@ class UserDao {
     };
     checkAdmin = async (email, otp) => {
         const user = await adminUser.findOne({ email: email });
-        console.log(user);
+        // console.log(user);
         if (!user) {
             return false;
         }

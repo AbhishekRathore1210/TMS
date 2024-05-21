@@ -9,9 +9,9 @@ class UserController {
     userRegistration = async (req, res) => {
         try {
             const { firstName, lastName, org, email, dob, doj } = req.body;
-            console.log(req.body);
+            // console.log(req.body);
             const orgExist = await Organization.findOne({ name: org });
-            console.log(orgExist);
+            // console.log(orgExist);
             if (!orgExist) {
                 res.status(400).send({ success: false, message: "Organization not Exists!" });
             }
@@ -53,7 +53,7 @@ class UserController {
     userLogin = async (req, res) => {
         try {
             const { email, org, otp } = req.body;
-            console.log(req.body);
+            // console.log(req.body);
             const orgExist = await Organization.findOne({ name: org });
             if (!orgExist) {
                 res.status(400).send({ success: false, message: "Organization not Exists!" });

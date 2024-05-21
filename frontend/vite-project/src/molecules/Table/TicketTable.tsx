@@ -1,15 +1,17 @@
-import { Table, Button, Col } from 'rsuite';
+import { Table, Button, Col,Pagination } from 'rsuite';
 const { Column, HeaderCell, Cell } = Table;
 import { createIconFont } from '@rsuite/icons';
-import { useState } from 'react';
+import { Cookies } from 'react-cookie';
 
 const IconFont = createIconFont({
   scriptUrl: '//at.alicdn.com/t/font_2144422_r174s9i1orl.js',
   commonProps: { style: { fontSize: 30, color: '#1675e0' } },
   onLoaded: () => {
-    console.log('onLoaded');
+    // console.log('onLoaded');
   }
 });
+
+const cookies = new Cookies();
 
 const EditableCell = ({ rowData, dataKey, onChange, ...props }:any) => {
 
@@ -64,35 +66,55 @@ const ActionCell = ({ rowData, dataKey, onClick, ...props }:any) => {
   );
 };
 
-function UserTicket({ticket,SetTicket}:any){
-    
-    // console.log(typeof(ticket),">>>>>>>>>>>>>");
-    const SerialNumberCell = ({ rowIndex, ...props }:any) => (
+function UserTicket({ticket,SetTicket,lim,p,setP,t,fun}:any){
+
+    const SerialNumberCell = ({ rowIndex, ...props}:any) => (
       <Cell {...props}>{rowIndex + 1}</Cell>
     );
     const AllDetails = async()=>{
 
     }
 
-    const handleChange = (_id: any, key: string | number, value: any) => {
-      console.log(`id ${_id} , key ${key}  value , ${value}`);
+    const handleChange = (_id: string, key: string | number, value: string) => {
+      // console.log(`id ${_id} , key ${key}  value , ${value}`);
       const nextData = Object.assign([], ticket);
       nextData.find((item:any) => item._id === _id)[key] = value;
       SetTicket(nextData);
     };
-    const handleEditState = (_id:any) => {
+    const handleEditState = (_id:string) => {
       const nextData = Object.assign([], ticket);
       const activeItem = nextData.find((item:any) => item._id === _id);
       activeItem.statuss = activeItem.statuss ? null : 'EDIT';
-      console.log(activeItem.statuss);
+      // console.log(activeItem.statuss);
       SetTicket(nextData);
     };
 
+        // try{
+        //   console.log(rowData,'**********');
+        //   const token:string | undefined = cookies.get('accessToken');
+        //   const config = {
+        //     headers: {
+        //       Authorization: `BEARER ${token}`,
+        //       'Custom-Header': 'Custom Value',
+        //     },
+        //   };
+
+        //   const response = await axios.put("http://localhost:8555/users/updateTicket",rowData);
+        //   // console.log('*************',response.data);
+        //   console.log("Row data",rowData);
+        //   console.log("id",_id);
+        // }
+        // catch(error:any){
+        //   console.log(error.message);
+        // }
+    // };
+
     return(
         <>
+        <div>
         <Table
     className='ticket-table'
-      height={800} width={1100}
+      height={400} width={1100}
       data={ticket}
     >
     <Column width={50} align='center' fixed>
@@ -125,8 +147,28 @@ function UserTicket({ticket,SetTicket}:any){
         <HeaderCell>...</HeaderCell>
         <ActionCell dataKey='_id' onClick={handleEditState}/>
       </Column>
+        </Table>
 
-      </Table>
+      <div style={{ padding: 20 }}>
+        <Pagination
+          prev
+          next
+          first
+          last
+          ellipsis
+          boundaryLinks
+          maxButtons={5}
+          size="md"
+          layout={['total', '-', 'limit', '|', 'pager', 'skip']}
+          total={t*lim}
+          limitOptions={[5,10, 30, 50]}
+          limit={lim}
+          activePage={p}
+          onChangePage={setP}
+          onChangeLimit={fun}
+        />
+      </div>
+      </div>
         </>
     )
 

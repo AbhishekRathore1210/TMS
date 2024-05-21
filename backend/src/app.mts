@@ -51,7 +51,7 @@ class App {
     });
 
     this.app.use((req:Request,res:Response,next:NextFunction) =>{
-      console.log(req.method);
+      // console.log(req.method);
       throw new NotFoundError(`Route not Found Method:${req.method} and URL : ${req.url}`);
     })
   }

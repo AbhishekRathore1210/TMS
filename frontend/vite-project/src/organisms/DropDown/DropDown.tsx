@@ -18,7 +18,7 @@ function CustomDropdown(props:Prop) {
         "Custom-Header": "Custom Value",
       },
     };
-    console.log(props.org, "*********");
+    // console.log(props.org, "*********");
     const response = axios
       .get("http://localhost:8555/admin/dashboard", config)
       .then((res) => {
@@ -49,7 +49,7 @@ function CustomDropdown(props:Prop) {
             value={props.org}
             disabled={props.user == 'System'?true:false}
             onChange={(value)=>{
-                 console.log(value, '>>>>>>');
+                //  console.log(value, '>>>>>>');
                  props.setOrg(value);
             }}
             style={{ width: 224 }}

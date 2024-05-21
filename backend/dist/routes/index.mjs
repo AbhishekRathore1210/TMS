@@ -27,10 +27,13 @@ class Routes {
         console.log("Initializing user routes..");
         this.router.post(`${prefix}/register`, this.validation.validate(orgUserRegisterSchema), this.userController.userRegistration);
         this.router.post(`${prefix}/login`, this.validation.validate(userLoginSchema), this.userController.userLogin);
-        this.router.get(`${prefix}/dashboard`, this.authentication.Auth, this.ticketController.showAllTicketsInOrganization);
+        this.router.get(`${prefix}/dashboard`, 
+        // this.authentication.Auth,
+        this.ticketController.showAllTicketsInOrganization);
         this.router.post(`${prefix}/dashboard/createTicket`, this.authentication.Auth, this.validation.validate(ticketSchema), this.ticketController.createTicket);
         this.router.get(`${prefix}/getAllTicketsInOrg`, this.authentication.Auth, this.ticketController.showAllTicketsInOrganization);
         this.router.get(`${prefix}/showAllUsersInOrg`, this.authentication.Auth, this.ticketController.showAllUserInOrganization);
+        this.router.put(`${prefix}/updateTicket`, this.ticketController.updateTicket);
         // this.router.get(`${prefix}/getAllOrg`,this.adminController.showOrganization);
     }
     initiaizeAdminRoutes(prefix) {

@@ -37,7 +37,7 @@ class Routes {
     this.router.post(`${prefix}/login`,this.validation.validate(userLoginSchema), this.userController.userLogin);
     this.router.get(
       `${prefix}/dashboard`,
-      this.authentication.Auth,
+      // this.authentication.Auth,
       this.ticketController.showAllTicketsInOrganization
     );
     this.router.post(
@@ -56,6 +56,7 @@ class Routes {
       this.authentication.Auth,
       this.ticketController.showAllUserInOrganization
     );
+    this.router.put(`${prefix}/updateTicket`,this.ticketController.updateTicket);
     // this.router.get(`${prefix}/getAllOrg`,this.adminController.showOrganization);
   }
 
