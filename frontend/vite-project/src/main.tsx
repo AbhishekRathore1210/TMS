@@ -5,7 +5,7 @@ import 'rsuite/dist/rsuite.min.css';
 import './index.css'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
+  // <React.StrictMode>
     <AppRoutes />
-  </React.StrictMode>,
+  // </React.StrictMode>
 )

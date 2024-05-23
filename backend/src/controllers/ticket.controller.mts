@@ -13,6 +13,9 @@ class ticketController {
     public updateTicket = async(req:Request,res:Response,next:NextFunction)=>{
         const updatedTicket = await this.ticketService.updateTicket(req,res,next);
     }
+    public getTickets = async(req:Request,res:Response,next:NextFunction)=>{
+        const allTickets = await this.ticketService.getTickets(req,res,next);
+    }
 
     public showAllTicketsInOrganization = async(req:Request,res:Response,next:NextFunction)=>{  
         const allTicketInOrganization = await this.ticketService.showTicketsInOrganization(req,res,next);

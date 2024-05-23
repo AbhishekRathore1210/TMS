@@ -23,6 +23,7 @@ interface TicketDocument extends Document {
   status: 'TOBEPICKED' | 'INPROGRESS' | 'INTESTING' | 'COMPLETED';
   createdDate: Date;
   updatedDate: Date;
+  organization:string;
   dueDate?: Date;
   files: { name: string; url: string }[];
   history: HistoryLog[];
@@ -41,7 +42,7 @@ const commentSchema = new Schema<Comment>({
   },
   createdAt: {
     type: Date,
-    default: Date.now
+    default: Date.now()
   }
 });
 
@@ -83,6 +84,9 @@ const ticketSchema = new Schema<TicketDocument>({
   description: {
     type: String,
     required: true
+  },
+  organization:{
+    type:String,
   },
   assignee: {
     type: String, 

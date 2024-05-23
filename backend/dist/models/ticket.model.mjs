@@ -11,7 +11,7 @@ const commentSchema = new Schema({
     },
     createdAt: {
         type: Date,
-        default: Date.now
+        default: Date.now()
     }
 });
 const historyLogSchema = new Schema({
@@ -51,6 +51,9 @@ const ticketSchema = new Schema({
     description: {
         type: String,
         required: true
+    },
+    organization: {
+        type: String,
     },
     assignee: {
         type: String,

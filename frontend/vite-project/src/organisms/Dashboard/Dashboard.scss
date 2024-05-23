@@ -3,7 +3,7 @@
 h1 {
     border: 2px solid black;
     text-align: center;
-    background-color: rgb(71, 82, 205);
+    background-color: rgb(45 115 215);
     height: 74px;
     color: white;
     position: relative;
@@ -32,6 +32,13 @@ h2 {
     margin: 1rem;
     margin-top: 0;
 }
+.all-ticket{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 
 .btn2 {
     position: absolute;
@@ -47,10 +54,23 @@ h2 {
     transform: translateY(-50%);
 }
 
-.log-out-btn{
-    background-color: black;
+.create-date{
+    width:200px;
 }
 
+.log-out-btn{
+    right:0rem;
+    background-color: white;
+}
+.custom-modal {
+    position: fixed;
+    top: 12%;
+    right: 1rem;
+    transform: translateY(-50%);
+    margin: 0;
+    width: 400px;
+  }
+  
 @media (max-width: 768px) {
     h1 {
         padding: 1rem;

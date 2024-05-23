@@ -22,19 +22,27 @@ class AdminController{
                 const newUser = this.userService.createAdmin(firstName, lastName, email);
                 return res.status(200).json(newUser);
 
-            } catch (error: any) {
-                return res.status(400).json({ error: error.message });
+            } catch (error) {
+                const err = error as Error
+                return res.status(400).json({ error: err.message });
             }
         }
     }
     public sendOTP = async(req:Request,res:Response) =>{
         const {email,org} = req.body;
-        const otpSent = await this.userService.sendOtpBetter(email,org);
+        const otpSent = await this.userService.sendOTP(email,org);
+        // console.log(otpSent,'value');
+        if(otpSent){
         return res.status(200).send({success:true,message:"OTP sent succesffuly"});
+        }
+        return res.send({code:400,data:{
+            success:false,
+            message:"User is not Pressent"
+        }})
     }
 
-    public showOrganization = async(req:Request,res:Response) =>{
-        const allOrganizations = await this.userService.allOrganizations();
+    public showOrganization = async(req:Request,res:Response,next:NextFunction) =>{
+        const allOrganizations = await this.userService.allOrganizations(req,res,next);
         return res.status(200).json(allOrganizations);
     }
 

@@ -18,12 +18,11 @@ function CustomDropdown(props:Prop) {
         "Custom-Header": "Custom Value",
       },
     };
-    // console.log(props.org, "*********");
     const response = axios
       .get("http://localhost:8555/admin/dashboard", config)
       .then((res) => {
         // console.log(res.data);
-        const activeData = res.data.filter(
+        const activeData = res.data.allOrg.filter(
           (item: any) => item.is_active == true
         );
         const mappedData = activeData.map((item: any) => item.name);
@@ -47,9 +46,7 @@ function CustomDropdown(props:Prop) {
           <SelectPicker
             data={data}
             value={props.org}
-            disabled={props.user == 'System'?true:false}
             onChange={(value)=>{
-                //  console.log(value, '>>>>>>');
                  props.setOrg(value);
             }}
             style={{ width: 224 }}

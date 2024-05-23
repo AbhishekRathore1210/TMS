@@ -13,7 +13,6 @@ const cookies = new Cookies();
 const navigate = useNavigate();
 const token:string | undefined = cookies.get('accessToken');
 useEffect(()=>{
-    // console.log(token);
     if(!token){
         navigate('/login');
         return;
@@ -22,6 +21,14 @@ useEffect(()=>{
 
 const handleSubmit = async(e:FormSubmit)=>{
     e.preventDefault();
+
+    console.log("outside trim");
+    if(!org.trim()){
+        console.log("Inside trim");
+        toast.error("Organization Name must be a unique Name!")
+        console.log("Organization cannot be created with empty Name");
+        return;
+    }
 
     const orgName = {org};  
     
@@ -36,8 +43,6 @@ const handleSubmit = async(e:FormSubmit)=>{
     });
     
     const result = await response.json();
-    // console.log(response);
-    // console.log(result);
 
     if(!result.success){
         console.log("Organization is alreaedy created");

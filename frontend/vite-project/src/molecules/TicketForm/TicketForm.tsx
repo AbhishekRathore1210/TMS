@@ -1,8 +1,9 @@
-
 import React, { useEffect, useState } from 'react';
 import { Cookies } from 'react-cookie';
+import {Button, Input} from 'rsuite';
 import { useNavigate } from 'react-router-dom';
-import CustomDropdown from '../../organisms/DropDown/DropDown';
+import { ToastContainer,toast} from 'react-toastify'
+import './TicketForm.scss'
 
 interface FormData {
   type: string;
@@ -10,6 +11,26 @@ interface FormData {
   description: string;
   assignee: string;
   dueDate: string;
+}
+interface IUsertickets{
+  ticketId:string,
+  status:string,
+  assignee:string
+}
+
+interface IUser{
+  firstName:string,
+  lastName:string,
+  email:string,
+  org:string,
+  is_admin:boolean,
+  organization_list:string[],
+  is_verified:boolean,
+  otp?:string,
+  dob?:Date,
+  doj?:Date,
+  ticketCount?:Number,
+  tickets?:Array<IUsertickets>
 }
 
 
@@ -21,8 +42,7 @@ const initialFormData: FormData = {
   summary: ''
 };
 
-const FormComponent: React.FC = () => {
-
+const FormComponent = ({fun}:any) => {
   
 const cookies = new Cookies();
 const navigate = useNavigate();
@@ -39,41 +59,56 @@ const navigate = useNavigate();
   };
 
   const token:string | undefined = cookies.get('accessToken');
+  if(!token){
+    navigate('/login');
+    return;
+}
+
   useEffect(() => {
     if(!token){
       navigate('/login');
       return;
     }
-    const fetchEmailOptions = async () => {
-      const response = await fetch('http://localhost:8555/users/showAllUsersInOrg', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `BEARER ${token}`
-        },
-      });
-      const result = await response.json();
-      console.log("Response",result);
-
-      const mapData = result.users.map((user:any)=>user.email);
-      // console.log("mapData",mapData);
-      SetUser(mapData);
-    };
     fetchEmailOptions();
   }, []);
+
+  const fetchEmailOptions = async () => {
+    const response = await fetch('http://localhost:8555/users/show-all-users-in-organization', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `BEARER ${token}`
+      },
+    });
+    const result = await response.json();
+    console.log("Response",result);
+
+    const mapData = result.users.map((user:IUser)=>user.email);
+    // console.log("mapData",mapData);
+    SetUser(mapData);
+  };
+
+  
+
+  const validateTicket = () =>{
+    if(!formData.type || !formData.assignee || !formData.description || !formData.summary){
+      toast.error("Fill All the fields");
+      console.log('fill details');
+      return false;
+    }
+    return true;
+  }
 
   const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const token:string | undefined = cookies.get('accessToken');
-    // console.log('**************************');
-    // console.log("Token",token);
-    if(!token){
-      navigate('/login');
-      return;
-  }
+    createTicket();
 
-    // console.log("inside handlesubmit");
+    if(!validateTicket()){
+      return;
+    }
+  }
+    const createTicket = async()=>{
     const ticket = {...formData}; 
     const response = await fetch("http://localhost:8555/users/dashboard/createTicket",{
       method:'POST',
@@ -84,16 +119,25 @@ const navigate = useNavigate();
       }
     });
 
-    // console.log("outside handlesubmit");
     const result = await response.json();
-    // console.log("Result",result);
     if(response.ok){
+      fun();
+      alert("Ticket Generated");
         console.log("Ticket genereated");
+        
     }
-
-    // console.log(formData);
     setFormData(initialFormData);
+    
   };
+  const today = new Date();
+
+  const getMinDate = () =>{
+    console.log(new Date());
+    const today = new Date();
+    today.setFullYear(today.getFullYear());
+    console.log(today.toISOString());
+    return today.toISOString()
+  }
 
   return (
     <div>
@@ -123,10 +167,12 @@ const navigate = useNavigate();
         </select><br /><br />
 
         <label htmlFor="dueDate">Due Date:</label>
-        <input type="date" id="dueDate" name="dueDate" value={formData.dueDate} onChange={handleChange} /><br /><br />
+        <input type="date" id="dueDate" name="dueDate" value={formData.dueDate} max='2025-05-20' onChange={handleChange} /><br /><br />
 
-        <input type="submit" value="Submit" />
+        {/* <input type="submit" value="Submit" /> */}
+        <Button size='lg' type='submit' color='red' appearance='primary'>Submit</Button>
       </form>
+      <ToastContainer/>
     </div>
   );
 };

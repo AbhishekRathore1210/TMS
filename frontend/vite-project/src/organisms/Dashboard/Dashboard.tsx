@@ -1,37 +1,56 @@
 import "./Dashboard.scss";
-import { Button } from "rsuite";
+import { Button , Pagination,Input} from "rsuite";
 import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { SetStateAction, useEffect, useState } from "react";
 import axios from "axios";
 import { ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { Cookies } from "react-cookie";
 import TableDemo from "../../molecules/Table/Table";
-import logOut from '../../../public/logOut.png';
-import { Modal, ButtonToolbar, Placeholder } from 'rsuite';
+import logOut1 from '../../../public/logOut1.png';
 
 
 interface IUserList{
   userId:string |null
-  name:string | null,
+  name:string
   email:string | null
 
 }
-
 interface IData{
-  name:string | null,
+  name:string,
   is_active:boolean,
   user_list:Array<IUserList>
 }
 
+
 function Dashboard() {
+
   const [org, setOrg] = useState([]);
   const [fil, setfil] = useState([]);
-  const [open,setOpen] = useState(false);
 
+  const [allTicket,setAllTicket] = useState([]);
+  const [limit2,setLimit2] = useState(10);
+  const [page2,setPage2] = useState(1);
+  const [t2,setTotal2] = useState(1);
 
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const [limit, setLimit] = useState(10);
+  const [page, setPage] = useState(1);
+  const [t,setTotal] = useState(1);
+  const [check,setCheck] = useState(false);
+
+  const handleChangeLimit = (dataKey: SetStateAction<number>) => {
+    setPage(1);
+    setLimit(dataKey);
+  };
+
+  const handleChangeLimit2 = (dataKey:SetStateAction<number>)=>{
+    setPage2(1);
+    setLimit2(dataKey);
+  }
+
+  const toggle = ()=>{
+    setCheck(!check);
+  }
 
   const navigate = useNavigate();
   const cookies = new Cookies();
@@ -45,6 +64,8 @@ function Dashboard() {
     navigate('/login');
     return;
   }
+  getAllTicket();
+
     const config = {
       headers: {
         Authorization: `BEARER ${token}`,
@@ -53,18 +74,41 @@ function Dashboard() {
     };
 
     response = axios
-      .get("http://localhost:8555/admin/dashboard",config)
+      .get(`http://localhost:8555/admin/dashboard?page=${page}&&limit=${limit}`,config)
       .then((res) => {
-        const activeData = res.data.filter((item:IData) => item.is_active == true);
-      setOrg(activeData);
-      setfil(activeData);
+        console.log("data",res.data);
+        setTotal(res.data.totalPage);
+      setOrg(res.data.allOrg);
+      setfil(res.data.allOrg);
       })
       .catch((err) => console.log(err));
-  }, []);
+  }, [page,t,limit, check,page2,t2,limit2]);
 
     if(response){
     response.json();
     }
+
+    const getAllTicket = async()=>{
+      if(!token){
+        navigate('/login');
+        return;
+      }
+      const config = {
+        headers: {
+          Authorization: `BEARER ${token}`,
+          'Custom-Header': 'Custom Value',
+        },
+      }; 
+
+      const response = await axios.get(`http://localhost:8555/users/getTickets?page=${page2}&&limit=${limit2}`,config)
+      .then((res)=>{
+        console.log("All tickets ",res.data.data.tickets);
+        console.log(res.data.data);
+        setTotal2(res.data.data.totalPage);
+        setPage2(res.data.data.currentPage);
+        setAllTicket(res.data.data.tickets)}).catch((err)=>console.log(err.message));
+
+        }
 
   const deliveOrganization = async(name:string) => {
 
@@ -84,18 +128,19 @@ function Dashboard() {
     });
     await response.json();
     if(response.ok){
-      const activeData = org.filter((item:any) => {
+      const activeData = org.filter((item:IData) => {
         return item.is_active == true;
       });
       setOrg(activeData);
       setfil(activeData);
 
       console.log("Organization Deleted Successfully!");
+      toggle();
     }
     else{
       console.log("Cannot Delete");
     }
-    navigate(0);
+    // navigate(0);
   }
   const logout = async()=>{
       cookies.remove('accessToken');
@@ -104,11 +149,12 @@ function Dashboard() {
 
   const handleInput = async(inp: any) => {
 
-    const filterData = org.filter((temp: any) => {
-      return temp.is_active && temp.name.toLowerCase().includes(inp.toLowerCase());
+    const filterData = org.filter((item: IData) => {
+      return item.is_active && item.name.toLowerCase().includes(inp.toLowerCase());
     });
     setfil(filterData);
   };
+
   return (
     <>
     {/* <NavBar/> */}
@@ -130,38 +176,33 @@ function Dashboard() {
             </Link>
             <h2>All Organizations</h2>
             <div className="upper-table">
-            <TableDemo fil={fil} deliveOrganization={deliveOrganization}/>
+            <TableDemo fil={fil} deliveOrganization={deliveOrganization} p={page} l={limit}/>
             </div>
-        {/* <TableDemo fil={fil} setfil={setfil}/> */}
-        {/* <div className="sidebar"> */}
-          {/* <h2>All Organizations</h2> */}
-          {/* <div>
-          </div> */}
-          {/* <div className="org">
-             {fil.map((e: any, i:number) => (
-              <div className="orgNameDiv">
-                <p className="orgName" key={i}>{e.name}</p> */}
-                {/* <button className="orgButton" onClick={()=>deliveOrganization(e.name)}>Delete</button> */}
-              {/* </div>
-            ))}  */}
-          {/* </div> */}
-        {/* </div> */}
-      {/* </div> */}
-      {/* <div className="main-content">
-        <div className="heading-btn">*/} 
+            <div style={{ padding: 20 }}>
+        <Pagination
+          prev
+          next
+          first
+          last
+          ellipsis
+          boundaryLinks
+          maxButtons={5}
+          size="md"
+          layout={['total', '-', 'limit', '|', 'pager', 'skip']}
+          total={t*limit}
+          limitOptions={[10, 30, 50]}
+          limit={limit}
+          activePage={page}
+          onChangePage={setPage}
+          onChangeLimit={handleChangeLimit}
+        />
+      </div>
            <Link to="/">
             <div>
-              <Button className='log-out-btn' appearance="subtle" onClick={logout}>
-                <img width={20} src={logOut}/>
+              <Button className='log-out-btn' appearance="default" onClick={logout}>
+                <img width={20} src={logOut1}/>
               </Button>
             </div></Link>
-        {/* </div>
-      </div> */}
-      {/* </div> */}
-
-     
-
-
       <ToastContainer />
 
     </>

@@ -20,7 +20,11 @@ const adminSchema = new mongoose.Schema({
     otp:{
         type:String,
         default:'000000'
+    },
+    otpExpire:{
+        type:Date
     }
+
 },{timestamps:true});
 
 const adminUser = mongoose.model('Admin', adminSchema);

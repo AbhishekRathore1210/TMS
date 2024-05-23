@@ -1,7 +1,6 @@
 import express from 'express';
 import nodemailer from 'nodemailer';
 import { orgUser } from '../models/user.model.mjs';
-import { Organization } from '../models/organization.model.mjs';
 import UserDao from '../dao/user.dao.mjs';
 import { adminUser } from "../models/admin.model.mjs";
 import OrganizationDao from '../dao/organization.dao.mjs';
@@ -18,8 +17,12 @@ class UserService {
         const ifDeleted = this.organizationDao.deleteOrg(name);
         return ifDeleted;
     };
-    allOrganizations = async () => {
-        const allOrganization = await this.organizationDao.showAllOrganizations();
+    allOrganizations = async (req, res, next) => {
+        console.log('query', req.query);
+        const page = Number(req.query.page);
+        const limit = Number(req.query.limit);
+        const skip = ((page - 1) * limit);
+        const allOrganization = await this.organizationDao.showAllOrganizations(skip, limit);
         return allOrganization;
     };
     createAdminUser = async (firstName, lastName, email) => {
@@ -27,6 +30,11 @@ class UserService {
         return newUser;
     };
     sendOTP = async (email, org) => {
+        const user = await orgUser.findOne({ email: email });
+        const user2 = await adminUser.findOne({ email: email });
+        if (!user && !user2) {
+            return 0;
+        }
         const transporter = nodemailer.createTransport({
             host: 'smtp.gmail.com',
             port: 587,
@@ -34,7 +42,7 @@ class UserService {
             requireTLS: true,
             auth: {
                 user: 'abhishek19229785@gmail.com',
-                pass: '' // password is required!
+                pass: 'inft pvav gugm lqyz' // password is required!
             }
         });
         const myOtp = Math.floor((Math.random() * 1000000) + 1);
@@ -44,45 +52,29 @@ class UserService {
             subject: 'For Verification Mail',
             text: `Your otp is ${myOtp}`
         };
-        transporter.sendMail(mailOptions, async function (err, info) {
-            if (err) {
+        transporter.sendMail(mailOptions, async function (error) {
+            if (error) {
+                const err = error;
                 console.log(err);
             }
             else {
-                console.log("Mail sent succesfully", info.response);
+                console.log("Mail sent succesfully");
+                var dt = (new Date().getTime());
                 if (org) {
                     // console.log("User is Organizations Usr");
-                    const updatedUser = await orgUser.updateOne({ email: email }, { $set: { otp: myOtp } });
+                    const updatedUser = await orgUser.updateOne({ email: email }, { $set: { otp: myOtp, otpExpire: new Date(dt + 900000) } });
                     // console.log("Updated User ",updatedUser);
                 }
                 else {
                     // console.log("User is Admin Usr");
-                    const updateUser = await adminUser.updateOne({ email: email }, { $set: { otp: myOtp } });
+                    const updateUser = await adminUser.updateOne({ email: email }, { $set: { otp: myOtp,
+                            otpExpire: new Date(dt + 900000)
+                        } });
                     // console.log("Updated User ",updateUser);
                 }
             }
         });
         return myOtp;
-    };
-    throttle = async (func, limit, email, org) => {
-        if (this.flag) {
-            func(email, org);
-            this.flag = false;
-            setTimeout(() => {
-                this.flag = true;
-            }, limit);
-        }
-        else {
-            console.log("Wait for some seconds");
-        }
-    };
-    sendOtpBetter = async (email, org) => {
-        if (this.flag) {
-            this.throttle(this.sendOTP, 10000, email, org);
-        }
-        else {
-            console.log("kindly wait for some time");
-        }
     };
     createAdmin = async (firstName, lastName, email) => {
         const newUser = await this.userDao.createAdmin(firstName, lastName, email);
@@ -95,11 +87,10 @@ class UserService {
     checkOrganization = async (org) => {
         const organization = await this.organizationDao.findOrgByName(org);
         if (organization) {
-            const updateOrg = await Organization.updateOne({ name: org }, { $set: { is_active: true } });
-            return true;
+            return false;
         }
-        this.organizationDao.createOrg(org);
-        return false;
+        const newOrganization = this.organizationDao.createOrg(org);
+        return newOrganization;
     };
 }
 export default UserService;

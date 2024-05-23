@@ -2,6 +2,7 @@
 
 .log-out-btn {
     position: absolute;
+    background-color: rgb(45 115 215);
     top: 1rem; /* Adjust top spacing */
     right: 3rem; /* Adjust right spacing */
 }
@@ -9,6 +10,18 @@
 .main {
     height: 100vh;
     width: 100vw;
+}
+
+.parent-filter-btn{
+    // border:1px solid blue;
+
+.filter-btn{
+    margin:0;
+    // border:2px solid black;
+    margin-left: 30%;
+
+    // padding:0;
+}
 }
 
 .heading {
@@ -23,6 +36,7 @@
     z-index: 999; /* Ensure the button stays on top */
 }
 .ticket {
+    width: 80%;
     display: flex;
     justify-content: center;
     margin: auto;

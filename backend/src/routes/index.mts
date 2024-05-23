@@ -52,11 +52,12 @@ class Routes {
       this.ticketController.showAllTicketsInOrganization
     );
     this.router.get(
-      `${prefix}/showAllUsersInOrg`,
+      `${prefix}/show-all-users-in-organization`,
       this.authentication.Auth,
       this.ticketController.showAllUserInOrganization
     );
-    this.router.put(`${prefix}/updateTicket`,this.ticketController.updateTicket);
+    this.router.put(`${prefix}/updateTicket`,this.authentication.Auth,this.ticketController.updateTicket);
+    this.router.get(`${prefix}/getTickets`,this.ticketController.getTickets);
     // this.router.get(`${prefix}/getAllOrg`,this.adminController.showOrganization);
   }
 
@@ -75,12 +76,11 @@ class Routes {
     );
     this.router.post(
       `${prefix}/dashboard/createOrg`,
-      this.authentication.AdminAuth,this.validation.validate(orgSchema),
+      this.authentication.Auth,
       this.organizationController.createOrg
     );
     this.router.post(
       `${prefix}/dashboard/deleteOrg`,
-      this.authentication.AdminAuth,
       this.organizationController.deleteOrg
     );
   }

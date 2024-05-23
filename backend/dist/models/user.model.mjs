@@ -29,6 +29,9 @@ const orgUserSchema = new mongoose.Schema({
         type: String,
         default: '000000',
     },
+    otpExipre: {
+        type: Date,
+    },
     dob: {
         type: Date,
     },

@@ -15,17 +15,25 @@ class AdminController {
                 return res.status(200).json(newUser);
             }
             catch (error) {
-                return res.status(400).json({ error: error.message });
+                const err = error;
+                return res.status(400).json({ error: err.message });
             }
         }
     };
     sendOTP = async (req, res) => {
         const { email, org } = req.body;
-        const otpSent = await this.userService.sendOtpBetter(email, org);
-        return res.status(200).send({ success: true, message: "OTP sent succesffuly" });
+        const otpSent = await this.userService.sendOTP(email, org);
+        // console.log(otpSent,'value');
+        if (otpSent) {
+            return res.status(200).send({ success: true, message: "OTP sent succesffuly" });
+        }
+        return res.send({ code: 400, data: {
+                success: false,
+                message: "User is not Pressent"
+            } });
     };
-    showOrganization = async (req, res) => {
-        const allOrganizations = await this.userService.allOrganizations();
+    showOrganization = async (req, res, next) => {
+        const allOrganizations = await this.userService.allOrganizations(req, res, next);
         return res.status(200).json(allOrganizations);
     };
     loginAdmin = async (req, res) => {

@@ -13,6 +13,7 @@ interface Ticket {
     created: Date;
     is_admin:boolean;
     Organization?: Schema.Types.ObjectId;
+    otpExpire:Date;
     organization_list?: string[];
     ticketCount?: number;
     tickets?: Ticket[];
@@ -47,6 +48,9 @@ const orgUserSchema = new mongoose.Schema({
     otp:{
         type:String,
         default:'000000',
+    },
+    otpExipre:{
+      type:Date,
     },
     dob:{
         type:Date,

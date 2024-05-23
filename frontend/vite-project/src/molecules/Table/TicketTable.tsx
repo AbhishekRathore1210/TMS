@@ -2,6 +2,13 @@ import { Table, Button, Col,Pagination } from 'rsuite';
 const { Column, HeaderCell, Cell } = Table;
 import { createIconFont } from '@rsuite/icons';
 import { Cookies } from 'react-cookie';
+import {useState,SetStateAction}  from 'react';
+import Details from '../../../public/details.png';
+import { Modal, Placeholder } from 'rsuite';
+import TicketDetails from '../../organisms/Dashboard/TicketDetails/TicketDetails';
+import { ToastContainer } from 'react-toastify';
+import './TicketTable.scss'
+
 
 const IconFont = createIconFont({
   scriptUrl: '//at.alicdn.com/t/font_2144422_r174s9i1orl.js',
@@ -66,7 +73,7 @@ const ActionCell = ({ rowData, dataKey, onClick, ...props }:any) => {
   );
 };
 
-function UserTicket({ticket,SetTicket,lim,p,setP,t,fun}:any){
+function UserTicket({ticket,SetTicket,lim,p,setP,t,fun,getTicket}:any){
 
     const SerialNumberCell = ({ rowIndex, ...props}:any) => (
       <Cell {...props}>{rowIndex + 1}</Cell>
@@ -89,52 +96,90 @@ function UserTicket({ticket,SetTicket,lim,p,setP,t,fun}:any){
       SetTicket(nextData);
     };
 
-        // try{
-        //   console.log(rowData,'**********');
-        //   const token:string | undefined = cookies.get('accessToken');
-        //   const config = {
-        //     headers: {
-        //       Authorization: `BEARER ${token}`,
-        //       'Custom-Header': 'Custom Value',
-        //     },
-        //   };
+    //     try{
+    //       console.log(rowData,'**********');
+    //       const token:string | undefined = cookies.get('accessToken');
+    //       const config = {
+    //         headers: {
+    //           Authorization: `BEARER ${token}`,
+    //           'Custom-Header': 'Custom Value',
+    //         },
+    //       };
 
-        //   const response = await axios.put("http://localhost:8555/users/updateTicket",rowData);
-        //   // console.log('*************',response.data);
-        //   console.log("Row data",rowData);
-        //   console.log("id",_id);
-        // }
-        // catch(error:any){
-        //   console.log(error.message);
-        // }
+    //       const response = await axios.put("http://localhost:8555/users/updateTicket",rowData);
+    //       // console.log('*************',response.data);
+    //       console.log("Row data",rowData);
+    //       console.log("id",_id);
+    //     }
+    //     catch(error){
+    //       const err = error as Error
+    //       console.log(err.message);
+    //     }
     // };
+
+    const [data, setdata] = useState({
+      type: "",
+      status: "",
+      summary: "",
+      description: "",
+      assignee: "",
+      createdDate: "",
+      updatedDate: "",
+      dueDate: "",
+      History: [],
+    });
+
+
+    const [id, Setid] = useState();
+    const [open, setOpen] = useState(false);
+    const [overflow, setOverflow] = useState(true);
+
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
+
+
+
+    const display = (id: any) => {
+      handleOpen();
+      Setid(id);
+      const oneTicket = ticket.find((ticket: { key: string }) => ticket.key === id);
+      console.log(oneTicket,'ticket is:');
+      setdata(oneTicket);
+
+    };
 
     return(
         <>
-        <div>
+        <div className='table-div'>
         <Table
     className='ticket-table'
-      height={400} width={1100}
+      height={400} width={1250}
       data={ticket}
     >
-    <Column width={50} align='center' fixed>
-        <HeaderCell>S.no</HeaderCell>
-        <SerialNumberCell/>
+ 
+      <Column width={100} align='center' >
+        <HeaderCell>Type</HeaderCell>
+        <Cell dataKey='type'/>
       </Column>
 
       <Column width={100} align='center' >
-        <HeaderCell>Type</HeaderCell>
-        <EditableCell dataKey='type' onChange={handleChange}/>
+        <HeaderCell>Key</HeaderCell>
+        <Cell dataKey='key'/>
       </Column>
 
-      <Column width={130} align='center' >
+      <Column width={130} align='center'>
         <HeaderCell>Status</HeaderCell>
-        <EditableCell dataKey='status' onChange={handleChange}/>
+        <Cell dataKey='status'/>
       </Column>
 
       <Column width={220} align='center' >
         <HeaderCell>Summary</HeaderCell>
-        <EditableCell dataKey='summary' onChange={handleChange}/>
+        <Cell dataKey='summary'/>
+      </Column>
+
+      <Column width={300} align='center' >
+        <HeaderCell>Assignee</HeaderCell>
+        <Cell dataKey='assignee'/>
       </Column>
 
 
@@ -143,11 +188,46 @@ function UserTicket({ticket,SetTicket,lim,p,setP,t,fun}:any){
         <Cell dataKey='reporter'/>
       </Column>
 
-      <Column flexGrow={1} align='center' >
-        <HeaderCell>...</HeaderCell>
-        <ActionCell dataKey='_id' onClick={handleEditState}/>
+      <Column width={100} align='center' >
+        <HeaderCell>Created Date</HeaderCell>
+        <Cell dataKey='createdDate'>{rowData=>(rowData.createdDate.split('T')[0])}</Cell>
+      </Column>
+
+      <Column width={100} align='center' >
+        <HeaderCell>Updated Date</HeaderCell>
+        <Cell dataKey='updatedDate'>{rowData=>(rowData.updatedDate.split('T')[0])}</Cell>
+      </Column>
+
+      <Column width={100} align='center' >
+        <HeaderCell>Due Date</HeaderCell>
+        <Cell dataKey='dueDate'>{rowData=>(rowData.dueDate.split('T')[0])}</Cell>
+      </Column>
+
+      <Column width={100} align='center' >
+        <HeaderCell>Details</HeaderCell>
+        <Cell>
+            {(rowData => (
+              <img onClick={()=>display(rowData.key)} width={20} src={Details}/>
+            ))}
+        </Cell>
       </Column>
         </Table>
+
+        
+    <Modal open={open} onClose={handleClose}>
+        <Modal.Header>
+          <Modal.Title>Ticket Details</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+
+        <TicketDetails d={data} setD = {setdata} funClose={handleClose} getTicket={getTicket}/>
+
+        </Modal.Body>
+        <Modal.Footer>
+          
+        </Modal.Footer>
+      </Modal>
+
 
       <div style={{ padding: 20 }}>
         <Pagination
@@ -169,6 +249,7 @@ function UserTicket({ticket,SetTicket,lim,p,setP,t,fun}:any){
         />
       </div>
       </div>
+      <ToastContainer/>
         </>
     )
 

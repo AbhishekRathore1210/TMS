@@ -1,17 +1,91 @@
 import TicketDAO from "../dao/ticket.dao.mjs";
 import Ticket from "../models/ticket.model.mjs";
 import { orgUser } from "../models/user.model.mjs";
+// import Ticket from "../models/ticket.model.mjs";
 class TicketService {
     ticketDAO = new TicketDAO();
     updateTicket = async (req, res, next) => {
         try {
-            return res.send({ code: 200, data: {
-                    status: 200,
-                    message: "Successfull"
-                } });
+            console.log("Req.body", req.body);
+            const email = req.user.email;
+            const { type, status, key, summary, description, assignee, reporter } = req.body;
+            const ticket = await Ticket.findOne({ key: key });
+            if (!ticket) {
+                return res.send({ code: 400, data: { success: false, message: "Ticket Not Found" } });
+            }
+            const historyLogs = [];
+            if (ticket.type !== type) {
+                historyLogs.push({ userName: email, fieldName: 'Type', oldValue: ticket.type, newValue: type });
+                ticket.type = type;
+            }
+            if (ticket.summary !== summary) {
+                historyLogs.push({ userName: email, fieldName: 'Summary', oldValue: ticket.summary, newValue: summary });
+                ticket.summary = summary;
+            }
+            if (ticket.description !== description) {
+                historyLogs.push({ userName: email, fieldName: 'Description', oldValue: ticket.description, newValue: description });
+                ticket.description = description;
+            }
+            if (ticket.assignee !== assignee) {
+                historyLogs.push({ userName: email, fieldName: 'Assignee', oldValue: ticket.assignee, newValue: assignee });
+                ticket.assignee = assignee;
+            }
+            // if (ticket.dueDate !== dueDate) {
+            //   historyLogs.push({ userName: email, fieldName: 'Due Date', oldValue: ticket.dueDate, newValue: dueDate });
+            //   ticket.dueDate = dueDate;
+            // }
+            if (ticket.status !== status) {
+                historyLogs.push({ userName: email, fieldName: 'Status', oldValue: ticket.status, newValue: status });
+                ticket.status = status;
+            }
+            ticket.updatedDate = new Date();
+            if (historyLogs.length > 0) {
+                ticket.history.push(...historyLogs);
+                await ticket.save();
+            }
+            res.status(200).send({ code: 200, data: { success: true, message: 'Ticket updated successfully', ticket, history: historyLogs } });
+            // const updateTicket = await Ticket.updateOne({key:key},{$set:{
+            //     type:type,
+            //     status:status,
+            //     summary:summary,
+            //     description:description,
+            //     assignee:assignee,
+            //     reporter:reporter
+            // }});
+            // if(updateTicket.modifiedCount){
+            //   return res.send({code:200,data:{success:true,message:"Ticket Updated"}});
+            // }
         }
         catch (error) {
-            res.send({ code: 500, data: {
+            return res.send({ code: 500, data: {
+                    status: 500,
+                    message: "Internal Server Error"
+                } });
+        }
+    };
+    getTickets = async (req, res, next) => {
+        try {
+            const page = Number(req.query.page) || 1;
+            const limit = Number(req.query.limit) || 5;
+            const skip = ((page - 1) * limit);
+            // const tickets = await this.ticketDAO.getTickets()
+            const tickets = await Ticket.find({}).skip(skip).limit(limit);
+            const totalTicket = await Ticket.countDocuments({});
+            if (tickets.length != 0) {
+                return res.send({ code: 200, data: { tickets, currentPage: page, totalPage: (Math.ceil(totalTicket / limit)), status: true, message: "Fetched successful"
+                    } });
+            }
+            else {
+                return res.send({ code: 400, data: {
+                        code: 400,
+                        message: "Failed To fetch tickets"
+                    } });
+            }
+        }
+        catch (error) {
+            const err = error;
+            console.log(err.message);
+            return res.send({ code: 500, data: {
                     status: 500,
                     message: "Internal Server Error"
                 } });
@@ -21,7 +95,7 @@ class TicketService {
         // console.log("JWT user",req.user);
         try {
             const { type, summary, description, assignee, dueDate, files } = req.body;
-            // console.log("body me ye aa rha h ", req.body);
+            // console.log("body me ye aa rha h ",req.body);
             const reporterOrgName = req.user.organization;
             const reporterEmail = req.user.email;
             // console.log(req.user);
@@ -48,6 +122,7 @@ class TicketService {
                 assignee: assignee,
                 reporter: reporterEmail,
                 dueDate,
+                organization: reporterOrgName,
                 files,
             });
             await orgUser.findOneAndUpdate({ email: assignee }, {
@@ -66,16 +141,17 @@ class TicketService {
         }
     };
     showAllUserInOrganization = async (req, res, next) => {
-        // console.log("JWT", req.user);
+        // console.log("JWT",req.user);
         try {
             const org = req.user.organization;
-            // console.log("org", org);
+            // console.log("org",org);
             const users = await orgUser.find({ organization_list: org });
-            // console.log("users", users);
+            // console.log("users",users);
             res.status(200).json({ users });
         }
         catch (error) {
-            console.log(error.message);
+            const err = error;
+            console.log(err.message);
         }
     };
     showTicketsInOrganization = async (req, res, next) => {
@@ -84,19 +160,45 @@ class TicketService {
             if (!user) {
                 return res.status(403).json({ success: false, message: 'Unauthorized: Only authenticated users can view tickets' });
             }
-            // console.log(req.query);
-            const page = Number(req.query.page);
-            const limit = Number(req.query.limit);
+            console.log(req.query);
+            const type = req.query.type;
+            const status = req.query.status;
+            const cd = req.query.cd;
+            const ud = req.query.ud;
+            const dd = req.query.dd;
+            const page = Number(req.query.page) || 1;
+            const limit = Number(req.query.limit) || 5;
             const skip = ((page - 1) * limit);
-            // const skip = ((Number(page)-1)*Number(limit));
-            // console.log("Page",page);
-            // console.log("limit",limit);
-            const tickets = await Ticket.find({ assignee: req.user.email }).skip(skip).limit(limit);
-            const totalTicket = await Ticket.countDocuments({ assignee: req.user.email });
+            const filter = { $and: [{
+                        assignee: req.user.email
+                    }, { organization: req.user.organization }] };
+            if (type) {
+                filter.type = type;
+            }
+            if (status) {
+                filter.status = status;
+            }
+            // { $and: [
+            //   { name: name },
+            //   { is_active: true }
+            // ]}
+            // if(cd){
+            //   const parsedDueDate = new Date(cd);
+            //   filter.cd = {
+            //     $gte: new Date(parsedDueDate.setHours(0, 0, 0, 0)),
+            //     $lt: new Date(parsedDueDate.setHours(23, 59, 59, 999))
+            //   };
+            // }
+            const tickets = await Ticket.find(filter).skip(skip).limit(limit);
+            const totalTicket = await Ticket.countDocuments({ $and: [{
+                        assignee: req.user.email
+                    }, { organization: req.user.organization
+                    }] });
             res.status(200).json({ tickets, currentPage: page, totalPages: Math.ceil(totalTicket / limit) });
         }
         catch (error) {
-            console.log(error.message);
+            const err = error;
+            console.log(err.message);
         }
     };
 }

@@ -1,27 +1,26 @@
 import { Button, Input } from 'rsuite'
 import './LoginForm.scss'
-import { useEffect, useState } from 'react'
+import {  useState } from 'react'
  
 import { useNavigate } from 'react-router-dom';
 import { ToastContainer,toast } from 'react-toastify';
 import { Cookies } from 'react-cookie';
+import CustomDropdown from '../DropDown/DropDown';
 
 
 function LoginForm() {
   const [user, setUser] = useState("System");
   const [error,setError] = useState("");
   const [org, setOrg] = useState("");
+  // const [org, setOrg] = useState<string | null>("");
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("");
   const [toggle,setToggle] = useState(false);
+  const [data , setData] = useState([]);
   let flag = false;
 
   const navigate = useNavigate();
   const cookies = new Cookies();
-
-  // useEffect(()=>{
-    // toast.success("Registerd Succesfully! Kindly Login");
-  // }, [])
 
   const validateUser = ()=>{
     if(!otp){
@@ -34,8 +33,6 @@ function LoginForm() {
 
   const validateEmail = ()=>{
     if(!email){
-      setError("Please Write your Email");
-      toast.error("Please Write your Email");
       return false;
     }
     return true;
@@ -49,6 +46,7 @@ function LoginForm() {
     }
     if(!org){
       setError("Please write name of the organization");
+      toast.error("Enter Organization Name");
       return false;
     }
     return true;
@@ -70,9 +68,6 @@ function LoginForm() {
     })
     const result = await response.json();
 
-    // console.log(result);
-    // console.log(result.success);
-
     if(!result.success){
       console.log("Cannot Login");
       toast.error("Login Failed!");
@@ -82,9 +77,9 @@ function LoginForm() {
     if(!response.ok){
       setError(result.error);
       setError("");
-      setOrg("");
-      setEmail("");
-      setOtp("");
+      // setOrg("");
+      // setEmail("");
+      // setOtp("");
       navigate('/login');
     }
 
@@ -99,13 +94,12 @@ function LoginForm() {
     }
   }
   const sendOTP = async()=>{
-    // console.log("before",toggle);
-    setToggle(true);
-    // console.log("before",toggle);
+    
     if(!validateEmail()){
       toast.error("Enter your Email first!");
       return;
     }
+    setToggle(true);
 
     // console.log("otp api called");
     const userEmail = {email,org};
@@ -118,14 +112,13 @@ function LoginForm() {
     });
 
     const result = await response.json();
-    // console.log(response);
-    // console.log(result);
 
     if(!result.success){
+      toast.error("User Not Exists!");
       console.log("OTP NOT SENT");
     }
     else{
-      // toast.success("OTP sent successfully!");
+      toast.success("OTP sent successfully!");
       console.log("OTP has been sent!");
     }
     setToggle(false);
@@ -170,8 +163,6 @@ function LoginForm() {
         <h4 >LOGIN</h4>
         {/* <div className="underline"></div> */}
         <div className="userSelection">
-            {/* <Button size='lg' color='blue' onClick={()=>{setUser("System")}}  appearance={user == "System"? "primary" : "default"}>System</Button>
-            <Button size='lg'color='blue' onClick={()=>{setUser("Organization")}} appearance={user == "Organization"? "primary" : "default"}>Organization</Button> */}
             <span className='btn-sys'>
               <Button size='lg' color='orange' onClick={()=>setUser("System")} appearance={user=='System'?"ghost":"default"} >System</Button>
             </span>
@@ -182,11 +173,15 @@ function LoginForm() {
         </div>
 
         <form onSubmit={user == 'System'? handleSystem : handleOrganization}>
+
           <Input disabled={user == 'System'? true : false} value={org} type="text" placeholder='Organization' onChange={(e: string)=>{setOrg((e))}}></Input>
+          {/* <CustomDropdown org={org} setOrg={setOrg} /> */}
+
+
           <Input type="email" value={email} placeholder='E-mail' onChange={(e: string)=>{setEmail((e))}}></Input>
 
           <div className="otpContainer">
-            <Input type='text' value={otp} onChange={(e:string)=>{setOtp((e))}} placeholder='OTP'></Input>
+            <Input type='number' value={otp} onChange={(e:string)=>{setOtp((e))}} placeholder='OTP'></Input>
             <Button size='md' appearance='default' disabled={toggle} onClick={sendOTP} >Get OTP</Button>
           </div>
         <span className='sub'><Button type='submit' color='red' appearance='primary' size='lg'>Submit</Button></span>

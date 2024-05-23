@@ -6,14 +6,11 @@ class Organization {
   private userService = new UserService();
   public createOrg = async (req: Request, res: Response) => {
     const { org } = req.body;
-    const orgExist = await this.userService.checkOrganization(org);
-    if (orgExist) {
-      res.status(200).send({
-        success: false,
-        message: "Organization already Created with same previous users!",
-      });
+    const newOrg = await this.userService.checkOrganization(org);
+    if (newOrg) {
+      res.status(200).send({ success: true, message: " New Organization Created" });
     } else {
-      res.status(200).send({ success: true, message: "Organization Created" });
+      res.status(400).send({success:false,message:"Organization already Exists!"});
     }
   };
 

@@ -10,25 +10,10 @@ class TicketDAO{
         return user;
     }
 
-    // public createticket = async(type: string,
-    //     key: string,
-    //     summary: string,
-    //     description: string,
-    //     assignee: string,
-    //     reporter: string | undefined,
-    //     dueDate: Date,
-    //     files: File)=> {
-    //     return await Ticket.create({
-    //         type,
-    //         key,
-    //         summary,
-    //         description,
-    //         assignee: assignee,
-    //         // reporter: reporterEmail,
-    //         dueDate,
-    //         files,
-    //     });
-    // }
+    public getTickets = async()=>{
+        const tickets = await Ticket.find({});
+        return tickets;
+    }
 }
 
 export default TicketDAO

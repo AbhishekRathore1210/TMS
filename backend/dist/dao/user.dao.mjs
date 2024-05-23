@@ -22,12 +22,13 @@ class UserDao {
     };
     checkAdmin = async (email, otp) => {
         const user = await adminUser.findOne({ email: email });
+        var dt = (new Date().getTime());
         // console.log(user);
         if (!user) {
             return false;
         }
         else {
-            if (user.otp != otp) {
+            if (user.otp != otp || user.otpExpire && user.otpExpire.getTime() < Date.now()) {
                 return false;
             }
         }

@@ -3,7 +3,7 @@ import React from 'react';
 import TicketForm from '../TicketForm/TicketForm';
 import './CreateModal.scss';
 
-const CreateModal = () => {
+const CreateModal = ({fun}:any) => {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -18,15 +18,9 @@ const CreateModal = () => {
           <Modal.Title>Create Ticket</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-         <TicketForm/>
+         <TicketForm fun={fun}/>
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={handleClose} appearance="primary">
-            Ok
-          </Button>
-          <Button onClick={handleClose} appearance="subtle">
-            Cancel
-          </Button>
         </Modal.Footer>
       </Modal>
     </>

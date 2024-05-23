@@ -8,7 +8,6 @@ import orgUserRegisterSchema from "../controllers/validators/orguser.controller.
 import TicketController from "../controllers/ticket.controller.mjs";
 import ticketSchema from "../controllers/validators/ticket.controller.validation.js";
 import Authentication from "../middleware/auth.middleware.mjs";
-import orgSchema from "../controllers/validators/organization.controller.validation.js";
 class Routes {
     userPath = "/users";
     adminPath = "/admin";
@@ -32,8 +31,9 @@ class Routes {
         this.ticketController.showAllTicketsInOrganization);
         this.router.post(`${prefix}/dashboard/createTicket`, this.authentication.Auth, this.validation.validate(ticketSchema), this.ticketController.createTicket);
         this.router.get(`${prefix}/getAllTicketsInOrg`, this.authentication.Auth, this.ticketController.showAllTicketsInOrganization);
-        this.router.get(`${prefix}/showAllUsersInOrg`, this.authentication.Auth, this.ticketController.showAllUserInOrganization);
-        this.router.put(`${prefix}/updateTicket`, this.ticketController.updateTicket);
+        this.router.get(`${prefix}/show-all-users-in-organization`, this.authentication.Auth, this.ticketController.showAllUserInOrganization);
+        this.router.put(`${prefix}/updateTicket`, this.authentication.Auth, this.ticketController.updateTicket);
+        this.router.get(`${prefix}/getTickets`, this.ticketController.getTickets);
         // this.router.get(`${prefix}/getAllOrg`,this.adminController.showOrganization);
     }
     initiaizeAdminRoutes(prefix) {
@@ -42,8 +42,8 @@ class Routes {
         this.router.post(`${prefix}/login`, this.validation.validate(userLoginSchema), this.adminController.loginAdmin);
         this.router.post(`${prefix}/otp`, this.validation.validate(userLoginSchema), this.adminController.sendOTP);
         this.router.get(`${prefix}/dashboard`, this.adminController.showOrganization);
-        this.router.post(`${prefix}/dashboard/createOrg`, this.authentication.AdminAuth, this.validation.validate(orgSchema), this.organizationController.createOrg);
-        this.router.post(`${prefix}/dashboard/deleteOrg`, this.authentication.AdminAuth, this.organizationController.deleteOrg);
+        this.router.post(`${prefix}/dashboard/createOrg`, this.authentication.Auth, this.organizationController.createOrg);
+        this.router.post(`${prefix}/dashboard/deleteOrg`, this.organizationController.deleteOrg);
     }
 }
 export default Routes;

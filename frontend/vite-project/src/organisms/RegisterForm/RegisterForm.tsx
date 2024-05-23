@@ -30,9 +30,14 @@ function RegisterForm() {
   })
 
   const validateOrgUser = ()=>{
-    if(!email || !firstName || !lastName){
+    if(!email || !firstName || !lastName ||!dob ||!doj){
       toast.error("Fill All the Details");
       return false;
+    }
+
+    if(!firstName.trim() || !lastName.trim()){
+      toast.error("Invalid Name");
+      return false
     }
 
     let hasNumbers = /\d/.test(firstName);
@@ -52,7 +57,7 @@ function RegisterForm() {
   }
   const validateUser = ()=>{
 
-    if(!email || !firstName || !lastName){
+    if(!email || !firstName || !lastName ){
       toast.error("Fill All the Details");
       setError("Fill All the Details");
       return false;
@@ -132,13 +137,6 @@ function RegisterForm() {
     console.log(result);
 
     if(!response.ok){
-      setError("");
-      setFirstname("");
-      setLastname("");
-      setEmail("");
-      setOrg("");
-      setDOB("");
-      setDOJ("");
       console.log(result.error);
       setError(result.error);
       toast.error(result.message);
@@ -152,7 +150,7 @@ function RegisterForm() {
       setOrg("");
       setDOB("");
       setDOJ("");
-      toast.success(result.message);
+      alert("New User Registered!")
       navigate("/admin/dashboard");
     }
   }
@@ -164,9 +162,15 @@ function RegisterForm() {
 
   const getMinDate = () => {
     const today = new Date();
-    today.setFullYear(today.getFullYear() - 120);
+    today.setFullYear(today.getFullYear() - 100);
     return today.toISOString().split('T')[0];
   };
+
+  const getMaxDate = () =>{
+    const today = new Date();
+    today.setFullYear(today.getFullYear() + 100);
+    return today.toISOString().split('T')[0];
+  }
 
   return (
     <>
@@ -195,7 +199,7 @@ function RegisterForm() {
           </div>
           <div className="dateContainer">
             <label className="form-label">Date of Joining</label>
-            <Input disabled={user=="System"?true:false} value={doj} type='date' onChange={(e: string)=>{setDOJ(e)}}></Input>
+            <Input disabled={user=="System"?true:false} value={doj} min={getCurrentDate()} max={getMaxDate()} type='date' onChange={(e: string)=>{setDOJ(e)}}></Input>
           </div>
           <Button className='sub-btn' type='submit' color='red' appearance='primary' size='lg' >Submit</Button>
         </form>
