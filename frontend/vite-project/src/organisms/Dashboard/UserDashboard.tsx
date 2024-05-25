@@ -51,7 +51,7 @@ function UserDashboard() {
     const handleSubmit = async(e:FormSubmit) =>{
       e.preventDefault();
       const filterValue = {ty, st, cd, ud, dd};
-      console.log(filterValue,'Filter **********');
+      // console.log(filterValue,'Filter **********');
     }
     // 
 
@@ -74,9 +74,8 @@ function UserDashboard() {
         Authorization: `BEARER ${token}`,
         'Custom-Header': 'Custom Value',
       },
-    };
-
-     const response =  axios.get(`http://localhost:8555/users/getAllTicketsInOrg?page=${page}&&limit=${limit}&&type=${ty}&&status=${st}&&cd=${cd}&&ud=${ud}&&dd=${dd}`,config).then((res)=>{
+    }; // dd?"&dd=${dd}:'' "
+     const response =  axios.get(`http://localhost:8555/users/tickets-in-org?page=${page}&&limit=${limit}&&type=${ty}&&status=${st}&&cd=${cd}&&ud=${ud}&&dd=${dd}`,config).then((res)=>{
       console.log(res.data,"Tickets");
       SetTicket(res.data.tickets);
       setTotal(res.data.totalPages);

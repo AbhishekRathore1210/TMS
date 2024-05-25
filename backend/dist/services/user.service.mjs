@@ -17,6 +17,10 @@ class UserService {
         const ifDeleted = this.organizationDao.deleteOrg(name);
         return ifDeleted;
     };
+    allOrg = async (req, res, next) => {
+        const allOrg = await this.organizationDao.allOrg();
+        return allOrg;
+    };
     allOrganizations = async (req, res, next) => {
         console.log('query', req.query);
         const page = Number(req.query.page);
@@ -42,7 +46,7 @@ class UserService {
             requireTLS: true,
             auth: {
                 user: 'abhishek19229785@gmail.com',
-                pass: 'inft pvav gugm lqyz' // password is required!
+                pass: 'inft pvav gugm lqyz' //password
             }
         });
         const myOtp = Math.floor((Math.random() * 1000000) + 1);

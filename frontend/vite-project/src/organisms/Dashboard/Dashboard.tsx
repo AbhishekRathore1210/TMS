@@ -27,6 +27,7 @@ function Dashboard() {
 
   const [org, setOrg] = useState([]);
   const [fil, setfil] = useState([]);
+  // const [user,setUser] = useState([]);
 
   const [allTicket,setAllTicket] = useState([]);
   const [limit2,setLimit2] = useState(10);
@@ -80,6 +81,7 @@ function Dashboard() {
         setTotal(res.data.totalPage);
       setOrg(res.data.allOrg);
       setfil(res.data.allOrg);
+      // setUser(res.data.allOrg.user_list.name);
       })
       .catch((err) => console.log(err));
   }, [page,t,limit, check,page2,t2,limit2]);
@@ -100,7 +102,7 @@ function Dashboard() {
         },
       }; 
 
-      const response = await axios.get(`http://localhost:8555/users/getTickets?page=${page2}&&limit=${limit2}`,config)
+      const response = await axios.get(`http://localhost:8555/users/tickets?page=${page2}&&limit=${limit2}`,config)
       .then((res)=>{
         console.log("All tickets ",res.data.data.tickets);
         console.log(res.data.data);
@@ -119,7 +121,7 @@ function Dashboard() {
     }
 
     const organizationName = {"name":name};
-    const response = await fetch("http://localhost:8555/admin/dashboard/deleteOrg",{
+    const response = await fetch("http://localhost:8555/admin/dashboard/delete-org",{
       method:'POST',
       body:JSON.stringify(organizationName),
       headers:{
@@ -133,7 +135,6 @@ function Dashboard() {
       });
       setOrg(activeData);
       setfil(activeData);
-
       console.log("Organization Deleted Successfully!");
       toggle();
     }
@@ -157,7 +158,6 @@ function Dashboard() {
 
   return (
     <>
-    {/* <NavBar/> */}
 
           <h1>System User Dashboard</h1>
           <Link to="/admin/dashboard/createOrgUser">

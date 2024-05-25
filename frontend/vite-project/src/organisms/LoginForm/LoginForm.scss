@@ -23,6 +23,11 @@
         width: 95%;
     }
 
+    .org-selectpicker{
+        border:2px solid black;
+        border-radius: 5px;
+    }
+
     .upperContainer {
         display: flex;
         width: 100%;
@@ -51,6 +56,7 @@
                 }
             }
         }
+        
 
         h4 {
             padding-bottom: 15px;

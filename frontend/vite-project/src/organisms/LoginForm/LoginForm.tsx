@@ -1,22 +1,26 @@
 import { Button, Input } from 'rsuite'
 import './LoginForm.scss'
-import {  useState } from 'react'
+import {  useEffect, useState } from 'react'
+import { SelectPicker, Stack } from 'rsuite';
+import axios from 'axios'
  
 import { useNavigate } from 'react-router-dom';
 import { ToastContainer,toast } from 'react-toastify';
 import { Cookies } from 'react-cookie';
-import CustomDropdown from '../DropDown/DropDown';
 
 
 function LoginForm() {
   const [user, setUser] = useState("System");
+
+
   const [error,setError] = useState("");
-  const [org, setOrg] = useState("");
-  // const [org, setOrg] = useState<string | null>("");
+  const [org, setOrg] = useState<string | null>("");
+  const [orgName,setOrgName] = useState([]);
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("");
   const [toggle,setToggle] = useState(false);
-  const [data , setData] = useState([]);
+
+
   let flag = false;
 
   const navigate = useNavigate();
@@ -30,6 +34,25 @@ function LoginForm() {
     }
     return true;
   }
+  useEffect(()=>{
+    allOrganizationName();
+  },[])
+
+  const allOrganizationName = async()=>{
+    const response = await axios.get('http://localhost:8555/org')
+      console.log(response.data,'data');
+      if(response.data.data.success){
+        // const formattedData = response.data.data.allOrg.map((e:any) => ({
+        //   label: e.name,
+        //   value: e.name// or any unique identifier
+        // }));
+        setOrgName(response.data.data.allOrg);
+        console.log(response.data.data.allOrg);
+      }
+      else{
+        console.log("error");
+      }
+    }
 
   const validateEmail = ()=>{
     if(!email){
@@ -121,7 +144,8 @@ function LoginForm() {
       toast.success("OTP sent successfully!");
       console.log("OTP has been sent!");
     }
-    setToggle(false);
+    setTimeout(()=>setToggle(false),10000);
+    // setToggle(false);
     // console.log(toggle,"after");
   }
   
@@ -155,6 +179,7 @@ function LoginForm() {
       navigate('/login');
     }
   }
+  
 
   return (
     <>
@@ -164,19 +189,19 @@ function LoginForm() {
         {/* <div className="underline"></div> */}
         <div className="userSelection">
             <span className='btn-sys'>
-              <Button size='lg' color='orange' onClick={()=>setUser("System")} appearance={user=='System'?"ghost":"default"} >System</Button>
+              <Button size='lg' color='blue' onClick={()=>setUser("System")} appearance={user=='System'?"primary":"default"} >System</Button>
             </span>
             <span className='btn-org'>
-              <Button size='lg' color='orange' onClick={()=>setUser("Organization")} appearance={user=='Organization'?"ghost":"default"} >Organization</Button>
+              <Button size='lg' color='blue' onClick={()=>setUser("Organization")} appearance={user=='Organization'?"subtle":"default"} >Organization</Button>
             </span>
+
         </div>
         </div>
 
         <form onSubmit={user == 'System'? handleSystem : handleOrganization}>
 
-          <Input disabled={user == 'System'? true : false} value={org} type="text" placeholder='Organization' onChange={(e: string)=>{setOrg((e))}}></Input>
-          {/* <CustomDropdown org={org} setOrg={setOrg} /> */}
 
+          <SelectPicker searchable={false} data={orgName} labelKey='name' block className='org-selectpicker' valueKey='name' disabled={user =='System'?true:false} style={{ width: 224 }} onChange={(e:string | null)=>{setOrg((e))}} />
 
           <Input type="email" value={email} placeholder='E-mail' onChange={(e: string)=>{setEmail((e))}}></Input>
 

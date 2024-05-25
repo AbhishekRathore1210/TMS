@@ -73,7 +73,7 @@ const navigate = useNavigate();
   }, []);
 
   const fetchEmailOptions = async () => {
-    const response = await fetch('http://localhost:8555/users/show-all-users-in-organization', {
+    const response = await fetch('http://localhost:8555/users/users-in-organization', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -110,7 +110,7 @@ const navigate = useNavigate();
   }
     const createTicket = async()=>{
     const ticket = {...formData}; 
-    const response = await fetch("http://localhost:8555/users/dashboard/createTicket",{
+    const response = await fetch("http://localhost:8555/users/dashboard/create-ticket",{
       method:'POST',
       body:JSON.stringify(ticket),
       headers:{

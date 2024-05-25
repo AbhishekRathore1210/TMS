@@ -92,6 +92,8 @@ function TableDemo(props:any){
         </Cell></Column>
     </Table>
 
+    
+
     </>
     
   );

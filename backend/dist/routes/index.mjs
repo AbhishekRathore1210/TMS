@@ -11,6 +11,7 @@ import Authentication from "../middleware/auth.middleware.mjs";
 class Routes {
     userPath = "/users";
     adminPath = "/admin";
+    orgPath = "/org";
     router = Router();
     userController = new UserController();
     adminController = new AdminController();
@@ -20,7 +21,12 @@ class Routes {
     authentication = new Authentication();
     constructor() {
         this.initializeUserRoutes(`${this.userPath}`);
-        this.initiaizeAdminRoutes(`${this.adminPath}`);
+        this.initializeAdminRoutes(`${this.adminPath}`);
+        this.initializeOrganizationRoutes(`${this.orgPath}`);
+    }
+    initializeOrganizationRoutes(prefix) {
+        console.log("Initializing Org Routes");
+        this.router.get('/org', this.organizationController.allOrg);
     }
     initializeUserRoutes(prefix) {
         console.log("Initializing user routes..");
@@ -29,21 +35,22 @@ class Routes {
         this.router.get(`${prefix}/dashboard`, 
         // this.authentication.Auth,
         this.ticketController.showAllTicketsInOrganization);
-        this.router.post(`${prefix}/dashboard/createTicket`, this.authentication.Auth, this.validation.validate(ticketSchema), this.ticketController.createTicket);
-        this.router.get(`${prefix}/getAllTicketsInOrg`, this.authentication.Auth, this.ticketController.showAllTicketsInOrganization);
-        this.router.get(`${prefix}/show-all-users-in-organization`, this.authentication.Auth, this.ticketController.showAllUserInOrganization);
-        this.router.put(`${prefix}/updateTicket`, this.authentication.Auth, this.ticketController.updateTicket);
-        this.router.get(`${prefix}/getTickets`, this.ticketController.getTickets);
+        this.router.post(`${prefix}/dashboard/create-ticket`, this.authentication.Auth, this.validation.validate(ticketSchema), this.ticketController.createTicket);
+        this.router.get(`${prefix}/tickets-in-org`, this.authentication.Auth, this.ticketController.showAllTicketsInOrganization);
+        this.router.get(`${prefix}/users-in-organization`, this.authentication.Auth, this.ticketController.showAllUserInOrganization);
+        this.router.put(`${prefix}/update-ticket`, this.authentication.Auth, this.ticketController.updateTicket);
+        this.router.get(`${prefix}/tickets`, this.ticketController.getTickets);
         // this.router.get(`${prefix}/getAllOrg`,this.adminController.showOrganization);
     }
-    initiaizeAdminRoutes(prefix) {
+    initializeAdminRoutes(prefix) {
         console.log("Admin Route");
         this.router.post(`${prefix}/register`, this.validation.validate(userRegisterSchema), this.adminController.registerAdmin);
         this.router.post(`${prefix}/login`, this.validation.validate(userLoginSchema), this.adminController.loginAdmin);
         this.router.post(`${prefix}/otp`, this.validation.validate(userLoginSchema), this.adminController.sendOTP);
         this.router.get(`${prefix}/dashboard`, this.adminController.showOrganization);
-        this.router.post(`${prefix}/dashboard/createOrg`, this.authentication.Auth, this.organizationController.createOrg);
-        this.router.post(`${prefix}/dashboard/deleteOrg`, this.organizationController.deleteOrg);
+        this.router.post(`${prefix}/dashboard/create-org`, this.authentication.Auth, this.organizationController.createOrg);
+        this.router.post(`${prefix}/dashboard/delete-org`, this.organizationController.deleteOrg);
+        // this.router.get(`/users-in-org`,this.organizationController.showUserInOrg);
     }
 }
 export default Routes;

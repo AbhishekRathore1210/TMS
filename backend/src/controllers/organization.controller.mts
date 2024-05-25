@@ -1,8 +1,10 @@
-import { Request, Response } from "express";
-
+import { NextFunction, Request, Response } from "express";
+import OrganizationDao from "../dao/organization.dao.mjs";
 import UserService from "../services/user.service.mjs";
 
 class Organization {
+  private organizationDao = new OrganizationDao();
+
   private userService = new UserService();
   public createOrg = async (req: Request, res: Response) => {
     const { org } = req.body;
@@ -13,6 +15,13 @@ class Organization {
       res.status(400).send({success:false,message:"Organization already Exists!"});
     }
   };
+  public allOrg = async(req:Request,res:Response,next:NextFunction) =>{
+    const allOrg = await this.userService.allOrg(req,res,next)
+    if(allOrg){
+      return res.send({code:200,data:{success:true,allOrg}});
+    }
+    return res.send({code:400,data:{success:false,message:"Failed to fetch organizations"}});
+  }
 
   public deleteOrg = async (req: Request, res: Response) => {
     const { name } = req.body;
@@ -22,6 +31,15 @@ class Organization {
     }
     return res.status(400).send({ message: "Not Deleted!" });
   };
+
+  public showUserInOrg = async(req:Request,res:Response)=>{
+    const name = req.params.name;
+    const newOrg  = await this.organizationDao.findOrgByName(name);
+    if(newOrg){
+      return res.send({code:200,data:{success:true,userList:newOrg.user_list}});
+    }
+    return res.send({code:400,data:{success:false,message:"Not Found"}});
+  }
 }
 
 export default Organization;

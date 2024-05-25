@@ -22,6 +22,16 @@ public showAllOrganizations = async(skip:number,limit:number) =>{
         
         return {allOrg,totalOrg,totalPage};
 }
+public allOrg = async()=>{
+    try{
+    const orgs = await Organization.find({is_active:true}).exec(); // Fetch all organizations
+    const orgNames = orgs.map(org => ({ name: org.name })); // Extract the name property from each document
+    return orgNames;
+    }catch(error){
+        const err = error as Error;
+        throw new Error('Failed to fetch organizations');
+    }
+}
 
 public deleteOrg = async(name:string) =>{
     const ifDeleted =await  Organization.updateOne({ $and: [

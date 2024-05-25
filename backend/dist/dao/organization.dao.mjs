@@ -12,6 +12,17 @@ class OrganizationDao {
         // console.log('skip',skip);
         return { allOrg, totalOrg, totalPage };
     };
+    allOrg = async () => {
+        try {
+            const orgs = await Organization.find({ is_active: true }).exec(); // Fetch all organizations
+            const orgNames = orgs.map(org => ({ name: org.name })); // Extract the name property from each document
+            return orgNames;
+        }
+        catch (error) {
+            const err = error;
+            throw new Error('Failed to fetch organizations');
+        }
+    };
     deleteOrg = async (name) => {
         const ifDeleted = await Organization.updateOne({ $and: [
                 { name: name },

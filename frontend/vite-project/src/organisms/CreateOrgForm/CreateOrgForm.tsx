@@ -25,14 +25,14 @@ const handleSubmit = async(e:FormSubmit)=>{
     console.log("outside trim");
     if(!org.trim()){
         console.log("Inside trim");
-        toast.error("Organization Name must be a unique Name!")
+        toast.error("Invalid Name")
         console.log("Organization cannot be created with empty Name");
         return;
     }
 
     const orgName = {org};  
     
-    const response = await fetch("http://localhost:8555/admin/dashboard/createOrg",{
+    const response = await fetch("http://localhost:8555/admin/dashboard/create-org",{
 
         method:'POST',
         body:JSON.stringify(orgName),
@@ -60,6 +60,7 @@ const handleSubmit = async(e:FormSubmit)=>{
     if(response.ok){
         setError("");
         setOrg("");
+        alert("New Organization Created!")
         navigate('/admin/dashboard');
     }
 }

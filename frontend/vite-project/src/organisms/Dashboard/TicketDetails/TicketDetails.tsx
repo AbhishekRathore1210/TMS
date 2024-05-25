@@ -60,7 +60,7 @@ function TicketDetails(props:any) {
 
         const updatedTicket = props.d;
         console.log(updatedTicket,'********');
-        const response = await axios.put("http://localhost:8555/users/updateTicket",updatedTicket,config)
+        const response = await axios.put("http://localhost:8555/users/update-ticket",updatedTicket,config)
         
         console.log("Response",response.data);
 
@@ -74,7 +74,7 @@ function TicketDetails(props:any) {
       }
 
       const handleChange = (e:any ) => {
-        console.log('e******88',e.target);
+        // console.log('e******88',e.target);
         const name = e.target.name;
         const value = e.target.value;
         props.setD({

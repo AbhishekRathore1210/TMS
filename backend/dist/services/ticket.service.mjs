@@ -141,12 +141,9 @@ class TicketService {
         }
     };
     showAllUserInOrganization = async (req, res, next) => {
-        // console.log("JWT",req.user);
         try {
             const org = req.user.organization;
-            // console.log("org",org);
             const users = await orgUser.find({ organization_list: org });
-            // console.log("users",users);
             res.status(200).json({ users });
         }
         catch (error) {
