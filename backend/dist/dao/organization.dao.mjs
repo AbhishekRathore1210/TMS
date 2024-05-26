@@ -41,13 +41,33 @@ class OrganizationDao {
         return organization;
     };
     findOrgByName = async (org) => {
-        const organization = Organization.findOne({
+        const organization = await Organization.findOne({ name: org });
+        if (!organization) {
+            return false;
+        }
+        const check2 = await Organization.findOne({
             $and: [
                 { name: org },
                 { is_active: true }
             ]
         });
-        return organization;
+        if (check2) {
+            return check2;
+        }
+        return false;
+        // if(organization){
+        //     const isActive =  organization.is_active;
+        //     console.log("oragnization",organization);
+        //     console.log("isActive",isActive)
+        //     if(isActive){
+        //         console.log("org is active");
+        //         return organization;
+        //     }
+        //     else{
+        //         return false;
+        //     }
+        // }
+        return false;
     };
 }
 export default OrganizationDao;

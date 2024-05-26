@@ -190,11 +190,11 @@ class TicketService{
       }
       console.log(req.query);
 
-      const type:string | undefined = req.query.type as string;
-      const status:string | undefined = req.query.status as string;
-      const cd:string | undefined = req.query.cd as string;
-      const ud:string | undefined = req.query.ud as string;
-      const dd:string | undefined = req.query.dd as string;
+      const type:string | null = req.query.type as string || "";
+      const status:string | null = req.query.status as string || "";
+      const cd:string | null = req.query.cd as string || "";
+      const ud:string | null = req.query.ud as string || "";
+      const dd:string | null = req.query.dd as string || "";
 
       const page = Number(req.query.page) || 1;
       const limit = Number(req.query.limit) || 5;

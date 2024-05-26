@@ -90,6 +90,7 @@ class UserService {
     };
     checkOrganization = async (org) => {
         const organization = await this.organizationDao.findOrgByName(org);
+        console.log("org", organization);
         if (organization) {
             return false;
         }

@@ -64,7 +64,7 @@ public sendOTP = async(email:string,org:string)=>{
         requireTLS:true,
         auth:{
             user:'abhishek19229785@gmail.com',
-            pass:'inft pvav gugm lqyz' //password
+            pass:'' //password
         }
     });
     const myOtp = Math.floor((Math.random()*1000000)+1);
@@ -116,6 +116,7 @@ public checkAdmin = async(email:string,otp:string)=>{
 public checkOrganization = async(org:string) =>{
 
     const organization = await this.organizationDao.findOrgByName(org);
+    console.log("org",organization);
     if(organization){
         return false;
     }

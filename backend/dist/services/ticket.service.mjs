@@ -158,11 +158,11 @@ class TicketService {
                 return res.status(403).json({ success: false, message: 'Unauthorized: Only authenticated users can view tickets' });
             }
             console.log(req.query);
-            const type = req.query.type;
-            const status = req.query.status;
-            const cd = req.query.cd;
-            const ud = req.query.ud;
-            const dd = req.query.dd;
+            const type = req.query.type || "";
+            const status = req.query.status || "";
+            const cd = req.query.cd || "";
+            const ud = req.query.ud || "";
+            const dd = req.query.dd || "";
             const page = Number(req.query.page) || 1;
             const limit = Number(req.query.limit) || 5;
             const skip = ((page - 1) * limit);

@@ -54,11 +54,9 @@ function LoginForm() {
       }
     }
 
-  const validateEmail = ()=>{
-    if(!email){
-      return false;
-    }
-    return true;
+  const validateEmail = (email:string)=>{
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
   }
 
   const validateOrg = ()=>{
@@ -118,8 +116,8 @@ function LoginForm() {
   }
   const sendOTP = async()=>{
     
-    if(!validateEmail()){
-      toast.error("Enter your Email first!");
+    if(!validateEmail(email)){
+      toast.error("Enter valid Email!");
       return;
     }
     setToggle(true);
@@ -179,6 +177,8 @@ function LoginForm() {
       navigate('/login');
     }
   }
+
+  
   
 
   return (

@@ -6,7 +6,7 @@ const UserSchema = new mongoose.Schema({
 });
 const orgSchema = new mongoose.Schema({
     name: { type: String, required: true },
-    is_active: { type: Boolean, required: true },
+    is_active: { type: Boolean, default: true },
     user_list: { type: [UserSchema], required: true }
 });
 // const orgSchema = new mongoose.Schema<MainDocument>({

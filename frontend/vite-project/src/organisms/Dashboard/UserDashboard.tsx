@@ -75,6 +75,8 @@ function UserDashboard() {
         'Custom-Header': 'Custom Value',
       },
     }; // dd?"&dd=${dd}:'' "
+
+  
      const response =  axios.get(`http://localhost:8555/users/tickets-in-org?page=${page}&&limit=${limit}&&type=${ty}&&status=${st}&&cd=${cd}&&ud=${ud}&&dd=${dd}`,config).then((res)=>{
       console.log(res.data,"Tickets");
       SetTicket(res.data.tickets);
@@ -112,9 +114,37 @@ function UserDashboard() {
       <CreateModal fun={getAllTicketInOrg}/></div>
      
           <h2>Tickets</h2>
+          
           <div className='parent-filter-btn'>
-          <Button className='filter-btn' onClick={handleOpen}>Filter</Button>
-      <Button className='filter-btn' onClick={handleRemove}>Clear</Button></div>
+            <h4 className='type-filter'>Type</h4>
+    <SelectPicker className='type-filter-picker'
+      data={type}
+      searchable={false}
+      style={{ width: 224 }}
+      onChange={(value)=>{
+        if(value){
+          setTy(value)
+        }
+        else{
+          setTy("");
+        }
+      }}
+    />
+      <h4 className='type-filter'>Status</h4>
+    {/* <h4>Status</h4> */}
+    <SelectPicker className='status-filter-picker'
+      data={statuss}
+      searchable={false}
+      style={{ width: 224 }}
+      onChange={(value)=>{
+        if(value){
+        setSt(value)}
+        else{setSt("");}
+      }}
+    />
+      {/* <Button className='filter-btn' onClick={handleRemove}>Clear</Button> */}
+      </div>
+          {/* <Button className='filter-btn' onClick={handleOpen}>Filter</Button> */}
       <div className='ticket'>
         <UserTicket ticket={ticket} SetTicket={SetTicket} lim={limit} p={page} setP={setPage} fun={handleChangeLimit} t={total} st={setTotal} getTicket={getAllTicketInOrg}  />
       </div>

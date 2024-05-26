@@ -75,6 +75,11 @@ const ActionCell = ({ rowData, dataKey, onClick, ...props }:any) => {
 
 function UserTicket({ticket,SetTicket,lim,p,setP,t,fun,getTicket}:any){
 
+
+  const [sortColumn, setSortColumn] =useState();
+  const [sortType, setSortType] = useState();
+  const [loading, setLoading] = useState(false);
+
     const SerialNumberCell = ({ rowIndex, ...props}:any) => (
       <Cell {...props}>{rowIndex + 1}</Cell>
     );
@@ -96,26 +101,43 @@ function UserTicket({ticket,SetTicket,lim,p,setP,t,fun,getTicket}:any){
       SetTicket(nextData);
     };
 
-    //     try{
-    //       console.log(rowData,'**********');
-    //       const token:string | undefined = cookies.get('accessToken');
-    //       const config = {
-    //         headers: {
-    //           Authorization: `BEARER ${token}`,
-    //           'Custom-Header': 'Custom Value',
-    //         },
-    //       };
+    // const d = ticket;
 
-    //       const response = await axios.put("http://localhost:8555/users/updateTicket",rowData);
-    //       // console.log('*************',response.data);
-    //       console.log("Row data",rowData);
-    //       console.log("id",_id);
-    //     }
-    //     catch(error){
-    //       const err = error as Error
-    //       console.log(err.message);
-    //     }
-    // };
+    const getData = () => {
+      if (sortColumn && sortType) {
+        return ticket.sort((a: { [x: string]: any; }, b: { [x: string]: any; }) => {
+          let x = a[sortColumn];
+          let y = b[sortColumn];
+          const isDateString = (dateStr: string) => {
+            // Simple check if the string matches the format YYYY-MM-DD
+            // console.log('x',dateStr);
+            dateStr = dateStr.split('T')[0];
+            return /^\d{4}-\d{2}-\d{2}$/.test(dateStr);
+          };
+    
+          if (isDateString(x) && isDateString(y)) {
+            console.log('x',x);
+            console.log('y',y);
+            x = new Date(x);
+            y = new Date(y);
+          }
+          else if (typeof x === 'string') {
+            x = x.charCodeAt(0);
+          }
+          else if (typeof y === 'string') {
+            y = y.charCodeAt(0);
+          }
+          if (sortType === 'asc') {
+            return x - y;
+          } else {
+            return y - x;
+          }
+        });
+      }
+      return ticket;
+    };
+
+
 
     const [data, setdata] = useState({
       type: "",
@@ -148,15 +170,27 @@ function UserTicket({ticket,SetTicket,lim,p,setP,t,fun,getTicket}:any){
 
     };
 
+  const handleSortColumn = (sortColumn: any, sortType: any) => {
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+      setSortColumn(sortColumn);
+      setSortType(sortType);
+    }, 500);
+  };
+
     return(
         <>
         <div className='table-div'>
         <Table
     className='ticket-table'
       height={400} width={1250}
-      data={ticket}
+      data={getData()}
+      sortColumn={sortColumn}
+      sortType={sortType}
+      onSortColumn={handleSortColumn}
+      loading={loading}
     >
- 
       <Column width={100} align='center' >
         <HeaderCell>Type</HeaderCell>
         <Cell dataKey='type'/>
@@ -188,17 +222,17 @@ function UserTicket({ticket,SetTicket,lim,p,setP,t,fun,getTicket}:any){
         <Cell dataKey='reporter'/>
       </Column>
 
-      <Column width={100} align='center' >
+      <Column width={150} align='center' sortable>
         <HeaderCell>Created Date</HeaderCell>
         <Cell dataKey='createdDate'>{rowData=>(rowData.createdDate.split('T')[0])}</Cell>
       </Column>
 
-      <Column width={100} align='center' >
+      <Column width={150} align='center' sortable>
         <HeaderCell>Updated Date</HeaderCell>
         <Cell dataKey='updatedDate'>{rowData=>(rowData.updatedDate.split('T')[0])}</Cell>
       </Column>
 
-      <Column width={100} align='center' >
+      <Column width={100} align='center' sortable >
         <HeaderCell>Due Date</HeaderCell>
         <Cell dataKey='dueDate'>{rowData=>(rowData.dueDate.split('T')[0])}</Cell>
       </Column>

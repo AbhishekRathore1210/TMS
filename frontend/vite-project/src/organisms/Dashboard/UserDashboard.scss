@@ -12,8 +12,29 @@
     width: 100vw;
 }
 
+h4{
+    display: inline-block;
+}
+
 .parent-filter-btn{
     // border:1px solid blue;
+    .type-filter{
+        margin-left: 145px;
+        margin-bottom: 5px;
+    }
+    .status-filter{
+      margin-left: 50px;
+      margin-bottom: 5px;
+      
+    }
+    .status-filter-picker{
+        margin-bottom: 5px;
+        margin-left: 5px;
+    }
+    .type-filter-picker{
+        margin-bottom: 5px;
+        margin-left: 3px;
+    }
 
 .filter-btn{
     margin:0;
