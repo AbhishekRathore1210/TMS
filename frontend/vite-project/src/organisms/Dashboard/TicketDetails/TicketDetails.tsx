@@ -1,9 +1,10 @@
-import {useState} from 'react';
+import { useState} from 'react';
 import {Button} from 'rsuite';
 import './TicketDetails.scss'
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
-import { Cookies } from "react-cookie";
+// import { Cookies } from "react-cookie";
+import Cookies from 'js-cookie';
 import { ToastContainer,toast } from 'react-toastify';
 
 interface Ihistory {
@@ -33,8 +34,6 @@ function TicketDetails(props:any) {
         item =>({label:item,value:item})
      );
 
-      const [ty,setTy] = useState<string | null>("");
-      const [st,setSt] = useState<string | null>("");
       const [disableData,setDisableData] = useState(true);
 
       const EnableData = ()=>{
@@ -42,9 +41,9 @@ function TicketDetails(props:any) {
       }
 
       const navigate = useNavigate();
-      const cookies = new Cookies();
+      // const cookies = new Cookies();
 
-      const token:string | undefined = cookies.get('accessToken');
+      const token:string | undefined = Cookies.get('accessToken');
 
       const updateTicket = async() =>{
         if(!token){
@@ -60,21 +59,19 @@ function TicketDetails(props:any) {
 
         const updatedTicket = props.d;
         console.log(updatedTicket,'********');
-        const response = await axios.put("http://localhost:8555/users/update-ticket",updatedTicket,config)
+        const response = await axios.put("http://localhost:8555/users/ticket",updatedTicket,config)
         
         console.log("Response",response.data);
 
         if(response.data.data.success){
           toast.success(response.data.data.message);
-          console.log(response.data.data.message,'toast not working');
+          // console.log(response.data.data.message,'toast not working');
           props.getTicket();
         }
         props.funClose();
-        
       }
 
       const handleChange = (e:any ) => {
-        // console.log('e******88',e.target);
         const name = e.target.name;
         const value = e.target.value;
         props.setD({
@@ -89,54 +86,63 @@ function TicketDetails(props:any) {
     <>
     <div>
             <div className='parent-edit-btn'>
-            <Button className='edit-btn' appearance='primary' disabled={!disableData} onClick={EnableData}>Edit</Button>
-            <Button className='save-btn' disabled={disableData} appearance='primary' onClick={updateTicket}>Save</Button></div>
-    <label>Type:</label>
-    <select name="type" onChange={handleChange} disabled={disableData} >
+            <Button className='edit-btn' appearance='primary' color='red' disabled={!disableData} onClick={EnableData}>Edit</Button>
+            <Button className='save-btn' disabled={disableData} color='green' appearance='primary' onClick={updateTicket}>Save</Button></div>
+    <label>Type:{'  '}</label>
+    <select name="type" onChange={handleChange} value={props.d.type} disabled={disableData} >
   <option value="Task">Task</option>
   <option value="Story">Story</option>
   <option value="Bug">Bug</option>
   </select>
     <br></br><br></br>
+    
+    {/* <SelectPicker
+      data={type}
+      searchable={false}
+      disabled={disableData}
+      value={props.d.type}
+      style={{ width: 224 }}
+      onChange={(e)=>{props.setD({...props.d,type:e})}}
+    /> */}
 
-    <label>Status:</label>
-    <select name="status" onChange={handleChange} disabled={disableData}>
+    <label>Status: {'  '}</label>
+    <select name="status" onChange={handleChange} value={props.d.status} disabled={disableData}>
   <option value="TOBEPICCKED">TOBEPICCKED</option>
   <option value="INTESTING">INTESTING</option>
   <option value="COMPLETED">COMPLETED</option>
   <option value="INTESTING">INPROGRESS</option>
   </select>
     <br></br><br></br>
-  <label>Key:</label>
+  <label>Key :{'  '}</label>
   <input className='edit-ticket-input' type='text' name='key' value={props.d.key} disabled onChange={handleChange}></input><br></br>
 
-  <label>Summary: </label>
-  <input className='edit-ticket-input' type='text' name='summary' value={props.d.summary} disabled={disableData} onChange={handleChange}></input ><br></br>
+  <label htmlFor="summary">Summary:{'  '}</label><br />
+  <textarea rows={4} cols={70} name='summary' value={props.d.summary} disabled={disableData} onChange={handleChange}></textarea ><br></br><br></br>
 
-  <label>Description: </label>
-  <input className='edit-ticket-input' type='text' name='description' value={props.d.description} disabled={disableData} onChange={handleChange}></input><br></br>
+  <label htmlFor="description">Description: {'  '}</label><br />
+  <textarea rows={4} cols={70} name='description' value={props.d.description} disabled={disableData} onChange={handleChange}></textarea><br></br><br></br>
 
 
-  <label>Assignee: </label>
+  <label>Assignee: {'  '} </label>
   <input className='edit-ticket-input' type='email' name='assignee' value={props.d.assignee} disabled onChange={handleChange}></input>
   <br></br>
-  <label>Reporter: </label>
+  <label>Reporter: {'  '} </label>
   <input className='edit-ticket-input' type='email' name='reporter' value={props.d.reporter} disabled
   onChange={handleChange}></input><br></br>
 
-  <label>Created Date:</label>
+  <label>Created Date: {'  '}</label>
   <input className='edit-ticket-input' type='date' name='createdDate' value={props.d.createdDate.split('T')[0]} disabled
-  onChange={handleChange}></input>
+  onChange={handleChange}></input><br></br>
 
-<label>Updated Date:</label>
+<label>Updated Date: {'  '}</label>
   <input className='edit-ticket-input' type='date' name='updatedDate' value={props.d.updatedDate.split('T')[0]} disabled
   onChange={handleChange}></input>
 
-<label>Due Date:</label>
+<label>Due Date: {'  '}</label>
   <input className='edit-ticket-input' type='date' name='dueDate' value={props.d.dueDate.split('T')[0]} disabled
   onChange={handleChange}></input>
 <br></br>
-  <label>History:</label>
+  <label>History: {'  '}</label>
     {
       props.d.history.map((e:Ihistory,i:any)=>(
         <div key={i}>
@@ -151,6 +157,7 @@ function TicketDetails(props:any) {
     }
 
     </div>
+    {/* <ToastContainer/> */}
     </>
   )
 }

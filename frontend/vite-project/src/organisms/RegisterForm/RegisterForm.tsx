@@ -5,7 +5,8 @@ import { useEffect, useState } from 'react'
 import { ToastContainer,toast} from 'react-toastify'
 import "react-toastify/dist/ReactToastify.css";
 import CustomDropdown from '../DropDown/DropDown'
-import { Cookies } from 'react-cookie'
+// import { Cookies } from 'react-cookie'
+import Cookies from 'js-cookie'
 
 function RegisterForm() {
   const [user, setUser] = useState<string | null>("Organization");
@@ -17,10 +18,10 @@ function RegisterForm() {
   const [doj, setDOJ] = useState("");
   const [error, setError] = useState("");
 
-  const cookies = new Cookies();
+  // const cookies = new Cookies();
 
   const navigate = useNavigate();
-  const token:string | undefined = cookies.get('accessToken');
+  const token:string | undefined = Cookies.get('accessToken');
 
   useEffect(()=>{
     if(!token){
@@ -30,7 +31,11 @@ function RegisterForm() {
   })
 
   const validateOrgUser = ()=>{
-    if(!email || !firstName || !lastName ||!dob ||!doj){
+
+    console.log("org***",org);
+
+
+    if(!email || !firstName || !lastName ||!dob ||!doj || !org){
       toast.error("Fill All the Details");
       return false;
     }
@@ -56,8 +61,10 @@ function RegisterForm() {
     return true;
   }
   const validateUser = ()=>{
+    
+   
 
-    if(!email || !firstName || !lastName ){
+    if(!email || !firstName || !lastName){
       toast.error("Fill All the Details");
       setError("Fill All the Details");
       return false;
@@ -86,7 +93,6 @@ function RegisterForm() {
     if(!validateUser()){
       return;
     }
-    // console.log("api is called");
 
     const adminUser = {firstName,lastName,email};
     const response = await fetch("http://localhost:8555/admin/register",{
@@ -150,8 +156,9 @@ function RegisterForm() {
       setOrg("");
       setDOB("");
       setDOJ("");
-      alert("New User Registered!")
-      navigate("/admin/dashboard");
+      toast.success("New User Registered");
+      setTimeout(()=>{navigate('/admin/dashboard')},1000);
+      // navigate("/admin/dashboard/createOrgUser");
     }
   }
 

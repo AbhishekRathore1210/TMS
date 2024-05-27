@@ -1,12 +1,12 @@
 import { Table, Button, Col,Pagination } from 'rsuite';
 const { Column, HeaderCell, Cell } = Table;
 import { createIconFont } from '@rsuite/icons';
-import { Cookies } from 'react-cookie';
-import {useState,SetStateAction}  from 'react';
+// import { Cookies } from 'react-cookie';
+
+import {useState}  from 'react';
 import Details from '../../../public/details.png';
 import { Modal, Placeholder } from 'rsuite';
 import TicketDetails from '../../organisms/Dashboard/TicketDetails/TicketDetails';
-import { ToastContainer } from 'react-toastify';
 import './TicketTable.scss'
 
 
@@ -18,28 +18,8 @@ const IconFont = createIconFont({
   }
 });
 
-const cookies = new Cookies();
+// const cookies = new Cookies();
 
-const EditableCell = ({ rowData, dataKey, onChange, ...props }:any) => {
-
-  const editing = rowData.statuss === 'EDIT';
-
-  return (
-    <Cell {...props} className={editing ? 'table-content-editing' : ''}>
-      {editing ? (
-        <input
-          className="rs-input"
-          defaultValue={rowData[dataKey]}
-          onChange={event => {
-            onChange && onChange(rowData._id, dataKey, event.target.value);
-          }}
-        />
-      ) : (
-        <span className="table-content-edit-span">{rowData[dataKey]}</span>
-      )}
-    </Cell>
-  );
-};
 
 export const EditCell = ({ rowData, dataKey, onChange, ...props }:any) => {
   return (
@@ -58,20 +38,6 @@ export const EditCell = ({ rowData, dataKey, onChange, ...props }:any) => {
     </Cell>
   );
 };
-const ActionCell = ({ rowData, dataKey, onClick, ...props }:any) => {
-  return (
-    <Cell {...props} style={{ padding: '6px' }}>
-      <Button
-        appearance="link"
-        onClick={() => {
-          onClick(rowData._id);
-        }}
-      >
-        {rowData.statuss === 'EDIT' ? 'Save' : 'Edit'}
-      </Button>
-    </Cell>
-  );
-};
 
 function UserTicket({ticket,SetTicket,lim,p,setP,t,fun,getTicket}:any){
 
@@ -80,28 +46,6 @@ function UserTicket({ticket,SetTicket,lim,p,setP,t,fun,getTicket}:any){
   const [sortType, setSortType] = useState();
   const [loading, setLoading] = useState(false);
 
-    const SerialNumberCell = ({ rowIndex, ...props}:any) => (
-      <Cell {...props}>{rowIndex + 1}</Cell>
-    );
-    const AllDetails = async()=>{
-
-    }
-
-    const handleChange = (_id: string, key: string | number, value: string) => {
-      // console.log(`id ${_id} , key ${key}  value , ${value}`);
-      const nextData = Object.assign([], ticket);
-      nextData.find((item:any) => item._id === _id)[key] = value;
-      SetTicket(nextData);
-    };
-    const handleEditState = (_id:string) => {
-      const nextData = Object.assign([], ticket);
-      const activeItem = nextData.find((item:any) => item._id === _id);
-      activeItem.statuss = activeItem.statuss ? null : 'EDIT';
-      // console.log(activeItem.statuss);
-      SetTicket(nextData);
-    };
-
-    // const d = ticket;
 
     const getData = () => {
       if (sortColumn && sortType) {
@@ -154,7 +98,6 @@ function UserTicket({ticket,SetTicket,lim,p,setP,t,fun,getTicket}:any){
 
     const [id, Setid] = useState();
     const [open, setOpen] = useState(false);
-    const [overflow, setOverflow] = useState(true);
 
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
@@ -184,60 +127,60 @@ function UserTicket({ticket,SetTicket,lim,p,setP,t,fun,getTicket}:any){
         <div className='table-div'>
         <Table
     className='ticket-table'
-      height={400} width={1250}
+      height={400}
       data={getData()}
       sortColumn={sortColumn}
       sortType={sortType}
       onSortColumn={handleSortColumn}
       loading={loading}
     >
-      <Column width={100} align='center' >
+      <Column flexGrow={1} align='center' >
         <HeaderCell>Type</HeaderCell>
         <Cell dataKey='type'/>
       </Column>
 
-      <Column width={100} align='center' >
+      {/* <Column flexGrow={1} align='center' >
         <HeaderCell>Key</HeaderCell>
         <Cell dataKey='key'/>
-      </Column>
+      </Column> */}
 
-      <Column width={130} align='center'>
+      <Column flexGrow={1} align='center'>
         <HeaderCell>Status</HeaderCell>
         <Cell dataKey='status'/>
       </Column>
 
-      <Column width={220} align='center' >
+      <Column flexGrow={1.5} align='center' >
         <HeaderCell>Summary</HeaderCell>
         <Cell dataKey='summary'/>
       </Column>
 
-      <Column width={300} align='center' >
+      <Column flexGrow={3} align='center' >
         <HeaderCell>Assignee</HeaderCell>
         <Cell dataKey='assignee'/>
       </Column>
 
 
-      <Column width={300} align='center' >
+      <Column flexGrow={3} align='center' >
         <HeaderCell>Reporter</HeaderCell>
         <Cell dataKey='reporter'/>
       </Column>
 
-      <Column width={150} align='center' sortable>
+      <Column flexGrow={1.3} align='center' sortable>
         <HeaderCell>Created Date</HeaderCell>
         <Cell dataKey='createdDate'>{rowData=>(rowData.createdDate.split('T')[0])}</Cell>
       </Column>
 
-      <Column width={150} align='center' sortable>
+      <Column flexGrow={1.4} align='center' sortable>
         <HeaderCell>Updated Date</HeaderCell>
         <Cell dataKey='updatedDate'>{rowData=>(rowData.updatedDate.split('T')[0])}</Cell>
       </Column>
 
-      <Column width={100} align='center' sortable >
+      <Column flexGrow={1.3} align='center' sortable >
         <HeaderCell>Due Date</HeaderCell>
         <Cell dataKey='dueDate'>{rowData=>(rowData.dueDate.split('T')[0])}</Cell>
       </Column>
 
-      <Column width={100} align='center' >
+      <Column flexGrow={1} align='center'>
         <HeaderCell>Details</HeaderCell>
         <Cell>
             {(rowData => (
@@ -275,7 +218,7 @@ function UserTicket({ticket,SetTicket,lim,p,setP,t,fun,getTicket}:any){
           size="md"
           layout={['total', '-', 'limit', '|', 'pager', 'skip']}
           total={t*lim}
-          limitOptions={[5,10, 30, 50]}
+          limitOptions={[15, 30, 50]}
           limit={lim}
           activePage={p}
           onChangePage={setP}
@@ -283,7 +226,7 @@ function UserTicket({ticket,SetTicket,lim,p,setP,t,fun,getTicket}:any){
         />
       </div>
       </div>
-      <ToastContainer/>
+      {/* <ToastContainer/> */}
         </>
     )
 

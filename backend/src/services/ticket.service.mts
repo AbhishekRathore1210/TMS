@@ -164,8 +164,9 @@ class TicketService{
       );
 
       res.status(201).json({ success: true, message: 'Ticket created successfully', ticket });
-    }catch (error : any) {
-      res.status(500).json({ success: false, error: 'Failed to create ticket', message: error.message });
+    }catch (error) {
+      const err = error as Error
+      res.status(500).json({ success: false, error: 'Failed to create ticket', message: err.message });
     }
   }
 

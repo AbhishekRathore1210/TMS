@@ -1,15 +1,16 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { SelectPicker, Stack } from "rsuite";
+import { ToastContainer,toast } from "react-toastify";
 
-interface Prop{
+interface IProp{
     org:string | null,
     setOrg:(value:string | null)=>void
     user:string |null,
     setUser:(value:string | null)=>void
 }
 
-function CustomDropdown(props:Prop) {
+function CustomDropdown(props:IProp) {
   const [data, SetData] = useState([]);
 
   const handleOpen = () => {
@@ -19,9 +20,8 @@ function CustomDropdown(props:Prop) {
       },
     };
     const response = axios
-      .get("http://localhost:8555/admin/dashboard", config)
+      .get("http://localhost:8555/admin/organizations", config)
       .then((res) => {
-        // console.log(res.data);
         const activeData = res.data.allOrg.filter(
           (item: any) => item.is_active == true
         );
@@ -46,6 +46,7 @@ function CustomDropdown(props:Prop) {
           <SelectPicker
             data={data}
             value={props.org}
+            onClean={()=>props.setOrg(null)}
             onChange={(value)=>{
                  props.setOrg(value);
             }}
@@ -53,6 +54,7 @@ function CustomDropdown(props:Prop) {
           />
         </Stack>
       </div>
+      <ToastContainer/>
     </>
   );
 }

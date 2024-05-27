@@ -46,7 +46,7 @@ class UserService {
             requireTLS: true,
             auth: {
                 user: 'abhishek19229785@gmail.com',
-                pass: 'inft pvav gugm lqyz' //password
+                pass: 'inft pvav gugm lqyz' //password  
             }
         });
         const myOtp = Math.floor((Math.random() * 1000000) + 1);
@@ -78,6 +78,7 @@ class UserService {
                 }
             }
         });
+        console.log("OTP", myOtp);
         return myOtp;
     };
     createAdmin = async (firstName, lastName, email) => {

@@ -11,6 +11,11 @@ class ticketController {
         const allTickets = await this.ticketService.getTickets(req, res, next);
     };
     showAllTicketsInOrganization = async (req, res, next) => {
+        // const user = req.user;
+        // console.log('user',user);
+        // if(user.is_admin == true){
+        //     res.send({code:401,data:{success:false,message:"Unauthorized"}});
+        // }
         const allTicketInOrganization = await this.ticketService.showTicketsInOrganization(req, res, next);
     };
     showAllUserInOrganization = async (req, res, next) => {

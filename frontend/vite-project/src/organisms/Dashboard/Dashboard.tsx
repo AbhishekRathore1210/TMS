@@ -1,11 +1,12 @@
 import "./Dashboard.scss";
-import { Button , Pagination,Input} from "rsuite";
+import { Button , Pagination} from "rsuite";
 import { Link } from "react-router-dom";
 import { SetStateAction, useEffect, useState } from "react";
 import axios from "axios";
 import { ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import { Cookies } from "react-cookie";
+// import { Cookies } from "react-cookie";
+import Cookies from "js-cookie";
 import TableDemo from "../../molecules/Table/Table";
 import logOut1 from '../../../public/logOut1.png';
 
@@ -22,17 +23,10 @@ interface IData{
   user_list:Array<IUserList>
 }
 
-
 function Dashboard() {
 
   const [org, setOrg] = useState([]);
   const [fil, setfil] = useState([]);
-  // const [user,setUser] = useState([]);
-
-  const [allTicket,setAllTicket] = useState([]);
-  const [limit2,setLimit2] = useState(10);
-  const [page2,setPage2] = useState(1);
-  const [t2,setTotal2] = useState(1);
 
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(1);
@@ -43,21 +37,15 @@ function Dashboard() {
     setPage(1);
     setLimit(dataKey);
   };
-
-  const handleChangeLimit2 = (dataKey:SetStateAction<number>)=>{
-    setPage2(1);
-    setLimit2(dataKey);
-  }
-
   const toggle = ()=>{
     setCheck(!check);
   }
 
   const navigate = useNavigate();
-  const cookies = new Cookies();
+  // const cookies = new Cookies();
 
   let response: any;
-  const token:string | undefined = cookies.get('accessToken');
+  const token:string | undefined = Cookies.get('accessToken');
 
   useEffect(() => {
     
@@ -65,7 +53,7 @@ function Dashboard() {
     navigate('/login');
     return;
   }
-  getAllTicket();
+  // getAllTicket();
 
     const config = {
       headers: {
@@ -75,7 +63,7 @@ function Dashboard() {
     };
 
     response = axios
-      .get(`http://localhost:8555/admin/dashboard?page=${page}&&limit=${limit}`,config)
+      .get(`http://localhost:8555/admin/organizations?page=${page}&&limit=${limit}`,config)
       .then((res) => {
         console.log("data",res.data);
         setTotal(res.data.totalPage);
@@ -84,44 +72,22 @@ function Dashboard() {
       // setUser(res.data.allOrg.user_list.name);
       })
       .catch((err) => console.log(err));
-  }, [page,t,limit, check,page2,t2,limit2]);
+  }, [page,t,limit, check]);
 
     if(response){
     response.json();
     }
 
-    const getAllTicket = async()=>{
-      if(!token){
-        navigate('/login');
-        return;
-      }
-      const config = {
-        headers: {
-          Authorization: `BEARER ${token}`,
-          'Custom-Header': 'Custom Value',
-        },
-      }; 
-
-      const response = await axios.get(`http://localhost:8555/users/tickets?page=${page2}&&limit=${limit2}`,config)
-      .then((res)=>{
-        console.log("All tickets ",res.data.data.tickets);
-        console.log(res.data.data);
-        setTotal2(res.data.data.totalPage);
-        setPage2(res.data.data.currentPage);
-        setAllTicket(res.data.data.tickets)}).catch((err)=>console.log(err.message));
-
-        }
-
   const deliveOrganization = async(name:string) => {
 
-    const token:string | undefined = cookies.get('accessToken');
+    const token:string | undefined = Cookies.get('accessToken');
     if(!token){
         navigate('/login');
         return;
     }
 
     const organizationName = {"name":name};
-    const response = await fetch("http://localhost:8555/admin/dashboard/delete-org",{
+    const response = await fetch("http://localhost:8555/admin/organization/delete",{
       method:'POST',
       body:JSON.stringify(organizationName),
       headers:{
@@ -141,24 +107,16 @@ function Dashboard() {
     else{
       console.log("Cannot Delete");
     }
-    // navigate(0);
   }
   const logout = async()=>{
-      cookies.remove('accessToken');
+    Cookies.remove('accessToken');
+    Cookies.remove('userType');
       console.log("LogOut SuccessFully");
+      // navigate('/login');
   }
-
-  const handleInput = async(inp: any) => {
-
-    const filterData = org.filter((item: IData) => {
-      return item.is_active && item.name.toLowerCase().includes(inp.toLowerCase());
-    });
-    setfil(filterData);
-  };
 
   return (
     <>
-
           <h1>System User Dashboard</h1>
           <Link to="/admin/dashboard/createOrgUser">
                 <Button className="btn2" color="red" appearance="primary">
@@ -204,7 +162,6 @@ function Dashboard() {
               </Button>
             </div></Link>
       <ToastContainer />
-
     </>
   );
 }

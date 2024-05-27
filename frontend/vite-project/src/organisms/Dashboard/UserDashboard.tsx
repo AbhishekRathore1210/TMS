@@ -1,7 +1,8 @@
 import CreateModal from '../../molecules/CreateModal/CreateModal';
 import {useState,useEffect, SetStateAction} from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Cookies } from 'react-cookie';
+// import { Cookies } from 'react-cookie';
+import Cookies from 'js-cookie';
 import axios from 'axios';
 import { Button } from 'rsuite';
 import { Link } from "react-router-dom";
@@ -10,6 +11,7 @@ import UserTicket from '../../molecules/Table/TicketTable';
 import logOut1 from '../../../public/logOut1.png';
 import { Modal } from 'rsuite';
 import { SelectPicker, Stack,Input } from 'rsuite';
+import { ToastContainer } from 'react-toastify';
 
 function UserDashboard() {
 
@@ -28,17 +30,13 @@ function UserDashboard() {
   const [dd,setDd] = useState<string | null>("");
   const [open2, setOpen2] = useState(false);
 
-  const handleOpen = () => {
-    setOpen2(true);
-  };
 
   const handleClose = () => setOpen2(false);
 
 
   const [ticket,SetTicket] = useState([]);
-  const [show,setShow] = useState(false);
 
-  const [limit, setLimit] = useState(10);
+  const [limit, setLimit] = useState(15);
   const [page, setPage] = useState(1);
   const [total,setTotal] = useState(1);
   
@@ -56,11 +54,16 @@ function UserDashboard() {
     // 
 
   const navigate = useNavigate();
-  const cookies = new Cookies();
+  // const cookies = new Cookies();
 
-  const token:string | undefined = cookies.get('accessToken');
+  const token:string | undefined = Cookies.get('accessToken');
 
   useEffect(()=>{
+    if(Cookies.get('userType')!='user'){
+      Cookies.remove('accessToken');
+      Cookies.remove('userType');
+      navigate('/login');
+    }
     getAllTicketInOrg();
   },[limit,page,ty,st,cd,ud,dd])
 
@@ -77,7 +80,7 @@ function UserDashboard() {
     }; // dd?"&dd=${dd}:'' "
 
   
-     const response =  axios.get(`http://localhost:8555/users/tickets-in-org?page=${page}&&limit=${limit}&&type=${ty}&&status=${st}&&cd=${cd}&&ud=${ud}&&dd=${dd}`,config).then((res)=>{
+     const response =  axios.get(`http://localhost:8555/users/tickets?page=${page}&&limit=${limit}&&type=${ty}&&status=${st}&&cd=${cd}&&ud=${ud}&&dd=${dd}`,config).then((res)=>{
       console.log(res.data,"Tickets");
       SetTicket(res.data.tickets);
       setTotal(res.data.totalPages);
@@ -87,16 +90,9 @@ function UserDashboard() {
   }
 
   const logout = async() =>{
-    cookies.remove('accessToken');
+    Cookies.remove('accessToken');
+    Cookies.remove('userType');
     console.log("Log Out Successfully!");
-  }
-
-  const handleRemove = ()=>{
-    setCd("");
-    setDd("");
-    setTy("");
-    setUd("");
-    setSt("");
   }
 
 
@@ -130,7 +126,7 @@ function UserDashboard() {
         }
       }}
     />
-      <h4 className='type-filter'>Status</h4>
+      <h4 className='status-filter'>Status</h4>
     {/* <h4>Status</h4> */}
     <SelectPicker className='status-filter-picker'
       data={statuss}
@@ -190,6 +186,7 @@ function UserDashboard() {
     </form>
         </Modal.Body>
       </Modal>
+      <ToastContainer/>
     </div>
   )
 

@@ -8,7 +8,7 @@ class UserController {
     userRegistration = async (req, res) => {
         try {
             const { firstName, lastName, org, email, dob, doj } = req.body;
-            // console.log(req.body);
+            console.log(req.body);
             const orgExist = await Organization.findOne({ name: org });
             // console.log(orgExist);
             if (!orgExist) {

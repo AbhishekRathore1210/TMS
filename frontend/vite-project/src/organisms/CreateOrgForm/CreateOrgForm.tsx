@@ -3,15 +3,16 @@ import { useNavigate } from "react-router-dom";
 import { Button, Input } from "rsuite";
 import { ToastContainer,toast } from "react-toastify";
 import './CreateOrgForm.scss';
-import { Cookies } from "react-cookie";
+// import { Cookies } from "react-cookie";
+import Cookies from "js-cookie";
 
 function RegisterForm(){
 const [org , setOrg] = useState("");
 const [error,setError] = useState("");
 
-const cookies = new Cookies();
+// const cookies = new Cookies();
 const navigate = useNavigate();
-const token:string | undefined = cookies.get('accessToken');
+const token:string | undefined = Cookies.get('accessToken');
 useEffect(()=>{
     if(!token){
         navigate('/login');
@@ -29,10 +30,10 @@ const handleSubmit = async(e:FormSubmit)=>{
         console.log("Organization cannot be created with empty Name");
         return;
     }
-
+    
     const orgName = {org};  
     
-    const response = await fetch("http://localhost:8555/admin/dashboard/create-org",{
+    const response = await fetch("http://localhost:8555/admin/organization",{
 
         method:'POST',
         body:JSON.stringify(orgName),
@@ -44,24 +45,22 @@ const handleSubmit = async(e:FormSubmit)=>{
     
     const result = await response.json();
 
-    if(!result.success){
-        console.log("Organization is alreaedy created");
-        toast.error(result.message);
-        setOrg("");
-        navigate('/dashboard/createOrg')
-    }
+    // if(!result.success){
+    //     console.log("Organization is alreaedy created");
+    //     toast.error(result.message);
+    //     setOrg("");
+    //     navigate('/dashboard/create-org')
+    // }
 
     if(!response.ok){
-        setError("Organization can't be created");
+        // setError("Organization can't be created");
         toast.error(result.message);
-        setOrg("");
-        navigate('/admin/dashboard');
+        navigate('/admin/dashboard/createOrg');
     }
     if(response.ok){
-        setError("");
+        toast.success("New Organization Created!");
         setOrg("");
-        alert("New Organization Created!")
-        navigate('/admin/dashboard');
+        setTimeout(()=>{navigate('/admin/dashboard')},1000);
     }
 }
 
@@ -73,7 +72,7 @@ return(
         </div>
         <form onSubmit={handleSubmit}>
             <div className="org-field">
-        <Input className='input' type="text" placeholder='Organization' onChange={(e: string)=>{setOrg((e))}}></Input>
+        <Input className='input' type="text" placeholder='Organization' onChange={(e: string)=>{setOrg((e.trim()))}}></Input>
         </div>
         <div className="sub-button">
         <Button type='submit' appearance='primary' size='lg'>Submit</Button>

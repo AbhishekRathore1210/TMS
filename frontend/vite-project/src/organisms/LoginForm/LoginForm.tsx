@@ -1,17 +1,18 @@
 import { Button, Input } from 'rsuite'
 import './LoginForm.scss'
 import {  useEffect, useState } from 'react'
-import { SelectPicker, Stack } from 'rsuite';
+import { SelectPicker } from 'rsuite';
 import axios from 'axios'
  
 import { useNavigate } from 'react-router-dom';
 import { ToastContainer,toast } from 'react-toastify';
-import { Cookies } from 'react-cookie';
+// import { Cookies } from 'react-cookie';
+import Cookies from 'js-cookie';
+
 
 
 function LoginForm() {
   const [user, setUser] = useState("System");
-
 
   const [error,setError] = useState("");
   const [org, setOrg] = useState<string | null>("");
@@ -20,11 +21,11 @@ function LoginForm() {
   const [otp, setOtp] = useState("");
   const [toggle,setToggle] = useState(false);
 
-
-  let flag = false;
-
   const navigate = useNavigate();
-  const cookies = new Cookies();
+
+
+
+  const token = Cookies.get('accessToken');
 
   const validateUser = ()=>{
     if(!otp){
@@ -42,10 +43,6 @@ function LoginForm() {
     const response = await axios.get('http://localhost:8555/org')
       console.log(response.data,'data');
       if(response.data.data.success){
-        // const formattedData = response.data.data.allOrg.map((e:any) => ({
-        //   label: e.name,
-        //   value: e.name// or any unique identifier
-        // }));
         setOrgName(response.data.data.allOrg);
         console.log(response.data.data.allOrg);
       }
@@ -98,15 +95,13 @@ function LoginForm() {
     if(!response.ok){
       setError(result.error);
       setError("");
-      // setOrg("");
-      // setEmail("");
-      // setOtp("");
       navigate('/login');
     }
 
     if(response.ok){
       const token = result.accessToken;
-      cookies.set("accessToken",token);
+      Cookies.set("accessToken",token);
+      Cookies.set('userType','admin');
       setError("");
       setOrg("");
       setEmail("");
@@ -122,7 +117,6 @@ function LoginForm() {
     }
     setToggle(true);
 
-    // console.log("otp api called");
     const userEmail = {email,org};
     const response = await fetch("http://localhost:8555/admin/otp",{
       method:'POST',
@@ -143,8 +137,6 @@ function LoginForm() {
       console.log("OTP has been sent!");
     }
     setTimeout(()=>setToggle(false),10000);
-    // setToggle(false);
-    // console.log(toggle,"after");
   }
   
   const handleOrganization =async (e:FormSubmit)=>{
@@ -154,10 +146,10 @@ function LoginForm() {
       return;
     }
 
-    const user = {email,org,otp};
+    const newUser = {email,org,otp};
     const response = await fetch("http://localhost:8555/users/login",{
         method:'POST',
-        body:JSON.stringify(user),
+        body:JSON.stringify(newUser),
         headers:{
           "Content-Type": "application/json",
         }
@@ -167,9 +159,10 @@ function LoginForm() {
 
     if(response.ok){
       const token = result.accessToken;
-      cookies.set("accessToken",token);
-    // toast.success(result.message);
-    setTimeout(()=>navigate('/users/dashboard'),300);
+      Cookies.set("accessToken",token);
+      Cookies.set('userType','user');
+    // setTimeout(()=>navigate('/users/dashboard'),300);
+    navigate('/users/dashboard');
     }
     else{
       console.log("Response is not ok");
@@ -178,21 +171,18 @@ function LoginForm() {
     }
   }
 
-  
-  
 
   return (
     <>
     <div className={'LoginContainer ' + user}>
         <div className='upperContainer'>
         <h4 >LOGIN</h4>
-        {/* <div className="underline"></div> */}
         <div className="userSelection">
             <span className='btn-sys'>
               <Button size='lg' color='blue' onClick={()=>setUser("System")} appearance={user=='System'?"primary":"default"} >System</Button>
             </span>
             <span className='btn-org'>
-              <Button size='lg' color='blue' onClick={()=>setUser("Organization")} appearance={user=='Organization'?"subtle":"default"} >Organization</Button>
+              <Button size='lg' color='blue' onClick={()=>setUser("Organization")} appearance={user=='Organization'?"primary":"default"} >Organization</Button>
             </span>
 
         </div>

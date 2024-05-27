@@ -137,7 +137,8 @@ class TicketService {
             res.status(201).json({ success: true, message: 'Ticket created successfully', ticket });
         }
         catch (error) {
-            res.status(500).json({ success: false, error: 'Failed to create ticket', message: error.message });
+            const err = error;
+            res.status(500).json({ success: false, error: 'Failed to create ticket', message: err.message });
         }
     };
     showAllUserInOrganization = async (req, res, next) => {

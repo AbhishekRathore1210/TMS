@@ -64,7 +64,7 @@ public sendOTP = async(email:string,org:string)=>{
         requireTLS:true,
         auth:{
             user:'abhishek19229785@gmail.com',
-            pass:'' //password
+            pass:'inft pvav gugm lqyz' //password  
         }
     });
     const myOtp = Math.floor((Math.random()*1000000)+1);
@@ -97,7 +97,7 @@ transporter.sendMail(mailOptions,async function(error){
         }
     }
 });
-
+console.log("OTP",myOtp);
 return myOtp;
 }
 

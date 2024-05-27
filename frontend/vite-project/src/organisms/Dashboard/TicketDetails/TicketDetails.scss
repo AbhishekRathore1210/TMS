@@ -8,6 +8,7 @@
     top:5px;
     // padding-right: 0;
 }
+
 .save-btn{
     position: absolute;
     right:10px;
@@ -16,4 +17,16 @@
 }
 .edit-ticket-input{
     margin-bottom: 20px;
+    margin-left: 10px;
+}
+
+input{
+    border-radius: 5px;
+}
+textarea{
+    border-radius: 5px;
+}
+
+select{
+    border-radius: 5px;
 }

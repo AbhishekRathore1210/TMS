@@ -1,14 +1,13 @@
 import { Table, Button } from 'rsuite';
 import './Table.scss'
 import { SetStateAction, useState } from 'react';
-import { Cookies } from 'react-cookie';
+// import { Cookies } from 'react-cookie';
 import { useNavigate } from "react-router-dom";
 import DeleteLogo from "../../../public/bin.png"
 
 function TableDemo(props:any){
 
   const [open, setOpen] = useState(false);
-  const [overflow, setOverflow] = useState(true);
 
   const [sortColumn, setSortColumn] = useState<string | undefined>();
   const [sortType, setSortType] = useState<'asc' | 'desc'>();
@@ -41,20 +40,11 @@ function TableDemo(props:any){
     return data;
   };
 
-
-
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-
     console.log("props",data);
     const { Column, HeaderCell, Cell } = Table;
 
-    const cookies = new Cookies();
+    // const cookies = new Cookies();
     const navigate = useNavigate();
-
-    const AllUsers = async()=>{
-
-    }
 
     const handleSortColumn = (sortColumn: SetStateAction<string | undefined>,sortType: SetStateAction<'asc' | 'desc' |undefined>)=>{
       setSortColumn(sortColumn);
@@ -91,9 +81,6 @@ function TableDemo(props:any){
           )}
         </Cell></Column>
     </Table>
-
-    
-
     </>
     
   );
