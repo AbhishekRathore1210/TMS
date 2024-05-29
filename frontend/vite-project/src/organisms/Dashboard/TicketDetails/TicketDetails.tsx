@@ -21,7 +21,7 @@ function TicketDetails(props:any) {
 
 
     let upDate = props.d.updatedDate;
-    // console.log(props.d.updatedDate);
+
     let dueDate = props.d.dueDate;
     upDate = upDate.split('T')[0];
     dueDate = dueDate.split('T')[0];
@@ -41,7 +41,6 @@ function TicketDetails(props:any) {
       }
 
       const navigate = useNavigate();
-      // const cookies = new Cookies();
 
       const token:string | undefined = Cookies.get('accessToken');
 
@@ -65,7 +64,7 @@ function TicketDetails(props:any) {
 
         if(response.data.data.success){
           toast.success(response.data.data.message);
-          // console.log(response.data.data.message,'toast not working');
+          
           props.getTicket();
         }
         props.funClose();
@@ -79,7 +78,6 @@ function TicketDetails(props:any) {
             [name]: value
           });
       };
-
 
 
   return (

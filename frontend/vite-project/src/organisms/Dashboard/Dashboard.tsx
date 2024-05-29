@@ -46,10 +46,15 @@ function Dashboard() {
 
   let response: any;
   const token:string | undefined = Cookies.get('accessToken');
+  const userType:string | undefined = Cookies.get('userType');
 
   useEffect(() => {
     
   if(!token){
+    navigate('/login');
+    return;
+  }
+  if(userType!='admin'){
     navigate('/login');
     return;
   }

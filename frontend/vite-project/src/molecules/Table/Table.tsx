@@ -1,13 +1,26 @@
-import { Table, Button } from 'rsuite';
+import { Table } from 'rsuite';
 import './Table.scss'
 import { SetStateAction, useState } from 'react';
 // import { Cookies } from 'react-cookie';
 import { useNavigate } from "react-router-dom";
 import DeleteLogo from "../../../public/bin.png"
+import { Modal, Button, ButtonToolbar, Placeholder } from 'rsuite';
 
 function TableDemo(props:any){
 
+  // const [open, setOpen] = useState(false);
+  const [name,setName] = useState('');
+
   const [open, setOpen] = useState(false);
+  const handleOpen = (orgName:string) => {
+    setName(orgName);
+    setOpen(true);}
+
+  const handleClose = () => {
+    setOpen(false);
+  }
+
+
 
   const [sortColumn, setSortColumn] = useState<string | undefined>();
   const [sortType, setSortType] = useState<'asc' | 'desc'>();
@@ -50,6 +63,8 @@ function TableDemo(props:any){
       setSortColumn(sortColumn);
       setSortType(sortType);
     }
+
+    
   return (
     // <div>My name is abhishek</div>
     <>
@@ -75,12 +90,33 @@ function TableDemo(props:any){
       <HeaderCell>Delete</HeaderCell>
       <Cell>
           {rowData => (
-            <Button size='sm' onClick={()=>props.deliveOrganization(rowData.name)}>
+            // <Button size='sm' onClick={()=>props.deliveOrganization(rowData.name)}>
+            <Button size='sm' onClick={()=>handleOpen(rowData.name)}>
               <img width={25} src={DeleteLogo}/>
             </Button>
           )}
         </Cell></Column>
     </Table>
+    
+    <Modal open={open} onClose={handleClose}>
+        <Modal.Header>
+          <Modal.Title>Delete Confirmation </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Are You Sure You Want to Delete this Organization??
+        </Modal.Body>
+        <Modal.Footer>
+          <Button onClick={()=>{
+            props.deliveOrganization(name);
+            handleClose();
+          }} appearance="primary" color='green'>
+            Ok
+          </Button>
+          <Button onClick={handleClose} appearance="primary" color='red'>
+            Cancel
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>
     
   );

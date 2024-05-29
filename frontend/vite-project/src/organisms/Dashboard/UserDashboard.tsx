@@ -51,18 +51,23 @@ function UserDashboard() {
       const filterValue = {ty, st, cd, ud, dd};
       // console.log(filterValue,'Filter **********');
     }
-    // 
 
   const navigate = useNavigate();
   // const cookies = new Cookies();
 
   const token:string | undefined = Cookies.get('accessToken');
+  const userType:string | undefined  = Cookies.get('userType');
 
   useEffect(()=>{
-    if(Cookies.get('userType')!='user'){
+    if(!token){
+      navigate('/login');
+      return;
+    }
+    if(userType!='user'){
       Cookies.remove('accessToken');
       Cookies.remove('userType');
       navigate('/login');
+      return;
     }
     getAllTicketInOrg();
   },[limit,page,ty,st,cd,ud,dd])

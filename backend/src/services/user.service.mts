@@ -64,7 +64,7 @@ public sendOTP = async(email:string,org:string)=>{
         requireTLS:true,
         auth:{
             user:'abhishek19229785@gmail.com',
-            pass:'inft pvav gugm lqyz' //password  
+            pass:'' //password  
         }
     });
     const myOtp = Math.floor((Math.random()*1000000)+1);

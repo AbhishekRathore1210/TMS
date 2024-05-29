@@ -113,6 +113,22 @@ function UserTicket({ticket,SetTicket,lim,p,setP,t,fun,getTicket}:any){
 
     };
 
+  const handlePageChange = (newPage:number)=>{
+    setLoading(true);
+    setTimeout(()=>{
+      setLoading(false);
+      setP(newPage);
+    },500);
+  }
+
+  const handleChangeLimit = (newLimit:number)=>{
+    setLoading(true);
+    setTimeout(()=>{
+      setLoading(false);
+      fun(newLimit);
+    },500)
+  }
+
   const handleSortColumn = (sortColumn: any, sortType: any) => {
     setLoading(true);
     setTimeout(() => {
@@ -121,7 +137,7 @@ function UserTicket({ticket,SetTicket,lim,p,setP,t,fun,getTicket}:any){
       setSortType(sortType);
     }, 500);
   };
-
+  
     return(
         <>
         <div className='table-div'>
@@ -218,11 +234,11 @@ function UserTicket({ticket,SetTicket,lim,p,setP,t,fun,getTicket}:any){
           size="md"
           layout={['total', '-', 'limit', '|', 'pager', 'skip']}
           total={t*lim}
-          limitOptions={[15, 30, 50]}
+          limitOptions={[10,15, 30, 50]}
           limit={lim}
           activePage={p}
-          onChangePage={setP}
-          onChangeLimit={fun}
+          onChangePage={handlePageChange}
+          onChangeLimit={handleChangeLimit}
         />
       </div>
       </div>

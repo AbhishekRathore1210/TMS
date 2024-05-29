@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { ToastContainer,toast } from 'react-toastify';
 // import { Cookies } from 'react-cookie';
 import Cookies from 'js-cookie';
+import LoginAPI from '../../services/LoginServices';
 
 
 
@@ -26,6 +27,7 @@ function LoginForm() {
 
 
   const token = Cookies.get('accessToken');
+  const userType = Cookies.get('userType');
 
   const validateUser = ()=>{
     if(!otp){
@@ -36,6 +38,16 @@ function LoginForm() {
     return true;
   }
   useEffect(()=>{
+    if(userType == 'user'){
+      navigate('/users/dashboard');
+      return;
+    }
+    if(userType == 'admin'){
+      navigate('/admin/dashboard');
+      return;
+    }
+    
+
     allOrganizationName();
   },[])
 
@@ -77,13 +89,7 @@ function LoginForm() {
       return;
     }
     const user = {email,otp};
-    const response = await fetch("http://localhost:8555/admin/login",{
-        method:'POST',
-        body:JSON.stringify(user),
-        headers:{
-          "Content-Type": "application/json",
-        }
-    })
+    const response = await LoginAPI.Login(user);
     const result = await response.json();
 
     if(!result.success){
@@ -118,13 +124,8 @@ function LoginForm() {
     setToggle(true);
 
     const userEmail = {email,org};
-    const response = await fetch("http://localhost:8555/admin/otp",{
-      method:'POST',
-      body:JSON.stringify(userEmail),
-      headers:{
-        "Content-Type": "application/json",
-      }
-    });
+
+    const response = await LoginAPI.OTP(userEmail);
 
     const result = await response.json();
 
