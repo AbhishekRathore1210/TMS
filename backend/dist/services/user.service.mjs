@@ -35,7 +35,7 @@ class UserService {
             requireTLS: true,
             auth: {
                 user: 'abhishek19229785@gmail.com',
-                pass: 'inft pvav gugm lqyz'
+                pass: ''
                 // password is reuired for OTP
             }
         });
