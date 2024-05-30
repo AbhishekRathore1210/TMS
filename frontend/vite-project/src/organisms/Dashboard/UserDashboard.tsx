@@ -48,7 +48,6 @@ function UserDashboard() {
 
     const handleSubmit = async(e:FormSubmit) =>{
       e.preventDefault();
-      const filterValue = {ty, st, cd, ud, dd};
       // console.log(filterValue,'Filter **********');
     }
 

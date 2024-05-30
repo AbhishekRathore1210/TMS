@@ -34,6 +34,7 @@ class Routes {
         this.router.post(`${prefix}/login`, this.validation.validate(userLoginSchema), this.userController.userLogin);
         this.router.post(`${prefix}/ticket`, this.authentication.Auth, this.validation.validate(ticketSchema), this.ticketController.createTicket);
         this.router.get(`${prefix}/tickets`, this.authentication.Auth, this.ticketController.showAllTicketsInOrganization);
+        this.router.get(`${prefix}/users/:name`, this.organizationController.showUserInOrg);
         this.router.get(`${prefix}/`, this.authentication.Auth, this.ticketController.showAllUserInOrganization);
         this.router.put(`${prefix}/ticket`, this.authentication.Auth, this.ticketController.updateTicket);
     }

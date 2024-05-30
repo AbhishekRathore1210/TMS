@@ -1,14 +1,35 @@
 import { Table } from 'rsuite';
 import './Table.scss'
 import { SetStateAction, useState } from 'react';
-// import { Cookies } from 'react-cookie';
-import { useNavigate } from "react-router-dom";
+
+import Persons from '../../../public/group.png';
 import DeleteLogo from "../../../public/bin.png"
-import { Modal, Button, ButtonToolbar, Placeholder } from 'rsuite';
+import { Modal, Button } from 'rsuite';
+import { Tooltip, Whisper } from 'rsuite';
+
+interface Iuser{
+  userId:string,
+  name:string,
+  email:string,
+  id:string
+}
 
 function TableDemo(props:any){
 
   // const [open, setOpen] = useState(false);
+  const [users,setUsers] = useState([]);
+  const [orgName,setOrgName] = useState("");
+  const [open2, setOpen2] = useState(false);
+  const handleOpen2 = (orgName:string) => {
+    setOpen2(true);
+    // console.log(orgName);
+    setOrgName(orgName);
+    userDetails(orgName);
+  }
+  const handleClose2 = () => setOpen2(false);
+
+
+
   const [name,setName] = useState('');
 
   const [open, setOpen] = useState(false);
@@ -56,15 +77,28 @@ function TableDemo(props:any){
     console.log("props",data);
     const { Column, HeaderCell, Cell } = Table;
 
-    // const cookies = new Cookies();
-    const navigate = useNavigate();
-
     const handleSortColumn = (sortColumn: SetStateAction<string | undefined>,sortType: SetStateAction<'asc' | 'desc' |undefined>)=>{
       setSortColumn(sortColumn);
       setSortType(sortType);
     }
 
-    
+    const userDetails = async(org:string)=>{
+
+    const response = await fetch(`http://localhost:8555/users/users/${org}`,{
+      method:'GET',
+      headers:{
+        "Content-Type": "application/json",
+      }
+    })
+    const result = await response.json();
+    if(result.data.success){
+      setUsers(result.data.userList);
+      console.log("user fetch successful");
+    }
+    else{
+      console.log("something is wrong!");
+    }
+  }
   return (
     // <div>My name is abhishek</div>
     <>
@@ -91,9 +125,22 @@ function TableDemo(props:any){
       <Cell>
           {rowData => (
             // <Button size='sm' onClick={()=>props.deliveOrganization(rowData.name)}>
+            <Whisper followCursor speaker={<Tooltip>Delete</Tooltip>}>
             <Button size='sm' onClick={()=>handleOpen(rowData.name)}>
               <img width={25} src={DeleteLogo}/>
-            </Button>
+            </Button></Whisper>
+          )}
+        </Cell></Column>
+
+        <Column width={150} align='center'>
+      <HeaderCell>Users</HeaderCell>
+      <Cell>
+          {rowData => (
+              <Whisper followCursor speaker={<Tooltip>Users</Tooltip>}>
+            <Button size='sm' onClick={()=>handleOpen2(rowData.name)}>
+              <img width={20} src={Persons}/>
+            </Button></Whisper>
+
           )}
         </Cell></Column>
     </Table>
@@ -117,6 +164,24 @@ function TableDemo(props:any){
           </Button>
         </Modal.Footer>
       </Modal>
+
+      <Modal open={open2} onClose={handleClose2}>
+        <Modal.Header>
+          <Modal.Title><strong style={{color:'black'}}>Users in {orgName}</strong> </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+            {
+              users.map((e:Iuser,i:number)=>(
+                <div key={i} className='user-detail'> 
+                <strong>{i+1}{')'} {'  '} {e.email}<br></br></strong>
+                </div>
+              ))
+            }
+        </Modal.Body>
+        <Modal.Footer>
+        </Modal.Footer>
+      </Modal>
+
     </>
     
   );

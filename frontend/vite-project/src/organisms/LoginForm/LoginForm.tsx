@@ -25,7 +25,6 @@ function LoginForm() {
   const navigate = useNavigate();
 
 
-
   const token = Cookies.get('accessToken');
   const userType = Cookies.get('userType');
 
@@ -46,7 +45,6 @@ function LoginForm() {
       navigate('/admin/dashboard');
       return;
     }
-    
 
     allOrganizationName();
   },[])
@@ -185,7 +183,6 @@ function LoginForm() {
             <span className='btn-org'>
               <Button size='lg' color='blue' onClick={()=>setUser("Organization")} appearance={user=='Organization'?"primary":"default"} >Organization</Button>
             </span>
-
         </div>
         </div>
 

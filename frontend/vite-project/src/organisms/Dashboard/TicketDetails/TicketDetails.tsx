@@ -5,7 +5,7 @@ import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 // import { Cookies } from "react-cookie";
 import Cookies from 'js-cookie';
-import { ToastContainer,toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 
 interface Ihistory {
   userName: string;
@@ -26,13 +26,13 @@ function TicketDetails(props:any) {
     upDate = upDate.split('T')[0];
     dueDate = dueDate.split('T')[0];
 
-    const type = ['Story','Task','Bug'].map(
-        item => ({ label: item, value: item })
-      );
+    // const type = ['Story','Task','Bug'].map(
+    //     item => ({ label: item, value: item })
+    //   );
 
-      const statuss = ['TOBEPICKED','INPROGRESS','INTESTING','COMPLETED'].map(
-        item =>({label:item,value:item})
-     );
+    //   const statuss = ['TOBEPICKED','INPROGRESS','INTESTING','COMPLETED'].map(
+    //     item =>({label:item,value:item})
+    //  );
 
       const [disableData,setDisableData] = useState(true);
 
@@ -142,7 +142,7 @@ function TicketDetails(props:any) {
 <br></br>
   <label>History: {'  '}</label>
     {
-      props.d.history.map((e:Ihistory,i:any)=>(
+      props.d.history.map((e:Ihistory,i:number)=>(
         <div key={i}>
         <p>
           <strong>{e.userName}</strong> {' '} updated {" "} 

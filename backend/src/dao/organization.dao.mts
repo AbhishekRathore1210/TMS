@@ -53,7 +53,9 @@ public createOrg = async(org:string) =>{
 }
 
 public findOrgByName = async(org: string)=>{
+    // console.log('param org',org);
     const organization = await Organization.findOne({name:org});
+    // console.log("organization",organization);
     if(!organization){
         return false;
     }
@@ -63,6 +65,7 @@ public findOrgByName = async(org: string)=>{
             {is_active:true}
         ]
     });
+    // console.log('check2',check2);
     if(check2){
         return check2;
     }
@@ -79,7 +82,6 @@ public findOrgByName = async(org: string)=>{
     //         return false;
     //     }
     // }
-    return false;
 }
 }
 

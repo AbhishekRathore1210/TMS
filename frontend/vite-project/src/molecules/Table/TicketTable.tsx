@@ -1,24 +1,11 @@
-import { Table, Button, Col,Pagination } from 'rsuite';
+import { Table,Pagination,Modal } from 'rsuite';
 const { Column, HeaderCell, Cell } = Table;
-import { createIconFont } from '@rsuite/icons';
-// import { Cookies } from 'react-cookie';
+import { Tooltip, Whisper } from 'rsuite';
 
 import {useState}  from 'react';
 import Details from '../../../public/details.png';
-import { Modal, Placeholder } from 'rsuite';
 import TicketDetails from '../../organisms/Dashboard/TicketDetails/TicketDetails';
 import './TicketTable.scss'
-
-
-const IconFont = createIconFont({
-  scriptUrl: '//at.alicdn.com/t/font_2144422_r174s9i1orl.js',
-  commonProps: { style: { fontSize: 30, color: '#1675e0' } },
-  onLoaded: () => {
-    // console.log('onLoaded');
-  }
-});
-
-// const cookies = new Cookies();
 
 
 export const EditCell = ({ rowData, dataKey, onChange, ...props }:any) => {
@@ -96,7 +83,7 @@ function UserTicket({ticket,SetTicket,lim,p,setP,t,fun,getTicket}:any){
     });
 
 
-    const [id, Setid] = useState();
+    const [id, Setid] = useState('');
     const [open, setOpen] = useState(false);
 
     const handleOpen = () => setOpen(true);
@@ -104,7 +91,7 @@ function UserTicket({ticket,SetTicket,lim,p,setP,t,fun,getTicket}:any){
 
 
 
-    const display = (id: any) => {
+    const display = (id: string) => {
       handleOpen();
       Setid(id);
       const oneTicket = ticket.find((ticket: { key: string }) => ticket.key === id);
@@ -155,11 +142,6 @@ function UserTicket({ticket,SetTicket,lim,p,setP,t,fun,getTicket}:any){
         <Cell dataKey='type'/>
       </Column>
 
-      {/* <Column flexGrow={1} align='center' >
-        <HeaderCell>Key</HeaderCell>
-        <Cell dataKey='key'/>
-      </Column> */}
-
       <Column flexGrow={1} align='center'>
         <HeaderCell>Status</HeaderCell>
         <Cell dataKey='status'/>
@@ -200,7 +182,8 @@ function UserTicket({ticket,SetTicket,lim,p,setP,t,fun,getTicket}:any){
         <HeaderCell>Details</HeaderCell>
         <Cell>
             {(rowData => (
-              <img onClick={()=>display(rowData.key)} width={20} src={Details}/>
+                <Whisper followCursor speaker={<Tooltip>Details</Tooltip>}>
+              <img onClick={()=>display(rowData.key)} width={20} src={Details}/></Whisper>
             ))}
         </Cell>
       </Column>

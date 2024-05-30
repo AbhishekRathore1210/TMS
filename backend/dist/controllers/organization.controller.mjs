@@ -29,12 +29,13 @@ class Organization {
         return res.status(400).send({ message: "Not Deleted!" });
     };
     showUserInOrg = async (req, res) => {
+        // console.log('param',req.params.name);
         const name = req.params.name;
         const newOrg = await this.organizationDao.findOrgByName(name);
         if (newOrg) {
             return res.send({ code: 200, data: { success: true, userList: newOrg.user_list } });
         }
-        return res.send({ code: 400, data: { success: false, message: "Not Found" } });
+        return res.send({ code: 400, data: { success: false, message: "Not Found", userList: [] } });
     };
 }
 export default Organization;

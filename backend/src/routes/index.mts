@@ -54,13 +54,13 @@ class Routes {
       this.authentication.Auth,
       this.ticketController.showAllTicketsInOrganization
     );
+    this.router.get(`${prefix}/users/:name`,this.organizationController.showUserInOrg)
     this.router.get(
       `${prefix}/`,
       this.authentication.Auth,
       this.ticketController.showAllUserInOrganization
     );
     this.router.put(`${prefix}/ticket`,this.authentication.Auth,this.ticketController.updateTicket);
-
   }
 
   private initializeAdminRoutes(prefix: string) {

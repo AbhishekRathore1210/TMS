@@ -33,12 +33,13 @@ class Organization {
   };
 
   public showUserInOrg = async(req:Request,res:Response)=>{
+    // console.log('param',req.params.name);
     const name = req.params.name;
     const newOrg  = await this.organizationDao.findOrgByName(name);
     if(newOrg){
       return res.send({code:200,data:{success:true,userList:newOrg.user_list}});
     }
-    return res.send({code:400,data:{success:false,message:"Not Found"}});
+    return res.send({code:400,data:{success:false,message:"Not Found",userList:[]}});
   }
 }
 
