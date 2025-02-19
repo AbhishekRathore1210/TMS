@@ -30,15 +30,15 @@ class AdminController{
     }
     public sendOTP = async(req:Request,res:Response) =>{
         const {email,org} = req.body;
-        const otpSent = await this.userService.sendOTP(email,org);
+        // const otpSent = await this.userService.sendOTP(email,org);
         // console.log(otpSent,'value');
-        if(otpSent){
+        // if(otpSent){
         return res.status(200).send({success:true,message:"OTP sent succesffuly"});
-        }
-        return res.send({code:400,data:{
-            success:false,
-            message:"User is not Pressent"
-        }})
+        // }
+        // return res.send({code:400,data:{
+        //     success:false,
+        //     message:"User is not Pressent"
+        // }})
     }
 
     public showOrganization = async(req:Request,res:Response,next:NextFunction) =>{

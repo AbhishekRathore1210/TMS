@@ -36,9 +36,9 @@ class UserDao {
         if (!user) {
             return false;
         }
-        else {
-            if (user.otp != otp || user.otpExpire && user.otpExpire.getTime() < Date.now()) { return false; }
-        }
+        // else {
+        //     if (user.otp != otp) { return false; }
+        // }
         return user;
     }
 
