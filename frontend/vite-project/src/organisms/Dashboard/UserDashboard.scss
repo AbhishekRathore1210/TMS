@@ -1,44 +1,76 @@
-.log-out-btn{
-    // padding-right: 0;
-    margin-right: 0;
-    padding-left: 91%;
-    margin-top: 0;
+
+
+.log-out-btn {
+    position: absolute;
+    background-color: rgb(45 115 215);
+    top: 1rem; /* Adjust top spacing */
+    right: 3rem; /* Adjust right spacing */
 }
-body{
-    // position: fixed;
+
+.main {
+    height: 100vh;
+    width: 100vw;
 }
-.main{
+
+h4{
+    display: inline-block;
+}
+
+.parent-filter-btn{
+    // border:1px solid blue;
+    .type-filter{
+        margin-left: 130px;
+        margin-bottom: 5px;
+    }
+    .status-filter{
+      margin-left: 10px;
+      margin-bottom: 5px;
+      
+    }
+    .status-filter-picker{
+        margin-bottom: 5px;
+        margin-left: 5px;
+    }
+    .type-filter-picker{
+        margin-bottom: 5px;
+        margin-left: 3px;
+    }
+
+.filter-btn{
+    margin:0;
     // border:2px solid black;
-    height:100vh;
-    width:100vw;
+    margin-left: 30%;
+
+    // padding:0;
+}
 }
 
-.heading{
+.heading {
     border: 2px solid black;
+    text-align: center; /* Center the heading text */
 }
 
-.create-ticket{
-    // border: 2px solid red;
-    bottom: 0;
-    width:100%;
-    padding-left: 53%;
-    position:fixed;
+.create-ticket {
+    position: fixed;
+    bottom: 1rem; /* Adjust bottom spacing */
+    right: 1rem; /* Adjust right spacing */
+    z-index: 999; /* Ensure the button stays on top */
 }
-
-.ticket{
+.ticket {
+    width: 80%;
     display: flex;
-    margin:auto;
     justify-content: center;
-    // border: 5px solid green;
-
-    
+    margin: auto;
 }
 
-h2{
-    justify-content: center;
-    text-align: center;
-    // border: 2px solid black;
-    flex-direction: column;
-    color:white
+h2 {
+    text-align: center; /* Center the heading text */
+    color: black;
+}
+
+@media (max-width: 768px) {
+    .create-ticket {
+        padding-left: 0; /* Remove left padding */
+    }
 }
 

@@ -1,12 +1,14 @@
 import { orgUser } from "../models/user.model.mjs";
 import { adminUser } from "../models/admin.model.mjs";
 class UserDao {
-    createUser = async (firstName, lastName, org, email) => {
+    createUser = async (firstName, lastName, org, email, dob, doj) => {
         const newUser = orgUser.create({
             firstName: firstName,
             lastName: lastName,
             org: org,
             email: email,
+            dob: dob,
+            doj: doj,
             organization_list: [org]
         });
         return newUser;
@@ -20,12 +22,13 @@ class UserDao {
     };
     checkAdmin = async (email, otp) => {
         const user = await adminUser.findOne({ email: email });
-        console.log(user);
+        var dt = (new Date().getTime());
+        // console.log(user);
         if (!user) {
             return false;
         }
         else {
-            if (user.otp != otp) {
+            if (user.otp != otp || user.otpExpire && user.otpExpire.getTime() < Date.now()) {
                 return false;
             }
         }

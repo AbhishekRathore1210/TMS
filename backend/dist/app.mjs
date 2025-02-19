@@ -41,7 +41,7 @@ class App {
             this.app.use('/', route.router);
         });
         this.app.use((req, res, next) => {
-            console.log(req.method);
+            // console.log(req.method);
             throw new NotFoundError(`Route not Found Method:${req.method} and URL : ${req.url}`);
         });
     }

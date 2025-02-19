@@ -1,0 +1,2 @@
+import CreateOrganizationUserPage from "./CreateOrganizationUserPage"
+export default CreateOrganizationUserPage

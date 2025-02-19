@@ -1,10 +1,12 @@
 import { Button, Input } from 'rsuite'
 import './RegisterForm.scss'
 import { useNavigate  } from 'react-router-dom'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { ToastContainer,toast} from 'react-toastify'
 import "react-toastify/dist/ReactToastify.css";
 import CustomDropdown from '../DropDown/DropDown'
+// import { Cookies } from 'react-cookie'
+import Cookies from 'js-cookie'
 
 function RegisterForm() {
   const [user, setUser] = useState<string | null>("Organization");
@@ -15,14 +17,32 @@ function RegisterForm() {
   const [dob, setDOB] = useState("");
   const [doj, setDOJ] = useState("");
   const [error, setError] = useState("");
-  const [data,setData] =  useState([]);
+
+  // const cookies = new Cookies();
 
   const navigate = useNavigate();
+  const token:string | undefined = Cookies.get('accessToken');
+
+  useEffect(()=>{
+    if(!token){
+      navigate('/login');
+      return;
+  }
+  })
 
   const validateOrgUser = ()=>{
-    if(!email || !firstName || !lastName){
+
+    console.log("org***",org);
+
+
+    if(!email || !firstName || !lastName ||!dob ||!doj || !org){
       toast.error("Fill All the Details");
       return false;
+    }
+
+    if(!firstName.trim() || !lastName.trim()){
+      toast.error("Invalid Name");
+      return false
     }
 
     let hasNumbers = /\d/.test(firstName);
@@ -41,6 +61,8 @@ function RegisterForm() {
     return true;
   }
   const validateUser = ()=>{
+    
+   
 
     if(!email || !firstName || !lastName){
       toast.error("Fill All the Details");
@@ -71,7 +93,6 @@ function RegisterForm() {
     if(!validateUser()){
       return;
     }
-    console.log("api is called");
 
     const adminUser = {firstName,lastName,email};
     const response = await fetch("http://localhost:8555/admin/register",{
@@ -79,6 +100,7 @@ function RegisterForm() {
       body:JSON.stringify(adminUser),
       headers:{
         "Content-Type": "application/json",
+        Authorization:`BEARER ${token}`
       }
     })
     const result = await response.json();
@@ -117,18 +139,10 @@ function RegisterForm() {
         "Content-Type": "application/json",
       }
     })
-    // console.log(response);
     const result = await response.json();
     console.log(result);
 
     if(!response.ok){
-      setError("");
-      setFirstname("");
-      setLastname("");
-      setEmail("");
-      setOrg("");
-      setDOB("");
-      setDOJ("");
       console.log(result.error);
       setError(result.error);
       toast.error(result.message);
@@ -142,10 +156,29 @@ function RegisterForm() {
       setOrg("");
       setDOB("");
       setDOJ("");
-      toast.success(result.message);
-      navigate("/admin/dashboard");
+      toast.success("New User Registered");
+      setTimeout(()=>{navigate('/admin/dashboard')},1000);
+      // navigate("/admin/dashboard/createOrgUser");
     }
   }
+
+  const getCurrentDate = () => {
+    const today = new Date();
+    return today.toISOString().split('T')[0];
+  };
+
+  const getMinDate = () => {
+    const today = new Date();
+    today.setFullYear(today.getFullYear() - 100);
+    return today.toISOString().split('T')[0];
+  };
+
+  const getMaxDate = () =>{
+    const today = new Date();
+    today.setFullYear(today.getFullYear() + 100);
+    return today.toISOString().split('T')[0];
+  }
+
   return (
     <>
     <div className="errorContainer">
@@ -169,11 +202,11 @@ function RegisterForm() {
             </div>
           <div className="dateContainer">
             <label className="form-label">Date of Birth</label>
-            <Input type='date' disabled={user=="System"?true:false} value={dob} onChange={(e:string)=>{setDOB((e))}}></Input>
+            <Input type='date' disabled={user=="System"?true:false} value={dob} onChange={(e:string)=>{setDOB((e))}}  max={getCurrentDate()} min={getMinDate()}></Input>
           </div>
           <div className="dateContainer">
             <label className="form-label">Date of Joining</label>
-            <Input disabled={user=="System"?true:false} value={doj} type='date' onChange={(e: string)=>{setDOJ(e)}}></Input>
+            <Input disabled={user=="System"?true:false} value={doj} min={getCurrentDate()} max={getMaxDate()} type='date' onChange={(e: string)=>{setDOJ(e)}}></Input>
           </div>
           <Button className='sub-btn' type='submit' color='red' appearance='primary' size='lg' >Submit</Button>
         </form>
@@ -182,5 +215,4 @@ function RegisterForm() {
     </>
   )
 }
-
 export default RegisterForm

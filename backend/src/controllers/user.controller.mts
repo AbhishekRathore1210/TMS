@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 import { orgUser } from '../models/user.model.mjs';
 import { adminUser } from '../models/admin.model.mjs';
-// import { checkAdmin , createUser , createAdmin,checkOrg } from '../services/userService.mjs';
 import {Organization} from '../models/organization.model.mjs';
 import UserService from '../services/user.service.mjs';
 import jwt from 'jsonwebtoken';
@@ -14,10 +13,10 @@ class UserController {
 
     public userRegistration = async (req: Request, res: Response) => {
         try{
-        const { firstName, lastName, org, email } = req.body;
+        const { firstName, lastName, org, email,dob,doj } = req.body;
         console.log(req.body);
         const orgExist = await Organization.findOne({name:org});
-        console.log(orgExist);
+        // console.log(orgExist);
 
         if(!orgExist){
             res.status(400).send({success:false,message:"Organization not Exists!"});
@@ -41,7 +40,7 @@ class UserController {
                 }
             }else{
                 // create user 
-                const user = await this.userService.createUser(firstName,lastName,org,email);
+                const user = await this.userService.createUser(firstName,lastName,org,email,dob,doj);
                 orgExist.user_list.push({
                     userId:user._id,
                     name:user.firstName +' '+ user.lastName,
@@ -51,14 +50,14 @@ class UserController {
                 res.status(200).send({success:true,message:"New User is added to the Organization"});
             }
         }
-        }catch(error:any){
-            console.log(error.message);
+        }catch(error){
+            const err = error as Error;
+            console.log(err.message);
         }
     }
     public userLogin = async(req:Request,res:Response)=>{
         try{
             const {email,org,otp} = req.body;
-            console.log(req.body);
             const orgExist = await Organization.findOne({name:org});
             if(!orgExist){
                 res.status(400).send({success:false,message:"Organization not Exists!"});
@@ -75,20 +74,21 @@ class UserController {
                     else{
                         const myOTP = userExist.otp;
                         // console.log("otp",otp);
-                        // if(otp == undefined ||  myOTP != otp){
-                        //     res.status(501).send({success:false,message:"Incorrect OTP"});
-                        // }
-                        // else{
+                        if(otp == undefined ||  myOTP != otp || userExist.otpExipre && userExist.otpExipre.getTime() < Date.now()){
+                            res.status(501).send({success:false,message:"Incorrect OTP"});
+                        }
+                        else{
                             const token = jwt.sign({email:email,is_admin:userExist.is_admin,organization:org},this.secretKey);
                             res.status(200).send({accessToken:token,success:true,message:"Login Successfully!"});
-                        // }
+                        }
                     }
             }else{
                 res.status(501).send({success:false,message:"User not Exist kindly Login!!"});
             }
         }
-    }catch(error:any){
-            console.log(error.message);
+    }catch(error){
+        const err = error as Error;
+            console.log(err.message);
         }
     }
 }

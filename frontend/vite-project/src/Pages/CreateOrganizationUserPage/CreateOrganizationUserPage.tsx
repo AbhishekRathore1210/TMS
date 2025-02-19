@@ -1,6 +1,5 @@
-import RegisterForm from "../../organisms/RegisterForm/RegisterForm"
+import RegisterForm from "../../organisms/RegisterForm"
 import './CreateOrganizationUserPage.scss';
-
 function CreateOrganizationUserPage() {
     return (
       <>
@@ -10,5 +9,4 @@ function CreateOrganizationUserPage() {
       </>
     )
   }
-  
   export default CreateOrganizationUserPage

@@ -1,87 +1,10 @@
-// import React, { useState } from 'react';
-
-// interface FormData {
-//   type: string;
-//   description: string;
-//   email: string;
-//   dueDate: string;
-// }
-
-// const initialFormData: FormData = {
-//   type: '',
-//   description: '',
-//   email: '',
-//   dueDate: ''
-// };
-
-// const TicketForm: React.FC = () => {
-//   const [formData, setFormData] = useState<FormData>(initialFormData);
-
-//   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-//     const { name, value } = e.target;
-//     setFormData({
-//       ...formData,
-//       [name]: value
-//     });
-//   };
-
-//   const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
-//     e.preventDefault();
-//     // You can handle form submission here, for now just logging the data
-
-//     const ticket = {...formData}; 
-//     const response = await fetch("http://localhost:8555/users/dashboard/createTicket",{
-//       method:'POST',
-//       body:JSON.stringify(ticket),
-//       headers:{
-//         "Content-Type": "application/json",
-//       }
-//     });
-
-//     const result = response.json();
-//     console.log("Result",result);
-//     if(response.ok){
-//         console.log("Ticket genereated");
-//     }
-
-//     console.log(formData);
-//     // Resetting the form after submission
-//     setFormData(initialFormData);
-//   };
-
-//   return (
-//     <div>
-//       <h2>Create New Item</h2>
-//       <form onSubmit={handleSubmit}>
-//         <label htmlFor="type">Type:</label>
-//         <select id="type" name="type" value={formData.type} onChange={handleChange}>
-//           <option value="">Select Type</option>
-//           <option value="story">Story</option>
-//           <option value="task">Task</option>
-//           <option value="bug">Bug</option>
-//         </select><br /><br />
-
-//         <label htmlFor="description">Description:</label><br />
-//         <textarea id="description" name="description" value={formData.description} onChange={handleChange} rows={4} cols={50}></textarea><br /><br />
-
-//         <label htmlFor="email">Email:</label>
-//         <input type="email" id="email" name="email" value={formData.email} onChange={handleChange} /><br /><br />
-
-//         <label htmlFor="dueDate">Due Date:</label>
-//         <input type="date" id="dueDate" name="dueDate" value={formData.dueDate} onChange={handleChange} /><br /><br />
-
-//         <input type="submit" value="Submit" />
-//       </form>
-//     </div>
-//   );
-// };
-
-// export default TicketForm;
-
-
-import React, { useState } from 'react';
-import { Cookies } from 'react-cookie';
+import React, { useEffect, useState } from 'react';
+// import { Cookies } from 'react-cookie';
+import Cookies from 'js-cookie';
+import {Button, Input} from 'rsuite';
 import { useNavigate } from 'react-router-dom';
+import { ToastContainer,toast} from 'react-toastify'
+import './TicketForm.scss'
 
 interface FormData {
   type: string;
@@ -89,6 +12,26 @@ interface FormData {
   description: string;
   assignee: string;
   dueDate: string;
+}
+interface IUsertickets{
+  ticketId:string,
+  status:string,
+  assignee:string
+}
+
+interface IUser{
+  firstName:string,
+  lastName:string,
+  email:string,
+  org:string,
+  is_admin:boolean,
+  organization_list:string[],
+  is_verified:boolean,
+  otp?:string,
+  dob?:Date,
+  doj?:Date,
+  ticketCount?:Number,
+  tickets?:Array<IUsertickets>
 }
 
 
@@ -100,13 +43,13 @@ const initialFormData: FormData = {
   summary: ''
 };
 
-const FormComponent: React.FC = () => {
-
+const FormComponent = ({fun}:any) => {
   
-const cookies = new Cookies();
+// const cookies = new Cookies();
 const navigate = useNavigate();
 
   const [formData, setFormData] = useState<FormData>(initialFormData);
+  const [user,SetUser] = useState([]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -116,20 +59,59 @@ const navigate = useNavigate();
     });
   };
 
-  const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const token:string | undefined = Cookies.get('accessToken');
+  if(!token){
+    navigate('/login');
+    return;
+}
 
-    const token:string | undefined = cookies.get('accessToken');
-    console.log('**************************');
-    console.log("Token",token);
+  useEffect(() => {
     if(!token){
       navigate('/login');
       return;
+    }
+    fetchEmailOptions();
+  }, []);
+
+  const fetchEmailOptions = async () => {
+    const response = await fetch('http://localhost:8555/users/', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `BEARER ${token}`
+      },
+    });
+    const result = await response.json();
+    console.log("Response",result);
+
+    const mapData = result.users.map((user:IUser)=>user.email);
+    // console.log("mapData",mapData);
+    SetUser(mapData);
+  };
+
+  
+
+  const validateTicket = () =>{
+    if(!formData.type || !formData.assignee || !formData.description || !formData.summary || !formData.dueDate){
+      toast.error("Fill All the fields");
+      console.log('fill details');
+      return false;
+    }
+    return true;
   }
 
-    console.log("inside handlesubmit");
+  const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    
+    if(!validateTicket()){
+      return;
+    }
+    createTicket();
+  }
+    const createTicket = async()=>{
     const ticket = {...formData}; 
-    const response = await fetch("http://localhost:8555/users/dashboard/createTicket",{
+    const response = await fetch("http://localhost:8555/users/ticket",{
       method:'POST',
       body:JSON.stringify(ticket),
       headers:{
@@ -138,24 +120,32 @@ const navigate = useNavigate();
       }
     });
 
-    console.log("outside handlesubmit");
     const result = await response.json();
-    console.log("Result",result);
     if(response.ok){
-        console.log("Ticket genereated");
+      // alert("Ticket Generated");
+      toast.success('Ticket Generated');
+      fun();
+      console.log("Ticket genereated");
     }
-
-    console.log(formData);
     setFormData(initialFormData);
+    
   };
+  const today = new Date();
 
+  // const getMinDate = () =>{
+  //   console.log(new Date());
+  //   const today = new Date();
+  //   today.setFullYear(today.getFullYear());
+  //   console.log(today.toISOString());
+  //   return today.toISOString()
+  // }
 
   return (
     <div>
-      <h2>Create New Item</h2>
+      <h2>Generate New Ticket</h2>
       <form onSubmit={handleSubmit}>
-        <label htmlFor="type">Type:</label>
-        <select id="type" name="type" value={formData.type} onChange={handleChange}>
+        <label htmlFor="type">Type:{' '}</label>
+        <select className='gen-tic' id="type" name="type" value={formData.type} onChange={handleChange}>
           <option value="">Select Type</option>
           <option value="Story">Story</option>
           <option value="Task">Task</option>
@@ -163,20 +153,27 @@ const navigate = useNavigate();
         </select><br /><br />
 
         <label htmlFor="summary">Summary:</label><br />
-        <textarea id="summary" name="summary" value={formData.summary} onChange={handleChange} rows={4} cols={50}></textarea><br /><br />
+        <textarea  id="summary" name="summary" value={formData.summary} onChange={handleChange} rows={4} cols={80}></textarea><br /><br />
 
         <label htmlFor="description">Description:</label><br />
-        <textarea id="description" name="description" value={formData.description} onChange={handleChange} rows={4} cols={50}></textarea><br /><br />
+        <textarea id="description" name="description" value={formData.description} onChange={handleChange} rows={4} cols={80}></textarea><br /><br />
         
 
-        <label htmlFor="email">Email:</label>
-        <input type="email" id="assignee" name="assignee" value={formData.assignee} onChange={handleChange} /><br /><br />
+        <label htmlFor="assignee">Assignee:{' '}</label>
+        <select className='gen-tic' id="assignee" name="assignee" value={formData.assignee} onChange={handleChange}>
+          <option value="">Select Email</option>
+          {user.map((email) => (
+            <option key={email} value={email}>{email}</option>
+          ))}
+        </select><br /><br />
 
-        <label htmlFor="dueDate">Due Date:</label>
-        <input type="date" id="dueDate" name="dueDate" value={formData.dueDate} onChange={handleChange} /><br /><br />
+        <label htmlFor="dueDate">Due Date:{' '}</label>
+        <input className='gen-tic' type="date" id="dueDate" name="dueDate" value={formData.dueDate} max='2025-05-20' min='2024-05-27' onChange={handleChange} /><br /><br />
 
-        <input type="submit" value="Submit" />
+        {/* <input type="submit" value="Submit" /> */}
+        <Button size='lg' type='submit' color='green' appearance='primary'>Submit</Button>
       </form>
+      {/* <ToastContainer/> */}
     </div>
   );
 };

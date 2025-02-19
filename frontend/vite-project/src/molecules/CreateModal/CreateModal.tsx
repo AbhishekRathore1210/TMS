@@ -1,8 +1,13 @@
-import { Modal, Button, ButtonToolbar, Placeholder } from 'rsuite';
+import { Modal, Button, ButtonToolbar } from 'rsuite';
 import React from 'react';
 import TicketForm from '../TicketForm/TicketForm';
+import './CreateModal.scss';
 
-const CreateModal = () => {
+interface Ifun{
+  fun:()=>Promise<void>
+}
+
+const CreateModal = ({fun}:Ifun) => {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -10,22 +15,17 @@ const CreateModal = () => {
   return (
     <>
       <ButtonToolbar>
-        <Button onClick={handleOpen} color='red' appearance='primary'> Create Ticket</Button>
+        <Button className='ticket-btn' onClick={handleOpen}  appearance='primary'>Ticket</Button>
       </ButtonToolbar>
       <Modal open={open} onClose={handleClose}>
         <Modal.Header>
-          <Modal.Title>Create Ticket</Modal.Title>
+          {/* <Modal.Title>Create Ticket</Modal.Title> */}
+          <TicketForm fun={fun}/>
         </Modal.Header>
         <Modal.Body>
-         <TicketForm/>
+         {/* <TicketForm fun={fun}/> */}
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={handleClose} appearance="primary">
-            Ok
-          </Button>
-          <Button onClick={handleClose} appearance="subtle">
-            Cancel
-          </Button>
         </Modal.Footer>
       </Modal>
     </>

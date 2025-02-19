@@ -29,12 +29,15 @@ const orgUserSchema = new mongoose.Schema({
         type: String,
         default: '000000',
     },
-    // dob:{
-    //     type:Date,
-    // },
-    // doj:{
-    //     type:Date,
-    // },
+    otpExipre: {
+        type: Date,
+    },
+    dob: {
+        type: Date,
+    },
+    doj: {
+        type: Date,
+    },
     organization_list: [{
             type: String,
         }],

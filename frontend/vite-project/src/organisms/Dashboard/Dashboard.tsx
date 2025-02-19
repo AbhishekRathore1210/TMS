@@ -1,23 +1,52 @@
 import "./Dashboard.scss";
-import { Button, Input, Modal, Table } from "rsuite";
+import { Button , Pagination} from "rsuite";
 import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { SetStateAction, useEffect, useState } from "react";
 import axios from "axios";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import { Cookies } from "react-cookie";
+// import { Cookies } from "react-cookie";
+import Cookies from "js-cookie";
 import TableDemo from "../../molecules/Table/Table";
-import NavBar from "../../molecules/NavBar/NavBar";
+import logOut1 from '../../../public/logOut1.png';
+
+
+interface IUserList{
+  userId:string |null
+  name:string
+  email:string | null
+
+}
+interface IData{
+  name:string,
+  is_active:boolean,
+  user_list:Array<IUserList>
+}
 
 function Dashboard() {
+
   const [org, setOrg] = useState([]);
   const [fil, setfil] = useState([]);
 
+  const [limit, setLimit] = useState(10);
+  const [page, setPage] = useState(1);
+  const [t,setTotal] = useState(1);
+  const [check,setCheck] = useState(false);
+
+  const handleChangeLimit = (dataKey: SetStateAction<number>) => {
+    setPage(1);
+    setLimit(dataKey);
+  };
+  const toggle = ()=>{
+    setCheck(!check);
+  }
+
   const navigate = useNavigate();
-  const cookies = new Cookies();
+  // const cookies = new Cookies();
 
   let response: any;
-  const token:string | undefined = cookies.get('accessToken');
+  const token:string | undefined = Cookies.get('accessToken');
+  const userType:string | undefined = Cookies.get('userType');
 
   useEffect(() => {
     
@@ -25,6 +54,12 @@ function Dashboard() {
     navigate('/login');
     return;
   }
+  if(userType!='admin'){
+    navigate('/login');
+    return;
+  }
+  // getAllTicket();
+
     const config = {
       headers: {
         Authorization: `BEARER ${token}`,
@@ -33,128 +68,104 @@ function Dashboard() {
     };
 
     response = axios
-      .get("http://localhost:8555/admin/dashboard",config)
+      .get(`http://localhost:8555/admin/organizations?page=${page}&&limit=${limit}`,config)
       .then((res) => {
-        const activeData = res.data.filter((item:any) => item.is_active == true);
-      setOrg(activeData);
-      setfil(activeData);
+        console.log("data",res.data);
+        setTotal(res.data.totalPage);
+      setOrg(res.data.allOrg);
+      setfil(res.data.allOrg);
+      // setUser(res.data.allOrg.user_list.name);
       })
       .catch((err) => console.log(err));
-  }, []);
+  }, [page,t,limit, check]);
 
     if(response){
-    const result = response.json();
+    response.json();
     }
 
   const deliveOrganization = async(name:string) => {
-    // console.log(name);
 
-    const token:string | undefined = cookies.get('accessToken');
+    const token:string | undefined = Cookies.get('accessToken');
     if(!token){
         navigate('/login');
         return;
     }
 
     const organizationName = {"name":name};
-    const response = await fetch("http://localhost:8555/admin/dashboard/deleteOrg",{
+    const response = await fetch("http://localhost:8555/admin/organization/delete",{
       method:'POST',
       body:JSON.stringify(organizationName),
       headers:{
         "Content-Type": "application/json",
       }
     });
-    const result = await response.json();
+    await response.json();
     if(response.ok){
-      const activeData = org.filter((item:any) => {
+      const activeData = org.filter((item:IData) => {
         return item.is_active == true;
       });
       setOrg(activeData);
       setfil(activeData);
-
       console.log("Organization Deleted Successfully!");
+      toggle();
     }
     else{
       console.log("Cannot Delete");
     }
-    navigate(0);
   }
   const logout = async()=>{
-      cookies.remove('accessToken');
+    Cookies.remove('accessToken');
+    Cookies.remove('userType');
       console.log("LogOut SuccessFully");
+      // navigate('/login');
   }
 
-  const handleInput = async(inp: any) => {
-
-    const filterData = org.filter((temp: any) => {
-      return temp.is_active && temp.name.toLowerCase().includes(inp.toLowerCase());
-    });
-    setfil(filterData);
-  };
   return (
     <>
-    {/* <NavBar/> */}
           <h1>System User Dashboard</h1>
-          {/* <Link to='/admin/dashboard/createOrg'>
+          <Link to="/admin/dashboard/createOrgUser">
+                <Button className="btn2" color="red" appearance="primary">
+                  Create User
+                </Button>
+            </Link>
+          <Link to='/admin/dashboard/createOrg'>
               <Button
                 className="org-btn"
                 color="red"
                 appearance="primary"
               >
-                Create
+                Create Organization
               </Button>
-            </Link> */}
-            <div className="table">
-            <TableDemo fil={fil} deliveOrganization={deliveOrganization}/>
-            </div>
-          {/* <div className="org-heading"><h2>All Organizaitons</h2></div>
-      <div>
-          { fil.map((e: any, i:number) => (
-            <div>
-              <div className="org" key={i}>
-                <div className="org-name">{e.name}</div></div>
-              </div>
-        ))} */}
-      {/* </div> */}
-  {/* <div className="grid-item">2</div>
-  <div className="grid-item">3</div>
-  <div className="grid-item">4</div>
-  <div className="grid-item">5</div>
-  <div className="grid-item">6</div>
-  <div className="grid-item">7</div>
-  <div className="grid-item">8</div> */}
-        {/* <TableDemo fil={fil} setfil={setfil}/> */}
-        {/* <div className="sidebar"> */}
-          {/* <h2>All Organizations</h2> */}
-          {/* <div>
-          </div> */}
-          {/* <div className="org">
-             {fil.map((e: any, i:number) => (
-              <div className="orgNameDiv">
-                <p className="orgName" key={i}>{e.name}</p> */}
-                {/* <button className="orgButton" onClick={()=>deliveOrganization(e.name)}>Delete</button> */}
-              {/* </div>
-            ))}  */}
-          {/* </div> */}
-        {/* </div> */}
-      {/* </div> */}
-      {/* <div className="main-content">
-        <div className="heading-btn">
-          <div className="btn"> */}
-            {/*<Link to="/admin/dashboard/createOrgUser">
-              <span>
-                <Button className="btn2" color="red" appearance="primary">
-                  Create Organization User
-                </Button>
-              </span>
             </Link>
-            <Link to="/">
-            <span>
-              <Button color='red' appearance="primary" onClick={logout}>LOG OUT</Button>
-            </span></Link>
-          </div>
-        </div>
-      </div> */}
-      {/* </div> */}
+            <h2>All Organizations</h2>
+            <div className="upper-table">
+            <TableDemo fil={fil} deliveOrganization={deliveOrganization} p={page} l={limit}/>
+            </div>
+            <div style={{ padding: 20 }}>
+        <Pagination
+          prev
+          next
+          first
+          last
+          ellipsis
+          boundaryLinks
+          maxButtons={5}
+          size="md"
+          layout={['total', '-', 'limit', '|', 'pager', 'skip']}
+          total={t*limit}
+          limitOptions={[10, 30, 50]}
+          limit={limit}
+          activePage={page}
+          onChangePage={setPage}
+          onChangeLimit={handleChangeLimit}
+        />
+      </div>
+           <Link to="/">
+            <div>
+              <Button className='log-out-btn' appearance="default" onClick={logout}>
+                <img width={20} src={logOut1}/>
+              </Button>
+            </div></Link>
       <ToastContainer />
     </>
   );

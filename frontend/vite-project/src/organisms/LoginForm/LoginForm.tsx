@@ -1,27 +1,32 @@
 import { Button, Input } from 'rsuite'
 import './LoginForm.scss'
-import { useEffect, useState } from 'react'
+import {  useEffect, useState } from 'react'
+import { SelectPicker } from 'rsuite';
+import axios from 'axios'
  
 import { useNavigate } from 'react-router-dom';
 import { ToastContainer,toast } from 'react-toastify';
-import { Cookies } from 'react-cookie';
+// import { Cookies } from 'react-cookie';
+import Cookies from 'js-cookie';
+import LoginAPI from '../../services/LoginServices';
+
 
 
 function LoginForm() {
   const [user, setUser] = useState("System");
+
   const [error,setError] = useState("");
-  const [org, setOrg] = useState("");
+  const [org, setOrg] = useState<string | null>("");
+  const [orgName,setOrgName] = useState([]);
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("");
   const [toggle,setToggle] = useState(false);
-  let flag = false;
 
   const navigate = useNavigate();
-  const cookies = new Cookies();
 
-  // useEffect(()=>{
-    // toast.success("Registerd Succesfully! Kindly Login");
-  // }, [])
+
+  const token = Cookies.get('accessToken');
+  const userType = Cookies.get('userType');
 
   const validateUser = ()=>{
     if(!otp){
@@ -31,14 +36,34 @@ function LoginForm() {
     }
     return true;
   }
-
-  const validateEmail = ()=>{
-    if(!email){
-      setError("Please Write your Email");
-      toast.error("Please Write your Email");
-      return false;
+  useEffect(()=>{
+    if(userType == 'user'){
+      navigate('/users/dashboard');
+      return;
     }
-    return true;
+    if(userType == 'admin'){
+      navigate('/admin/dashboard');
+      return;
+    }
+
+    allOrganizationName();
+  },[])
+
+  const allOrganizationName = async()=>{
+    const response = await axios.get('http://localhost:8555/org')
+      console.log(response.data,'data');
+      if(response.data.data.success){
+        setOrgName(response.data.data.allOrg);
+        console.log(response.data.data.allOrg);
+      }
+      else{
+        console.log("error");
+      }
+    }
+
+  const validateEmail = (email:string)=>{
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
   }
 
   const validateOrg = ()=>{
@@ -49,6 +74,7 @@ function LoginForm() {
     }
     if(!org){
       setError("Please write name of the organization");
+      toast.error("Enter Organization Name");
       return false;
     }
     return true;
@@ -61,17 +87,8 @@ function LoginForm() {
       return;
     }
     const user = {email,otp};
-    const response = await fetch("http://localhost:8555/admin/login",{
-        method:'POST',
-        body:JSON.stringify(user),
-        headers:{
-          "Content-Type": "application/json",
-        }
-    })
+    const response = await LoginAPI.Login(user);
     const result = await response.json();
-
-    // console.log(result);
-    // console.log(result.success);
 
     if(!result.success){
       console.log("Cannot Login");
@@ -82,15 +99,13 @@ function LoginForm() {
     if(!response.ok){
       setError(result.error);
       setError("");
-      setOrg("");
-      setEmail("");
-      setOtp("");
       navigate('/login');
     }
 
     if(response.ok){
       const token = result.accessToken;
-      cookies.set("accessToken",token);
+      Cookies.set("accessToken",token);
+      Cookies.set('userType','admin');
       setError("");
       setOrg("");
       setEmail("");
@@ -99,37 +114,28 @@ function LoginForm() {
     }
   }
   const sendOTP = async()=>{
-    // console.log("before",toggle);
-    setToggle(true);
-    console.log("before",toggle);
-    if(!validateEmail()){
-      toast.error("Enter your Email first!");
+    
+    if(!validateEmail(email)){
+      toast.error("Enter valid Email!");
       return;
     }
+    setToggle(true);
 
-    // console.log("otp api called");
     const userEmail = {email,org};
-    const response = await fetch("http://localhost:8555/admin/otp",{
-      method:'POST',
-      body:JSON.stringify(userEmail),
-      headers:{
-        "Content-Type": "application/json",
-      }
-    });
+
+    const response = await LoginAPI.OTP(userEmail);
 
     const result = await response.json();
-    // console.log(response);
-    // console.log(result);
 
     if(!result.success){
+      toast.error("User Not Exists!");
       console.log("OTP NOT SENT");
     }
     else{
-      // toast.success("OTP sent successfully!");
+      toast.success("OTP sent successfully!");
       console.log("OTP has been sent!");
     }
-    setToggle(false);
-    console.log(toggle,"after");
+    setTimeout(()=>setToggle(false),10000);
   }
   
   const handleOrganization =async (e:FormSubmit)=>{
@@ -139,10 +145,10 @@ function LoginForm() {
       return;
     }
 
-    const user = {email,org,otp};
+    const newUser = {email,org,otp};
     const response = await fetch("http://localhost:8555/users/login",{
         method:'POST',
-        body:JSON.stringify(user),
+        body:JSON.stringify(newUser),
         headers:{
           "Content-Type": "application/json",
         }
@@ -152,9 +158,10 @@ function LoginForm() {
 
     if(response.ok){
       const token = result.accessToken;
-      cookies.set("accessToken",token);
-    // toast.success(result.message);
-    setTimeout(()=>navigate('/users/dashboard'),300);
+      Cookies.set("accessToken",token);
+      Cookies.set('userType','user');
+    // setTimeout(()=>navigate('/users/dashboard'),300);
+    navigate('/users/dashboard');
     }
     else{
       console.log("Response is not ok");
@@ -163,30 +170,31 @@ function LoginForm() {
     }
   }
 
+
   return (
     <>
     <div className={'LoginContainer ' + user}>
         <div className='upperContainer'>
         <h4 >LOGIN</h4>
-        {/* <div className="underline"></div> */}
         <div className="userSelection">
-            {/* <Button size='lg' color='blue' onClick={()=>{setUser("System")}}  appearance={user == "System"? "primary" : "default"}>System</Button>
-            <Button size='lg'color='blue' onClick={()=>{setUser("Organization")}} appearance={user == "Organization"? "primary" : "default"}>Organization</Button> */}
             <span className='btn-sys'>
-              <Button size='lg' color='orange' onClick={()=>setUser("System")} appearance={user=='System'?"ghost":"default"} >System</Button>
+              <Button size='lg' color='blue' onClick={()=>setUser("System")} appearance={user=='System'?"primary":"default"} >System</Button>
             </span>
             <span className='btn-org'>
-              <Button size='lg' color='orange' onClick={()=>setUser("Organization")} appearance={user=='Organization'?"ghost":"default"} >Organization</Button>
+              <Button size='lg' color='blue' onClick={()=>setUser("Organization")} appearance={user=='Organization'?"primary":"default"} >Organization</Button>
             </span>
         </div>
         </div>
 
         <form onSubmit={user == 'System'? handleSystem : handleOrganization}>
-          <Input disabled={user == 'System'? true : false} value={org} type="text" placeholder='Organization' onChange={(e: string)=>{setOrg((e))}}></Input>
+
+
+          <SelectPicker searchable={false} data={orgName} labelKey='name' block className='org-selectpicker' valueKey='name' disabled={user =='System'?true:false} style={{ width: 224 }} onChange={(e:string | null)=>{setOrg((e))}} />
+
           <Input type="email" value={email} placeholder='E-mail' onChange={(e: string)=>{setEmail((e))}}></Input>
 
           <div className="otpContainer">
-            <Input type='text' value={otp} onChange={(e:string)=>{setOtp((e))}} placeholder='OTP'></Input>
+            <Input type='number' value={otp} onChange={(e:string)=>{setOtp((e))}} placeholder='OTP'></Input>
             <Button size='md' appearance='default' disabled={toggle} onClick={sendOTP} >Get OTP</Button>
           </div>
         <span className='sub'><Button type='submit' color='red' appearance='primary' size='lg'>Submit</Button></span>
