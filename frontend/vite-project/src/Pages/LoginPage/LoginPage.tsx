@@ -7,7 +7,6 @@ function LoginPage() {
   return (
     <>  
     <div className="heading-login">
-        {/* <h3>Welcome To TMS</h3> */}
         </div>
         <div className="LoginPageBody">
             <LoginForm/>

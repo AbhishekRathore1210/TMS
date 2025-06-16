@@ -30,15 +30,12 @@ class UserDao {
 
     public checkAdmin = async (email: string, otp: string) => {
         const user = await adminUser.findOne({ email: email });
-
-        var dt = (new Date().getTime());
-        // console.log(user);
         if (!user) {
             return false;
         }
-        // else {
-        //     if (user.otp != otp) { return false; }
-        // }
+        else {
+            if (user.otp != otp) { return false; }
+        }
         return user;
     }
 

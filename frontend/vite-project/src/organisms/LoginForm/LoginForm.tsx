@@ -6,11 +6,8 @@ import axios from 'axios'
  
 import { useNavigate } from 'react-router-dom';
 import { ToastContainer,toast } from 'react-toastify';
-// import { Cookies } from 'react-cookie';
 import Cookies from 'js-cookie';
 import LoginAPI from '../../services/LoginServices';
-
-
 
 function LoginForm() {
   const [user, setUser] = useState("System");
@@ -47,7 +44,7 @@ function LoginForm() {
     }
 
     allOrganizationName();
-  },[])
+  },[navigate, userType])
 
   const allOrganizationName = async()=>{
     const response = await axios.get('http://localhost:8555/org')
@@ -187,9 +184,7 @@ function LoginForm() {
         </div>
 
         <form onSubmit={user == 'System'? handleSystem : handleOrganization}>
-
-
-          <SelectPicker searchable={false} data={orgName} labelKey='name' block className='org-selectpicker' valueKey='name' disabled={user =='System'?true:false} style={{ width: 224 }} onChange={(e:string | null)=>{setOrg((e))}} />
+          <SelectPicker searchable={false} data={orgName} labelKey='name' block valueKey='name' disabled={user =='System'?true:false} style={{ width: 224 }} onChange={(e:string | null)=>{setOrg((e))}} />
 
           <Input type="email" value={email} placeholder='E-mail' onChange={(e: string)=>{setEmail((e))}}></Input>
 

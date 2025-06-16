@@ -1,27 +1,24 @@
 import { Request, Response } from 'express';
 import { orgUser } from '../models/user.model.mjs';
-import { adminUser } from '../models/admin.model.mjs';
 import {Organization} from '../models/organization.model.mjs';
 import UserService from '../services/user.service.mjs';
 import jwt from 'jsonwebtoken';
 
-
 class UserController {
 
     private userService = new UserService();
-    private secretKey = 'Abhishek@123$';
+    private organization = Organization;
+    private orguser = orgUser;
 
     public userRegistration = async (req: Request, res: Response) => {
         try{
         const { firstName, lastName, org, email,dob,doj } = req.body;
-        console.log(req.body);
-        const orgExist = await Organization.findOne({name:org});
-        // console.log(orgExist);
+        const orgExist = await this.organization.findOne({ name:org });
 
         if(!orgExist){
             res.status(400).send({success:false,message:"Organization not Exists!"});
         }else{
-            const userExist = await orgUser.findOne({ email: email });
+            const userExist = await this.orguser.findOne({ email: email });
             if(userExist){
                 if(userExist.organization_list.includes(org)){
                     res.status(400).send({success:false,message:"User is part of this Organization"});
@@ -58,7 +55,7 @@ class UserController {
     public userLogin = async(req:Request,res:Response)=>{
         try{
             const {email,org,otp} = req.body;
-            const orgExist = await Organization.findOne({name:org});
+            const orgExist = await this.organization.findOne({name:org});
             if(!orgExist){
                 res.status(400).send({success:false,message:"Organization not Exists!"});
             }
@@ -66,20 +63,18 @@ class UserController {
                 if(!orgExist.is_active){
                     res.status(400).send({success:false,message:"Organization is delived!!"});
                 }
-                const userExist = await orgUser.findOne({ email: email });
+                const userExist = await this.orguser.findOne({ email: email });
                 if(userExist){
                     if(!userExist.organization_list.includes(org)){
                         res.status(501).send({success:false,message:"User is Not Part of this Organization"});
                     }
                     else{
                         const myOTP = userExist.otp;
-                        console.log(otp,">>> otp");
-                        // console.log("otp",otp);
                         if(otp != '0000' && (otp == undefined ||  myOTP != otp || userExist.otpExipre && userExist.otpExipre.getTime() < Date.now())){
                             res.status(501).send({success:false,message:"Incorrect OTP"});
                         }
                         else{
-                            const token = jwt.sign({email:email,is_admin:userExist.is_admin,organization:org},this.secretKey);
+                            const token = jwt.sign({email:email,is_admin:userExist.is_admin,organization:org},process.env.JWT_SECRET_KEY as string);
                             res.status(200).send({accessToken:token,success:true,message:"Login Successfully!"});
                         }
                     }

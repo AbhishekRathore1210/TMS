@@ -30,12 +30,10 @@ class Routes {
   }
 
   private initializeOrganizationRoutes(prefix:string){
-    console.log("Initializing Org Routes");
     this.router.get('/org',this.organizationController.allOrg);
   }
 
   private initializeUserRoutes(prefix: string) {
-    console.log("Initializing user routes..");
     this.router.post(
       `${prefix}/register`,
       this.validation.validate(orgUserRegisterSchema),
@@ -64,8 +62,6 @@ class Routes {
   }
 
   private initializeAdminRoutes(prefix: string) {
-    console.log("Admin Route");
-
     this.router.post(`${prefix}/login`,this.validation.validate(userLoginSchema), this.adminController.loginAdmin);
     this.router.post(`${prefix}/otp`,this.validation.validate(userLoginSchema), this.adminController.sendOTP);
     this.router.get(

@@ -1,14 +1,9 @@
 import UserService from "../services/user.service.mjs";
 import { NextFunction, Request, Response } from 'express';
-import { orgUser } from '../models/user.model.mjs';
-import { adminUser } from '../models/admin.model.mjs';
-import { Organization } from "../models/organization.model.mjs";
 import jwt from 'jsonwebtoken';
-
 class AdminController{
 
     private userService = new UserService();
-    private secret = "Abhishek@123$";
 
     public registerAdmin = async (req: Request, res: Response, next: NextFunction) => {
         const { firstName, lastName, email } = req.body;
@@ -49,12 +44,11 @@ class AdminController{
     public loginAdmin = async (req: Request, res: Response) => {
         const { email, otp } = req.body;
         const adminExist = await this.userService.checkAdmin(email, otp);
-        // console.log(adminExist);
         if (!adminExist) {
             return res.status(401).json({ success:false,message: 'Cannot Login' });
         }
         else {
-            const token = jwt.sign({adminExist},this.secret);
+            const token = jwt.sign({adminExist},process.env.JWT_SECRET_KEY as string);
             // console.log(token);
            return res.status(200).json({accessToken:token,success:true, message: "Login success" });
         }
