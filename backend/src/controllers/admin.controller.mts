@@ -29,7 +29,7 @@ class AdminController{
         }
     }
     public sendOTP = async(req:Request,res:Response) =>{
-        const {email,org} = req.body;
+        // const {email,org} = req.body;
         // const otpSent = await this.userService.sendOTP(email,org);
         // console.log(otpSent,'value');
         // if(otpSent){

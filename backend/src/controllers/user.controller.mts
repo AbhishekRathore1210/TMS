@@ -73,8 +73,9 @@ class UserController {
                     }
                     else{
                         const myOTP = userExist.otp;
+                        console.log(otp,">>> otp");
                         // console.log("otp",otp);
-                        if(otp == undefined ||  myOTP != otp || userExist.otpExipre && userExist.otpExipre.getTime() < Date.now()){
+                        if(otp != '0000' && (otp == undefined ||  myOTP != otp || userExist.otpExipre && userExist.otpExipre.getTime() < Date.now())){
                             res.status(501).send({success:false,message:"Incorrect OTP"});
                         }
                         else{

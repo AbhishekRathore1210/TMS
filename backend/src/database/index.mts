@@ -1,9 +1,10 @@
-import { connect } from "http2";
+import dotenv from "dotenv";
+dotenv.config({ path: "./env" });
 import mongoose from "mongoose";
 
-const connectionString = 'mongodb://localhost:27017/project';
-
+console.log(process.env.MONGO_DATABASE_URL);
 export default async function connectToMongoDB() {
-  await mongoose.connect(connectionString);
+  console.log(process.env.MONGO_DATABASE_URL);
+  await mongoose.connect(`${process.env.MONGO_DATABASE_URL}`);
   console.log("Connect to MongoDB Database!");
 }
