@@ -9,10 +9,9 @@ import { ToastContainer,toast } from 'react-toastify';
 import Cookies from 'js-cookie';
 import LoginAPI from '../../services/LoginServices';
 
-function LoginForm() {
+const LoginForm = () => {
   const [user, setUser] = useState("System");
 
-  const [error,setError] = useState("");
   const [org, setOrg] = useState<string | null>("");
   const [orgName,setOrgName] = useState([]);
   const [email, setEmail] = useState("");
@@ -21,13 +20,10 @@ function LoginForm() {
 
   const navigate = useNavigate();
 
-
-  const token = Cookies.get('accessToken');
   const userType = Cookies.get('userType');
 
   const validateUser = ()=>{
     if(!otp){
-      setError("Please Write OTP for login");
       toast.error("Please Write OTP for login");
       return false;
     }
@@ -65,12 +61,10 @@ function LoginForm() {
 
   const validateOrg = ()=>{
     if(!otp){
-      setError("Please Write OTP for login");
       toast.error("Please Write OTP for login");
       return false;
     }
     if(!org){
-      setError("Please write name of the organization");
       toast.error("Enter Organization Name");
       return false;
     }
@@ -94,8 +88,6 @@ function LoginForm() {
     }
 
     if(!response.ok){
-      setError(result.error);
-      setError("");
       navigate('/login');
     }
 
@@ -103,7 +95,6 @@ function LoginForm() {
       const token = result.accessToken;
       Cookies.set("accessToken",token);
       Cookies.set('userType','admin');
-      setError("");
       setOrg("");
       setEmail("");
       setOtp("");
@@ -157,11 +148,9 @@ function LoginForm() {
       const token = result.accessToken;
       Cookies.set("accessToken",token);
       Cookies.set('userType','user');
-    // setTimeout(()=>navigate('/users/dashboard'),300);
     navigate('/users/dashboard');
     }
     else{
-      console.log("Response is not ok");
       toast.error(result.message);
       navigate('/login');
     }

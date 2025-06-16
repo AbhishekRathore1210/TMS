@@ -23,7 +23,7 @@ interface IData{
   user_list:Array<IUserList>
 }
 
-function Dashboard() {
+const Dashboard = () => {
 
   const [org, setOrg] = useState([]);
   const [fil, setfil] = useState([]);
@@ -42,9 +42,7 @@ function Dashboard() {
   }
 
   const navigate = useNavigate();
-  // const cookies = new Cookies();
 
-  let response: any;
   const token:string | undefined = Cookies.get('accessToken');
   const userType:string | undefined = Cookies.get('userType');
 
@@ -58,7 +56,6 @@ function Dashboard() {
     navigate('/login');
     return;
   }
-  // getAllTicket();
 
     const config = {
       headers: {
@@ -67,21 +64,15 @@ function Dashboard() {
       },
     };
 
-    response = axios
+    axios
       .get(`http://localhost:8555/admin/organizations?page=${page}&&limit=${limit}`,config)
       .then((res) => {
-        console.log("data",res.data);
         setTotal(res.data.totalPage);
       setOrg(res.data.allOrg);
       setfil(res.data.allOrg);
-      // setUser(res.data.allOrg.user_list.name);
       })
       .catch((err) => console.log(err));
-  }, [page,t,limit, check]);
-
-    if(response){
-    response.json();
-    }
+  }, [page, t, limit, check, token, userType, navigate]);
 
   const deliveOrganization = async(name:string) => {
 
@@ -116,8 +107,6 @@ function Dashboard() {
   const logout = async()=>{
     Cookies.remove('accessToken');
     Cookies.remove('userType');
-      console.log("LogOut SuccessFully");
-      // navigate('/login');
   }
 
   return (

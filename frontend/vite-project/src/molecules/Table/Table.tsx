@@ -50,8 +50,6 @@ function TableDemo(props:any){
 
 
   const getData = () => {
-    console.log(sortColumn,'(((((((((');
-    console.log(sortType,'))))))))))))');
     if (sortColumn && sortType) {
       return data.sort((a: { [x: string]: any; }, b: { [x: string]: any; }) => {
         let x = a[sortColumn];
@@ -104,7 +102,7 @@ function TableDemo(props:any){
     <>
     <Table
     className='table'
-      height={300} width={700}
+      height={500} width={700}
       data={getData()}
       sortColumn={sortColumn}
       sortType={sortType}

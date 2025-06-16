@@ -2,7 +2,7 @@
 import LoginForm from '../../organisms/LoginForm/LoginForm'
 import './LoginPage.scss'
 
-function LoginPage() {
+const LoginPage = () => {
     
   return (
     <>  

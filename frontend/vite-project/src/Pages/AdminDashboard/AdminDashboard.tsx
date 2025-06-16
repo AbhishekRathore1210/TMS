@@ -1,7 +1,7 @@
 import "./AdminDashboard.scss";
 import Dashboard from "../../organisms/Dashboard";
 
-function DashboardPage() {
+const DashboardPage = () => {
   return (
     <>
       <Dashboard />
