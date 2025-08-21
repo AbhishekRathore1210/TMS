@@ -2,13 +2,14 @@ import "./Dashboard.scss";
 import { Button , Pagination} from "rsuite";
 import { Link } from "react-router-dom";
 import { SetStateAction, useEffect, useState } from "react";
-import axios from "axios";
 import { ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 // import { Cookies } from "react-cookie";
 import Cookies from "js-cookie";
 import TableDemo from "../../molecules/Table/Table";
 import logOut1 from '../../../public/logOut1.png';
+import { apiFetch } from "../../api";
+import axiosRequest from "../../axios";
 
 
 interface IUserList{
@@ -64,8 +65,8 @@ const Dashboard = () => {
       },
     };
 
-    axios
-      .get(`http://localhost:8555/admin/organizations?page=${page}&&limit=${limit}`,config)
+    axiosRequest
+      .get(`/admin/organizations?page=${page}&&limit=${limit}`,config)
       .then((res) => {
         setTotal(res.data.totalPage);
       setOrg(res.data.allOrg);
@@ -83,7 +84,7 @@ const Dashboard = () => {
     }
 
     const organizationName = {"name":name};
-    const response = await fetch("http://localhost:8555/admin/organization/delete",{
+    const response = await apiFetch("/admin/organization/delete",{
       method:'POST',
       body:JSON.stringify(organizationName),
       headers:{

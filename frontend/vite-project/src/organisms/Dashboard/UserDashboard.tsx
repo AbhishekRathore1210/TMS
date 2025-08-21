@@ -3,7 +3,6 @@ import {useState,useEffect, SetStateAction} from 'react';
 import { useNavigate } from 'react-router-dom';
 // import { Cookies } from 'react-cookie';
 import Cookies from 'js-cookie';
-import axios from 'axios';
 import { Button } from 'rsuite';
 import { Link } from "react-router-dom";
 import './UserDashboard.scss';
@@ -12,6 +11,7 @@ import logOut1 from '../../../public/logOut1.png';
 import { Modal } from 'rsuite';
 import { SelectPicker, Stack,Input } from 'rsuite';
 import { ToastContainer } from 'react-toastify';
+import axiosRequest from '../../axios';
 
 function UserDashboard() {
 
@@ -84,7 +84,7 @@ function UserDashboard() {
     }; // dd?"&dd=${dd}:'' "
 
   
-     const response =  axios.get(`http://localhost:8555/users/tickets?page=${page}&&limit=${limit}&&type=${ty}&&status=${st}&&cd=${cd}&&ud=${ud}&&dd=${dd}`,config).then((res)=>{
+     const response =  axiosRequest.get(`/users/tickets?page=${page}&&limit=${limit}&&type=${ty}&&status=${st}&&cd=${cd}&&ud=${ud}&&dd=${dd}`,config).then((res)=>{
       console.log(res.data,"Tickets");
       SetTicket(res.data.tickets);
       setTotal(res.data.totalPages);

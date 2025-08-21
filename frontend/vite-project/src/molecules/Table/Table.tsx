@@ -6,6 +6,7 @@ import Persons from '../../../public/group.png';
 import DeleteLogo from "../../../public/bin.png"
 import { Modal, Button } from 'rsuite';
 import { Tooltip, Whisper } from 'rsuite';
+import { apiFetch } from '../../api';
 
 interface Iuser{
   userId:string,
@@ -82,7 +83,7 @@ function TableDemo(props:any){
 
     const userDetails = async(org:string)=>{
 
-    const response = await fetch(`http://localhost:8555/users/users/${org}`,{
+    const response = await apiFetch(`/users/users/${org}`,{
       method:'GET',
       headers:{
         "Content-Type": "application/json",

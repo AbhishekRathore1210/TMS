@@ -5,6 +5,7 @@ import { ToastContainer,toast } from "react-toastify";
 import './CreateOrgForm.scss';
 // import { Cookies } from "react-cookie";
 import Cookies from "js-cookie";
+import { apiFetch } from "../../api";
 
 function RegisterForm(){
 const [org , setOrg] = useState("");
@@ -33,7 +34,7 @@ const handleSubmit = async(e:FormSubmit)=>{
     
     const orgName = {org};  
     
-    const response = await fetch("http://localhost:8555/admin/organization",{
+    const response = await apiFetch("/admin/organization",{
 
         method:'POST',
         body:JSON.stringify(orgName),

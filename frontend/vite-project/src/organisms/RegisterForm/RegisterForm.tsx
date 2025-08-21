@@ -7,6 +7,7 @@ import "react-toastify/dist/ReactToastify.css";
 import CustomDropdown from '../DropDown/DropDown'
 // import { Cookies } from 'react-cookie'
 import Cookies from 'js-cookie'
+import { apiFetch } from '../../api'
 
 function RegisterForm() {
   const [user, setUser] = useState<string | null>("Organization");
@@ -95,7 +96,7 @@ function RegisterForm() {
     }
 
     const adminUser = {firstName,lastName,email};
-    const response = await fetch("http://localhost:8555/admin/register",{
+    const response = await apiFetch("/admin/register",{
       method:'POST',
       body:JSON.stringify(adminUser),
       headers:{
@@ -132,7 +133,7 @@ function RegisterForm() {
     if(!validateOrgUser()){
       return;
     }
-    const response = await fetch("http://localhost:8555/users/register", {
+    const response = await apiFetch("/users/register", {
       method: 'POST',
       body : JSON.stringify(addOrgUser),
       headers: {

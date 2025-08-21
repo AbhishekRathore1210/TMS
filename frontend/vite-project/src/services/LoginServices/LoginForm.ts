@@ -1,5 +1,7 @@
+import { apiFetch } from "../../api";
+
 export async function Login(user:{email:string,otp:string}){
-    return await fetch("http://localhost:8555/admin/login",{
+    return await apiFetch("/admin/login",{
         method:'POST',
         body:JSON.stringify(user),
         headers:{
@@ -9,7 +11,7 @@ export async function Login(user:{email:string,otp:string}){
 }
 
 export async function OTP(userEmail:{email:string,org:string | null}){
-  return await fetch("http://localhost:8555/admin/otp",{
+  return await apiFetch("/admin/otp",{
     method:'POST',
     body:JSON.stringify(userEmail),
     headers:{

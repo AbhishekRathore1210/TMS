@@ -6,12 +6,13 @@ import { useNavigate } from "react-router-dom";
 // import { Cookies } from "react-cookie";
 import Cookies from 'js-cookie';
 import { toast } from 'react-toastify';
+import axiosRequest from '../../../axios';
 
 interface Ihistory {
   userName: string;
   fieldName: string;
   oldValue: string;
-  newValue: string;
+  newValue: string;
 }
 
 function TicketDetails(props:any) {
@@ -58,7 +59,7 @@ function TicketDetails(props:any) {
 
         const updatedTicket = props.d;
         console.log(updatedTicket,'********');
-        const response = await axios.put("http://localhost:8555/users/ticket",updatedTicket,config)
+        const response = await axiosRequest.put("/users/ticket",updatedTicket,config)
         
         console.log("Response",response.data);
 

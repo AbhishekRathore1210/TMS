@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { SelectPicker, Stack } from "rsuite";
 import { ToastContainer } from "react-toastify";
+import axiosRequest from "../../axios";
 
 interface IProp{
     org:string | null,
@@ -19,8 +20,8 @@ function CustomDropdown(props:IProp) {
         "Custom-Header": "Custom Value",
       },
     };
-    const response = axios
-      .get("http://localhost:8555/admin/organizations", config)
+    const response = axiosRequest
+      .get("/admin/organizations", config)
       .then((res) => {
         const activeData = res.data.allOrg.filter(
           (item: any) => item.is_active == true

@@ -2,12 +2,13 @@ import { Button, Input } from 'rsuite'
 import './LoginForm.scss'
 import {  useEffect, useState } from 'react'
 import { SelectPicker } from 'rsuite';
-import axios from 'axios'
  
 import { useNavigate } from 'react-router-dom';
 import { ToastContainer,toast } from 'react-toastify';
 import Cookies from 'js-cookie';
 import LoginAPI from '../../services/LoginServices';
+import { apiFetch } from '../../api';
+import axiosRequest from '../../axios';
 
 const LoginForm = () => {
   const [user, setUser] = useState("System");
@@ -43,7 +44,7 @@ const LoginForm = () => {
   },[navigate, userType])
 
   const allOrganizationName = async()=>{
-    const response = await axios.get('http://localhost:8555/org')
+    const response = await axiosRequest.get('/org')
       console.log(response.data,'data');
       if(response.data.data.success){
         setOrgName(response.data.data.allOrg);
@@ -134,7 +135,7 @@ const LoginForm = () => {
     }
 
     const newUser = {email,org,otp};
-    const response = await fetch("http://localhost:8555/users/login",{
+    const response = await apiFetch("/users/login",{
         method:'POST',
         body:JSON.stringify(newUser),
         headers:{

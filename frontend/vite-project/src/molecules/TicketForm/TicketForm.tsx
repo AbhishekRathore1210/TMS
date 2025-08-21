@@ -5,6 +5,7 @@ import {Button, Input} from 'rsuite';
 import { useNavigate } from 'react-router-dom';
 import { ToastContainer,toast} from 'react-toastify'
 import './TicketForm.scss'
+import { apiFetch } from '../../api';
 
 interface FormData {
   type: string;
@@ -71,16 +72,17 @@ const navigate = useNavigate();
       return;
     }
     fetchEmailOptions();
-  }, []);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [token]);
 
   const fetchEmailOptions = async () => {
-    const response = await fetch('http://localhost:8555/users/', {
+    const response = await apiFetch('/users/', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `BEARER ${token}`
       },
-    });
+    }); 
     const result = await response.json();
     console.log("Response",result);
 
@@ -111,7 +113,7 @@ const navigate = useNavigate();
   }
     const createTicket = async()=>{
     const ticket = {...formData}; 
-    const response = await fetch("http://localhost:8555/users/ticket",{
+    const response = await apiFetch("/users/ticket",{
       method:'POST',
       body:JSON.stringify(ticket),
       headers:{
