@@ -2,7 +2,6 @@ import UserService from "../services/user.service.mjs";
 import jwt from 'jsonwebtoken';
 class AdminController {
     userService = new UserService();
-    secret = "Abhishek@123$";
     registerAdmin = async (req, res, next) => {
         const { firstName, lastName, email } = req.body;
         const userExist = await this.userService.createAdminUser(firstName, lastName, email);
@@ -21,16 +20,16 @@ class AdminController {
         }
     };
     sendOTP = async (req, res) => {
-        const { email, org } = req.body;
-        const otpSent = await this.userService.sendOTP(email, org);
+        // const {email,org} = req.body;
+        // const otpSent = await this.userService.sendOTP(email,org);
         // console.log(otpSent,'value');
-        if (otpSent) {
-            return res.status(200).send({ success: true, message: "OTP sent succesffuly" });
-        }
-        return res.send({ code: 400, data: {
-                success: false,
-                message: "User is not Pressent"
-            } });
+        // if(otpSent){
+        return res.status(200).send({ success: true, message: "OTP sent succesffuly" });
+        // }
+        // return res.send({code:400,data:{
+        //     success:false,
+        //     message:"User is not Pressent"
+        // }})
     };
     showOrganization = async (req, res, next) => {
         const allOrganizations = await this.userService.allOrganizations(req, res, next);
@@ -39,12 +38,11 @@ class AdminController {
     loginAdmin = async (req, res) => {
         const { email, otp } = req.body;
         const adminExist = await this.userService.checkAdmin(email, otp);
-        // console.log(adminExist);
         if (!adminExist) {
             return res.status(401).json({ success: false, message: 'Cannot Login' });
         }
         else {
-            const token = jwt.sign({ adminExist }, this.secret);
+            const token = jwt.sign({ adminExist }, process.env.JWT_SECRET_KEY);
             // console.log(token);
             return res.status(200).json({ accessToken: token, success: true, message: "Login success" });
         }

@@ -1,5 +1,4 @@
 import jwt from "jsonwebtoken";
-import { secretKey } from "../constants/common.mjs";
 class Authentication {
     // public AdminAuth = (req: Request, res: Response, next: NextFunction) => {
     //     const authHeader = req.headers['authorization'];
@@ -15,7 +14,7 @@ class Authentication {
             // return res.status(401).json({ status: false, msg: "Token is missing" });
             return res.status(401).json({ code: 401, data: { status: false, message: "Token is missing" } });
         }
-        jwt.verify(token, secretKey, (err, decoded) => {
+        jwt.verify(token, process.env.JWT_SECRET_KEY, (err, decoded) => {
             console.log(err);
             if (err) {
                 return res.status(400).json({ status: false, msg: `Invalid token: ${err.message}` });

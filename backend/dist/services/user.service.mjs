@@ -46,7 +46,7 @@ class UserService {
             requireTLS: true,
             auth: {
                 user: 'abhishek19229785@gmail.com',
-                pass: ''  
+                pass: '' //password  
             }
         });
         const myOtp = Math.floor((Math.random() * 1000000) + 1);

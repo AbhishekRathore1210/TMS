@@ -25,11 +25,9 @@ class Routes {
         this.initializeOrganizationRoutes(`${this.orgPath}`);
     }
     initializeOrganizationRoutes(prefix) {
-        console.log("Initializing Org Routes");
         this.router.get('/org', this.organizationController.allOrg);
     }
     initializeUserRoutes(prefix) {
-        console.log("Initializing user routes..");
         this.router.post(`${prefix}/register`, this.validation.validate(orgUserRegisterSchema), this.userController.userRegistration);
         this.router.post(`${prefix}/login`, this.validation.validate(userLoginSchema), this.userController.userLogin);
         this.router.post(`${prefix}/ticket`, this.authentication.Auth, this.validation.validate(ticketSchema), this.ticketController.createTicket);
@@ -39,7 +37,6 @@ class Routes {
         this.router.put(`${prefix}/ticket`, this.authentication.Auth, this.ticketController.updateTicket);
     }
     initializeAdminRoutes(prefix) {
-        console.log("Admin Route");
         this.router.post(`${prefix}/login`, this.validation.validate(userLoginSchema), this.adminController.loginAdmin);
         this.router.post(`${prefix}/otp`, this.validation.validate(userLoginSchema), this.adminController.sendOTP);
         this.router.get(`${prefix}/organizations`, this.adminController.showOrganization);
