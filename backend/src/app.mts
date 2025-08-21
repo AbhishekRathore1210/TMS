@@ -33,7 +33,13 @@ class App {
   private initializeMiddlewares() {
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: false }));
-    this.app.use(cors());
+    this.app.use(
+      cors({
+        origin: "*",   // allow all origins
+        methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+        credentials: true
+      })
+    );
     this.app.use(cookieParser());
   }
 
