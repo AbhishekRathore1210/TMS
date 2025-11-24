@@ -73,14 +73,15 @@ const LoginForm = () => {
   }
 
   const handleSystem = async(e:FormSubmit) => {
+    console.log('handleSystem <>>>>>>>>>');
     e.preventDefault();
 
     if(!validateUser()){
       return;
     }
     const user = {email,otp};
-    const response = await LoginAPI.Login(user);
-    const result = await response.json();
+    const result = await LoginAPI.Login(user);
+    console.log(result,">>> result");
 
     if(!result.success){
       console.log("Cannot Login");
@@ -88,11 +89,8 @@ const LoginForm = () => {
       navigate('/login');
     }
 
-    if(!response.ok){
-      navigate('/login');
-    }
-
-    if(response.ok){
+    if(result.success){
+      console.log('Login Success');
       const token = result.accessToken;
       Cookies.set("accessToken",token);
       Cookies.set('userType','admin');
@@ -112,9 +110,7 @@ const LoginForm = () => {
 
     const userEmail = {email,org};
 
-    const response = await LoginAPI.OTP(userEmail);
-
-    const result = await response.json();
+    const result = await LoginAPI.OTP(userEmail);
 
     if(!result.success){
       toast.error("User Not Exists!");
@@ -135,7 +131,7 @@ const LoginForm = () => {
     }
 
     const newUser = {email,org,otp};
-    const response = await apiFetch("/users/login",{
+    const result = await apiFetch("/users/login",{
         method:'POST',
         body:JSON.stringify(newUser),
         headers:{
@@ -143,9 +139,7 @@ const LoginForm = () => {
         }
     });
 
-    const result = await response.json();
-
-    if(response.ok){
+    if(result){
       const token = result.accessToken;
       Cookies.set("accessToken",token);
       Cookies.set('userType','user');

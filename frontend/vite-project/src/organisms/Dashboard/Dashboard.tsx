@@ -91,8 +91,7 @@ const Dashboard = () => {
         "Content-Type": "application/json",
       }
     });
-    await response.json();
-    if(response.ok){
+    if(response){
       const activeData = org.filter((item:IData) => {
         return item.is_active == true;
       });

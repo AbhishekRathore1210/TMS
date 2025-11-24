@@ -76,14 +76,13 @@ const navigate = useNavigate();
   }, [token]);
 
   const fetchEmailOptions = async () => {
-    const response = await apiFetch('/users/', {
+    const result = await apiFetch('/users/', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `BEARER ${token}`
       },
     }); 
-    const result = await response.json();
     console.log("Response",result);
 
     const mapData = result.users.map((user:IUser)=>user.email);
@@ -122,8 +121,7 @@ const navigate = useNavigate();
       }
     });
 
-    const result = await response.json();
-    if(response.ok){
+    if(response){
       // alert("Ticket Generated");
       toast.success('Ticket Generated');
       fun();
@@ -132,7 +130,6 @@ const navigate = useNavigate();
     setFormData(initialFormData);
     
   };
-  const today = new Date();
 
   // const getMinDate = () =>{
   //   console.log(new Date());

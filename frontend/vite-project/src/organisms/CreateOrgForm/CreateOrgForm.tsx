@@ -34,7 +34,7 @@ const handleSubmit = async(e:FormSubmit)=>{
     
     const orgName = {org};  
     
-    const response = await apiFetch("/admin/organization",{
+    const result = await apiFetch("/admin/organization",{
 
         method:'POST',
         body:JSON.stringify(orgName),
@@ -43,8 +43,6 @@ const handleSubmit = async(e:FormSubmit)=>{
             "authorization": `BEARER ${token}`
         }
     });
-    
-    const result = await response.json();
 
     // if(!result.success){
     //     console.log("Organization is alreaedy created");
@@ -53,12 +51,12 @@ const handleSubmit = async(e:FormSubmit)=>{
     //     navigate('/dashboard/create-org')
     // }
 
-    if(!response.ok){
+    if(!result){
         // setError("Organization can't be created");
         toast.error(result.message);
         navigate('/admin/dashboard/createOrg');
     }
-    if(response.ok){
+    if(result){
         toast.success("New Organization Created!");
         setOrg("");
         setTimeout(()=>{navigate('/admin/dashboard')},1000);

@@ -96,7 +96,7 @@ function RegisterForm() {
     }
 
     const adminUser = {firstName,lastName,email};
-    const response = await apiFetch("/admin/register",{
+    const result = await apiFetch("/admin/register",{
       method:'POST',
       body:JSON.stringify(adminUser),
       headers:{
@@ -104,9 +104,8 @@ function RegisterForm() {
         Authorization:`BEARER ${token}`
       }
     })
-    const result = await response.json();
 
-    if(response.status == 400){
+    if(result.status == 400){
       setError("");
       setFirstname("");
       setLastname("");
@@ -114,11 +113,11 @@ function RegisterForm() {
       toast.error("User is Already Registered!");
       navigate("/register");
     }
-    if(!response.ok){
+    if(!result){
       setError(result.error);
     }
 
-    if(response.ok){
+    if(result){
       setError("");
       setFirstname("");
       setLastname("");
@@ -133,23 +132,22 @@ function RegisterForm() {
     if(!validateOrgUser()){
       return;
     }
-    const response = await apiFetch("/users/register", {
+    const result = await apiFetch("/users/register", {
       method: 'POST',
       body : JSON.stringify(addOrgUser),
       headers: {
         "Content-Type": "application/json",
       }
     })
-    const result = await response.json();
     console.log(result);
 
-    if(!response.ok){
+    if(!result){
       console.log(result.error);
       setError(result.error);
       toast.error(result.message);
     }
 
-    if(response.ok){
+    if(result){
       setError("");
       setFirstname("");
       setLastname("");
