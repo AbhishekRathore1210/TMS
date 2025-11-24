@@ -33,13 +33,16 @@ class App {
   private initializeMiddlewares() {
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: false }));
-    this.app.use(
-      cors({
-        origin: "*",   // allow all origins
-        methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-        credentials: true
-      })
-    );
+this.app.use(
+  cors({
+    origin: [
+      "https://tms-fe-g3w0.onrender.com", // your frontend URL
+      "http://localhost:5173"             // for local development
+    ],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    credentials: true
+  })
+);
     this.app.use(cookieParser());
   }
 
