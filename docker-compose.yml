@@ -1,0 +1,20 @@
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "8555:8555"
+    environment:
+      PORT: 8555
+      MONGO_DATABASE_URL: ${MONGO_DATABASE_URL}
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
+
+  frontend:
+    build: ./frontend/vite-project
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+    environment:
+      # If your frontend uses Vite env vars like VITE_API_URL,
+      # set them here. Browser-side calls hit localhost from your laptop.
+      VITE_API_URL: http://localhost:8555
